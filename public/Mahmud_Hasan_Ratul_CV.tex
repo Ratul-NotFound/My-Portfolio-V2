@@ -1,0 +1,297 @@
+%----------------------------------------------------------------------------------------
+%	MAHMUD HASAN RATUL - WORLD CLASS PROFESSIONAL CURRICULUM VITAE
+%	A4 Split-Column Luxury Technical Resume (Overleaf / XeLaTeX Compliant)
+%----------------------------------------------------------------------------------------
+
+\documentclass[10pt,a4paper,oneside]{article}
+
+% Language & Encoding
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+% Page Layout & Margins
+\usepackage[portrait]{geometry}
+\geometry{
+	a4paper,
+	left=8mm,
+	right=8mm,
+	top=8mm,
+	bottom=8mm
+}
+
+% Suppress Headers & Footers
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+% Colors
+\usepackage{xcolor}
+\definecolor{primary}{HTML}{1E293B}      % Deep Slate Blue-Grey
+\definecolor{sidebarbg}{HTML}{1E293B}   % Sleek Slate Sidebar Background
+\definecolor{accent}{HTML}{38BDF8}      % Radiant Light Blue Accent
+\definecolor{textdark}{HTML}{334155}    % Charcoal Main Text
+\definecolor{textlight}{HTML}{94A3B8}   % Light Slate Sidebar text
+\definecolor{white}{HTML}{FFFFFF}
+
+% Fonts
+\usepackage{fontspec}
+\setmainfont{Helvetica Neue}[
+	Scale=0.95,
+	BoldFont=Helvetica Neue Bold,
+	ItalicFont=Helvetica Neue Light Italic
+]
+\setsansfont{Arial}
+
+% Icons (FontAwesome)
+\usepackage{fontawesome5}
+
+% Custom Spacing
+\usepackage{setspace}
+
+% Lists Formatting
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=10pt, noitemsep, topsep=1pt, parsep=0.5pt}
+
+% Tables & Layout Components
+\usepackage{array}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins}
+
+% PDF Metadata
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+	pdftitle={Mahmud Hasan Ratul - Curriculum Vitae},
+	pdfauthor={Mahmud Hasan Ratul},
+	pdfsubject={Curriculum Vitae},
+	pdfkeywords={Computer Science, Engineering, DIU, VP, ICPC}
+}
+
+% Custom section command for main column
+\newcommand{\cvsection}[2]{
+	\vspace{8pt}
+	{\normalsize\bfseries\color{primary}\uppercase{#1}}\hfill{\color{accent}#2}
+	\vspace{-2pt}
+	\hrule height 1pt\relax
+	\vspace{5pt}
+}
+
+% Custom section command for sidebar
+\newcommand{\sidebarsection}[1]{
+	\vspace{12pt}
+	{\scriptsize\bfseries\color{accent}\uppercase{#1}}
+	\vspace{2pt}
+	\hrule height 1pt\relax
+	\vspace{4pt}
+}
+
+%----------------------------------------------------------------------------------------
+%	BEGIN DOCUMENT
+%----------------------------------------------------------------------------------------
+\begin{document}
+
+\begin{tcolorbox}[
+	enhanced,
+	sharp corners,
+	boxrule=0pt,
+	colback=white,
+	grow to left by=8mm,
+	grow to right by=8mm,
+	top=-8mm,
+	bottom=-8mm,
+	left=0mm,
+	right=0mm,
+	boxsep=0pt
+]
+	\begin{tabular}{@{}m{66mm}@{}m{128mm}@{}}
+		
+		%--------------------------------------------------------------------------------
+		%	LEFT COLUMN: SIDEBAR (Slate Background)
+		%--------------------------------------------------------------------------------
+		\begin{tcolorbox}[
+			enhanced,
+			sharp corners,
+			boxrule=0pt,
+			colback=sidebarbg,
+			minimum height=297mm,
+			top=10mm,
+			bottom=10mm,
+			left=5mm,
+			right=5mm,
+			boxsep=0pt
+		]
+			
+			% Name & Subtitle Header
+			\begin{center}
+				{\Large\bfseries\color{white} M. H. RATUL} \\
+				\vspace{2pt}
+				{\color{textlight}\tiny\bfseries COMPUTER SCIENCE \& ENGINEERING} \\
+				\vspace{12pt}
+			\end{center}
+			
+			% Contact Info Section
+			\sidebarsection{Contact}
+			\vspace{2pt}
+			\begin{spacing}{1.1}
+				{\color{accent}\faMapMarkerAlt} \hspace{4pt} {\scriptsize\color{white} Savar, Dhaka, BD} \\
+				\vspace{2pt}
+				{\color{accent}\faPhone} \hspace{4pt} {\scriptsize\color{white} +8801784090278} \\
+				\vspace{2pt}
+				{\color{accent}\faEnvelope} \hspace{4pt} {\scriptsize\color{accent}\href{mailto:m.h.ratul18@gmail.com}{m.h.ratul18@gmail.com}} \\
+				\vspace{2pt}
+				{\color{accent}\faGithub} \hspace{4pt} {\scriptsize\color{white}\href{https://github.com/ratul-notfound}{github.com/ratul-notfound}} \\
+				\vspace{2pt}
+				{\color{accent}\faLinkedin} \hspace{4pt} {\scriptsize\color{white}\href{https://linkedin.com/in/mahmud-hasan-ratul}{in/mahmud-hasan-ratul}}
+			\end{spacing}
+			
+			% Education Section
+			\sidebarsection{Education}
+			\vspace{4pt}
+			{\scriptsize\bfseries\color{white} B.Sc. in CSE} \\
+			{\tiny\color{textlight} Daffodil International University} \\
+			{\tiny\color{accent}\bfseries Spring 2023 -- Present} \\
+			\vspace{4pt}
+			{\scriptsize\bfseries\color{white} HSC} \\
+			{\tiny\color{textlight} Ghatail Cantonment Public School \& College} \\
+			{\tiny\color{textlight} Group: Science | Passing Year: 2021} \\
+			{\tiny\color{accent}\bfseries Result: GPA 5.00 / 5.00} \\
+			\vspace{4pt}
+			{\scriptsize\bfseries\color{white} SSC} \\
+			{\tiny\color{textlight} Suti V.M. Pilot Model Govt. High School} \\
+			{\tiny\color{textlight} Group: Science | Passing Year: 2019} \\
+			{\tiny\color{accent}\bfseries Result: GPA 4.94 / 5.00}
+			
+			% Computer Skills Section
+			\sidebarsection{Computer Skills}
+			\vspace{4pt}
+			{\tiny\bfseries\color{textlight} PROGRAMMING} \\
+			{\scriptsize\color{white} C Programming, App Development (Java), Web Browsing} \\
+			\vspace{4.5pt}
+			{\tiny\bfseries\color{textlight} OFFICE SUITE} \\
+			{\scriptsize\color{white} Text Processor (MS Word, Google Docs), Spreadsheet (MS Excel, Google Sheets)} \\
+			\vspace{4.5pt}
+			{\tiny\bfseries\color{textlight} PRESENTATION} \\
+			{\scriptsize\color{white} MS PowerPoint, Google Slides, Canva} \\
+			\vspace{4.5pt}
+			{\tiny\bfseries\color{textlight} MEDIA \& CREATIVE} \\
+			{\scriptsize\color{white} Video Editing}
+			
+			% Soft Skills Section
+			\sidebarsection{Soft Skills}
+			\vspace{2.5pt}
+			{\scriptsize\color{white}
+			\begin{itemize}[leftmargin=8pt]
+				\item Communication Skill
+				\item Leadership Skill
+				\item Team Management
+				\item Problem Solving
+				\item Time Management
+				\item Public Speaking
+			\end{itemize}
+			}
+			
+			% Languages Section
+			\sidebarsection{Languages}
+			\vspace{2.5pt}
+			{\scriptsize\bfseries\color{white} Bangla} {\tiny\color{textlight} (Native/Fluent)} \\
+			{\scriptsize\bfseries\color{white} English} {\tiny\color{textlight} (Intermediate)}
+			
+		\end{tcolorbox}
+		
+		& % Tabular column separator
+		
+		%--------------------------------------------------------------------------------
+		%	RIGHT COLUMN: MAIN CONTENT (White Canvas)
+		%--------------------------------------------------------------------------------
+		\begin{tcolorbox}[
+			enhanced,
+			sharp corners,
+			boxrule=0pt,
+			colback=white,
+			minimum height=297mm,
+			top=10mm,
+			bottom=10mm,
+			left=6mm,
+			right=4mm,
+			boxsep=0pt
+		]
+			
+			% Large Executive Title Header
+			{\Huge\bfseries\color{primary} Mahmud Hasan Ratul} \\
+			\vspace{3pt}
+			{\color{accent}\small\bfseries Computer Science \& Engineering Student} \\
+			\vspace{8pt}
+			
+			% Executive Summary Section
+			\cvsection{Professional Summary}{\faCompass}
+			{\color{textdark}\scriptsize
+				A dedicated Computer Science and Engineering student with a responsible and organized approach to work. I strive to apply my technical knowledge and problem-solving skills to contribute effectively in a professional environment.
+			} \\
+			\vspace{6pt}
+			
+			% Experience Section
+			\cvsection{Professional \& Leadership Experience}{\faBriefcase}
+			
+			\textbf{\color{primary}\scriptsize Vice President} \hfill {\color{textdark}\tiny Jan 2023 -- Present} \\
+			\textsl{\color{accent}\tiny Daffodil International University Computer \& Programming Club (DIUCPC)}
+			\begin{itemize}
+				\item Directing club activities, organizing workshops, and mentoring aspiring developers.
+				\item Acted as Former Assistant General Secretary, helping scale community outreach and hackathon operations.
+			\end{itemize}
+			\vspace{5pt}
+			
+			\textbf{\color{primary}\scriptsize Co-Lead Volunteer (Crowd Control Management Head)} \hfill {\color{textdark}\tiny Dec 2024} \\
+			\textsl{\color{accent}\tiny ICPC Dhaka Regional Contest 2024}
+			\begin{itemize}
+				\item Coordinated venue setups, volunteer pipelines, and crowd operations for 100+ competing universities.
+			\end{itemize}
+			\vspace{5pt}
+			
+			\textbf{\color{primary}\scriptsize Marketing Executive} \hfill {\color{textdark}\tiny Nov 2024 -- 2025} \\
+			\textsl{\color{accent}\tiny The Premium Homes Ltd.}
+			\begin{itemize}
+				\item Designed promotional campaigns and successfully managed high-value real estate branding activities.
+			\end{itemize}
+			\vspace{5pt}
+			
+			\textbf{\color{primary}\scriptsize Head of Branding and Production} \hfill {\color{textdark}\tiny 2024} \\
+			\textsl{\color{accent}\tiny Hult Prize at Daffodil International University}
+			\begin{itemize}
+				\item Directed creative branding campaigns and multimedia productions for the social entrepreneurship event.
+			\end{itemize}
+			
+			\vspace{6pt}
+			\cvsection{Additional Leadership \& Involvements}{\faUsers}
+			\vspace{2pt}
+			\begin{spacing}{1.1}
+				\begin{tabular}{@{}p{90mm}@{\hspace{2mm}}r@{}}
+					{\scriptsize\color{primary}\bfseries Volunteer} \textsl{\tiny at Bangladesh Olympiad in Informatics (BDOI)} & {\tiny\color{textdark} 2024 -- 2025} \\
+					{\scriptsize\color{primary}\bfseries Campus Ambassador} \textsl{\tiny at Jobsnavi} & {\tiny\color{textdark} 2024} \\
+					{\scriptsize\color{primary}\bfseries Conference Volunteer} \textsl{\tiny at BIM 2023 (Int. Conf. on Big Data, IoT \& ML)} & {\tiny\color{textdark} 2023} \\
+					{\scriptsize\color{primary}\bfseries General Member} \textsl{\tiny at DIU Blood Donors Club (DIU BDC)} & {\tiny\color{textdark} 2023 -- Present}
+				\end{tabular}
+			\end{spacing}
+			
+			% Hobbies Section
+			\vspace{6pt}
+			\cvsection{Hobbies \& Interests}{\faHeart}
+			{\color{textdark}\scriptsize
+				Singing, Playing Guitar, Cycling, Reading Books, Crafting, DIY Projects, Photography, Videography, Playing Cricket.
+			} \\
+			
+			% References Section
+			\vspace{8pt}
+			\cvsection{References}{\faCheckDouble}
+			
+			\begin{tabular}{@{}p{60mm}@{\hspace{4mm}}p{60mm}@{}}
+				\textbf{\color{primary}\scriptsize Md. Mainul Hasan Dulon} & \textbf{\color{primary}\scriptsize Mr. Saiful Islam} \\
+				{\tiny\color{textdark} CEO} & {\tiny\color{textdark} Assistant Professor, Dept. of CSE} \\
+				{\tiny\color{accent} The Premium Homes Ltd.} & {\tiny\color{accent} Daffodil International University} \\
+				{\tiny\color{textdark} Phone: +880 1933-657804} & {\tiny\color{textdark} Phone: +8801989089279} \\
+				& {\tiny\color{textdark} Email: saiful.cse@diu.edu.bd}
+			\end{tabular}
+			
+		\end{tcolorbox}
+		
+	\end{tabular}
+\end{tcolorbox}
+
+\end{document}

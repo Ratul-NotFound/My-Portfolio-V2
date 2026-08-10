@@ -1,0 +1,8 @@
+{
+  "name": "My Portfolio V2",
+  "description": "Executive Portfolio of Mahmud Hasan Ratul — Full-Stack Engineer & AI Researcher.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
