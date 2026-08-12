@@ -20,66 +20,64 @@ function StackableDeckCard({ project, index, total, onInspect }) {
     : (typeof project.tech === 'string' ? project.tech.split(',') : ['Next.js', 'React']);
 
   return (
-    <div 
-      className="w-full rounded-3xl overflow-hidden transition-all duration-300 relative z-10 select-none p-5 sm:p-6 group font-mono shadow-xl hover:shadow-2xl"
-      style={{
-        border: '1px solid var(--color-border)',
-        background: 'var(--color-surface)',
-      }}
-      onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-accent)'; }}
-      onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; }}
-    >
-      {/* Top Laser Accent Line on Hover */}
-      <div 
-        className="absolute inset-x-0 top-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30" 
-        style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }} 
-      />
-
-      {/* Top Bar Header */}
-      <div className="flex items-center justify-between gap-4 pb-3.5 flex-shrink-0 z-20" style={{ borderBottom: '1px solid var(--color-border)' }}>
-        <div className="flex items-center gap-2">
-          <span 
-            className="text-[11px] font-mono font-bold uppercase tracking-wider px-3 py-1 rounded-full"
-            style={{
-              background: 'var(--color-surface-2)',
-              color: 'var(--color-accent)',
-              border: '1px solid var(--color-border)',
-            }}
-          >
-            {project.category}
-          </span>
-          {project.featured && (
-            <span 
-              className="text-[10px] px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1 shadow-sm"
-              style={{
-                background: 'var(--color-surface-2)',
-                color: 'var(--color-accent)',
-                border: '1px solid var(--color-border)',
-              }}
-            >
-              <Sparkles className="w-3 h-3" style={{ color: 'var(--color-accent)' }} />
-              <span>Flagship</span>
-            </span>
-          )}
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 text-[10px] px-2.5 py-0.5 rounded-full font-bold" style={{ background: 'rgba(34, 197, 94, 0.12)', color: '#22c55e', border: '1px solid rgba(34, 197, 94, 0.25)' }}>
-            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping" />
-            LIVE
-          </span>
-          <span 
-            className="text-xs px-3 py-1 rounded-full font-bold hidden sm:inline-block"
-            style={{
-              background: 'var(--color-surface-2)',
-              color: 'var(--color-accent)',
-              border: '1px solid var(--color-border)',
-            }}
-          >
-            0{index + 1} / 0{total}
-          </span>
+    <div className="w-full relative z-10 select-none group font-mono mt-4">
+      {/* Seamless Single Top-Right File Folder Tab */}
+      <div className="flex items-center justify-end pr-6 relative z-20">
+        <div 
+          className="px-5 py-1.5 rounded-t-2xl text-[11px] font-mono font-bold flex items-center gap-2 shadow-md border-t border-x relative -mb-[1px]"
+          style={{
+            background: 'var(--color-surface)',
+            borderColor: 'var(--color-border)',
+            color: 'var(--color-accent)',
+          }}
+        >
+          <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+          <span>PROJECT 0{index + 1} / 0{total}</span>
         </div>
       </div>
+
+      {/* Main Folder Card Container */}
+      <div 
+        className="w-full rounded-2xl sm:rounded-3xl rounded-tr-none transition-all duration-300 relative z-10 p-5 sm:p-6 shadow-xl hover:shadow-2xl overflow-hidden"
+        style={{
+          border: '1px solid var(--color-border)',
+          background: 'var(--color-surface)',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-accent)'; }}
+        onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; }}
+      >
+        {/* Top Laser Accent Line on Hover */}
+        <div 
+          className="absolute inset-x-0 top-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30" 
+          style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }} 
+        />
+
+        {/* Top Bar Header */}
+        <div className="flex items-center justify-between gap-4 pb-3.5 flex-shrink-0 z-20" style={{ borderBottom: '1px solid var(--color-border)' }}>
+          <div className="flex items-center gap-2">
+            <h3 className="text-lg sm:text-xl font-bold font-sans tracking-tight" style={{ color: 'var(--color-text)' }}>
+              {project.title}
+            </h3>
+            {project.featured && (
+              <span 
+                className="text-[10px] px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1 shadow-sm"
+                style={{
+                  background: 'var(--color-surface-2)',
+                  color: 'var(--color-accent)',
+                  border: '1px solid var(--color-border)',
+                }}
+              >
+                <Sparkles className="w-3 h-3" style={{ color: 'var(--color-accent)' }} />
+                <span>Flagship</span>
+              </span>
+            )}
+          </div>
+
+          <span className="inline-flex items-center gap-1.5 text-[10px] px-2.5 py-0.5 rounded-full font-bold" style={{ background: 'rgba(34, 197, 94, 0.12)', color: '#22c55e', border: '1px solid rgba(34, 197, 94, 0.25)' }}>
+            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping" />
+            LIVE DEMO
+          </span>
+        </div>
 
       {/* 2-Column Split Body */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center my-4">
@@ -206,7 +204,8 @@ function StackableDeckCard({ project, index, total, onInspect }) {
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 }
 
 export default function Projects({ projects = [] }) {
@@ -286,15 +285,15 @@ export default function Projects({ projects = [] }) {
           </div>
         </div>
 
-        {/* SCROLLSTACK CONTAINER */}
-        <div className="w-full h-[540px] relative">
+        {/* SCROLLSTACK FOLDER DECK CONTAINER */}
+        <div className="w-full h-[460px] sm:h-[500px] relative">
           <ScrollStack
-            itemDistance={40}
+            itemDistance={32}
             itemScale={0.02}
-            itemStackDistance={35}
-            stackPosition="4%"
+            itemStackDistance={24}
+            stackPosition="3%"
             scaleEndPosition="2%"
-            baseScale={0.94}
+            baseScale={0.95}
             blurAmount={0}
             useWindowScroll={false}
             className="w-full h-full pr-2 custom-scrollbar"

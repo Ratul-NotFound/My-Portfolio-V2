@@ -19,87 +19,90 @@ function StackableExperienceCard({ exp, index, total }) {
   const logoPath = exp.logo || '/cpc1.jpg';
 
   return (
-    <div 
-      className="w-full rounded-2xl overflow-hidden transition-all relative z-10 select-none p-5 sm:p-6 flex flex-col sm:flex-row gap-5 items-start sm:items-center group shadow-card"
-      style={{
-        border: '1px solid var(--color-border)',
-        background: 'var(--color-surface)',
-        transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
-      }}
-      onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-border-accent)'; }}
-      onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; }}
-    >
-      {/* Top Laser Sweep Highlight */}
-      <div 
-        className="absolute inset-x-0 top-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-30" 
-        style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }}
-      />
-
-      {/* LEFT SIDE: Brand Logo / Company Avatar Box */}
-      <div 
-        className="relative w-16 h-16 sm:w-22 sm:h-22 rounded-xl overflow-hidden flex-shrink-0 shadow-md flex items-center justify-center p-2"
-        style={{
-          background: 'var(--color-surface-3)',
-          border: '1px solid var(--color-border)',
-        }}
-      >
-        <img
-          src={logoPath}
-          alt={exp.organization}
-          className="w-full h-full object-cover rounded-lg group-hover:scale-110 transition-transform duration-500"
-        />
+    <div className="w-full relative z-10 select-none group font-mono mt-4">
+      {/* Seamless Single Top-Right File Folder Tab */}
+      <div className="flex items-center justify-end pr-6 relative z-20">
+        <div 
+          className="px-5 py-1.5 rounded-t-2xl text-[11px] font-mono font-bold flex items-center gap-2 shadow-md border-t border-x relative -mb-[1px]"
+          style={{
+            background: 'var(--color-surface)',
+            borderColor: 'var(--color-border)',
+            color: 'var(--color-accent)',
+          }}
+        >
+          <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+          <span>ROLE 0{index + 1} / 0{total}</span>
+        </div>
       </div>
 
-      {/* RIGHT SIDE: Experience Content Spec */}
-      <div className="space-y-2.5 flex-1 w-full">
-        <div className="flex flex-wrap items-center justify-between gap-2 pb-2" style={{ borderBottom: '1px solid var(--color-border)' }}>
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider" style={{ color: 'var(--color-accent)' }}>
-                {exp.category || exp.type}
-              </span>
-              <span 
-                className="text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold"
-                style={{
-                  background: 'var(--color-surface-2)',
-                  color: 'var(--color-accent)',
-                  border: '1px solid var(--color-border-accent)',
-                }}
-              >
-                Role 0{index + 1} / 0{total}
-              </span>
-            </div>
-            <h3 className="text-base sm:text-lg font-bold transition-colors leading-snug font-sans group-hover:text-accent" style={{ color: 'var(--color-text)' }}>
-              {exp.role}
-            </h3>
-            <p className="text-xs sm:text-sm font-semibold font-sans pt-0.5" style={{ color: 'var(--color-text-muted)' }}>{exp.organization}</p>
-          </div>
+      {/* Main Folder Card Container */}
+      <div 
+        className="w-full rounded-2xl sm:rounded-3xl rounded-tr-none transition-all duration-300 relative z-10 p-5 sm:p-6 shadow-xl hover:shadow-2xl overflow-hidden flex flex-col sm:flex-row gap-5 items-start sm:items-center"
+        style={{
+          border: '1px solid var(--color-border)',
+          background: 'var(--color-surface)',
+          transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-border-accent)'; }}
+        onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; }}
+      >
+        {/* Top Laser Sweep Highlight */}
+        <div 
+          className="absolute inset-x-0 top-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-30" 
+          style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }}
+        />
 
-          <span 
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold shadow-sm"
-            style={{
-              background: 'var(--color-surface-2)',
-              border: '1px solid var(--color-border-accent)',
-              color: 'var(--color-accent)',
-            }}
-          >
-            <Calendar className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
-            <span>{exp.period}</span>
-          </span>
+        {/* LEFT SIDE: Brand Logo / Company Avatar Box */}
+        <div 
+          className="relative w-16 h-16 sm:w-22 sm:h-22 rounded-xl overflow-hidden flex-shrink-0 shadow-md flex items-center justify-center p-2"
+          style={{
+            background: 'var(--color-surface-3)',
+            border: '1px solid var(--color-border)',
+          }}
+        >
+          <img
+            src={logoPath}
+            alt={exp.organization}
+            className="w-full h-full object-cover rounded-lg group-hover:scale-110 transition-transform duration-500"
+          />
         </div>
 
-        {/* Achievements Bullet List */}
-        <div className="space-y-1.5 pt-1">
-          {exp.bullets.map((bullet, i) => (
-            <div 
-              key={i} 
-              className="flex items-start gap-2.5 text-xs sm:text-sm leading-relaxed font-sans"
-              style={{ color: 'var(--color-text-muted)' }}
-            >
-              <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: 'var(--color-accent)' }} />
-              <span>{bullet}</span>
+        {/* RIGHT SIDE: Experience Content Spec */}
+        <div className="space-y-2.5 flex-1 w-full">
+          <div className="flex flex-wrap items-center justify-between gap-2 pb-2" style={{ borderBottom: '1px solid var(--color-border)' }}>
+            <div>
+              <h3 className="text-base sm:text-lg font-bold transition-colors leading-snug font-sans group-hover:text-accent" style={{ color: 'var(--color-text)' }}>
+                {exp.role}
+              </h3>
+              <p className="text-xs sm:text-sm font-semibold font-sans pt-0.5" style={{ color: 'var(--color-text-muted)' }}>{exp.organization}</p>
             </div>
-          ))}
+
+            <span 
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold shadow-sm"
+              style={{
+                background: 'var(--color-surface-2)',
+                border: '1px solid var(--color-border-accent)',
+                color: 'var(--color-accent)',
+              }}
+            >
+              <Calendar className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
+              <span>{exp.period}</span>
+            </span>
+          </div>
+
+          {/* Achievements Bullet List */}
+          <div className="space-y-1.5 pt-1">
+            {exp.bullets.map((bullet, i) => (
+              <div 
+                key={i} 
+                className="flex items-start gap-2.5 text-xs sm:text-sm leading-relaxed font-sans"
+                style={{ color: 'var(--color-text-muted)' }}
+              >
+                <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: 'var(--color-accent)' }} />
+                <span>{bullet}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
