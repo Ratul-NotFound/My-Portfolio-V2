@@ -82,11 +82,10 @@ const ScrollStack = ({
     const stackPositionPx = parsePercentage(stackPosition, containerHeight);
     const scaleEndPositionPx = parsePercentage(scaleEndPosition, containerHeight);
 
-    const endElement = useWindowScroll
-      ? document.querySelector('.scroll-stack-end')
-      : scrollerRef.current?.querySelector('.scroll-stack-end');
-
-    const endElementTop = endElement ? getElementOffset(endElement) : 0;
+    const scrollerScrollHeight = useWindowScroll
+      ? document.documentElement.scrollHeight
+      : (scrollerRef.current?.scrollHeight || 0);
+    const maxScroll = Math.max(0, scrollerScrollHeight - containerHeight);
 
     cardsRef.current.forEach((card, i) => {
       if (!card) return;
@@ -95,7 +94,7 @@ const ScrollStack = ({
       const triggerStart = cardTop - stackPositionPx - itemStackDistance * i;
       const triggerEnd = cardTop - scaleEndPositionPx;
       const pinStart = cardTop - stackPositionPx - itemStackDistance * i;
-      const pinEnd = endElementTop - containerHeight / 2;
+      const pinEnd = Math.max(pinStart + 50, maxScroll);
 
       const scaleProgress = calculateProgress(scrollTop, triggerStart, triggerEnd);
       const targetScale = baseScale + i * itemScale;
@@ -154,7 +153,7 @@ const ScrollStack = ({
       }
 
       if (i === cardsRef.current.length - 1) {
-        const isInView = scrollTop >= pinStart && scrollTop <= pinEnd;
+        const isInView = scrollTop >= pinStart;
         if (isInView && !stackCompletedRef.current) {
           stackCompletedRef.current = true;
           onStackComplete?.();
@@ -270,6 +269,10 @@ const ScrollStack = ({
       card.style.webkitPerspective = '1000px';
     });
 
+    if (scroller && !useWindowScroll) {
+      scroller.scrollTop = 0;
+    }
+
     setupLenis();
 
     updateCardTransforms();
@@ -287,6 +290,7 @@ const ScrollStack = ({
       isUpdatingRef.current = false;
     };
   }, [
+    children,
     itemDistance,
     itemScale,
     itemStackDistance,

@@ -20,7 +20,7 @@ function StackableExperienceCard({ exp, index, total }) {
 
   return (
     <div 
-      className="w-full rounded-2xl overflow-hidden transition-all relative z-10 select-none p-4 sm:p-4.5 flex flex-col sm:flex-row gap-4 items-start sm:items-center group shadow-card"
+      className="w-full rounded-2xl overflow-hidden transition-all relative z-10 select-none p-5 sm:p-6 flex flex-col sm:flex-row gap-5 items-start sm:items-center group shadow-card"
       style={{
         border: '1px solid var(--color-border)',
         background: 'var(--color-surface)',
@@ -37,7 +37,7 @@ function StackableExperienceCard({ exp, index, total }) {
 
       {/* LEFT SIDE: Brand Logo / Company Avatar Box */}
       <div 
-        className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden flex-shrink-0 shadow-md flex items-center justify-center p-1.5"
+        className="relative w-16 h-16 sm:w-22 sm:h-22 rounded-xl overflow-hidden flex-shrink-0 shadow-md flex items-center justify-center p-2"
         style={{
           background: 'var(--color-surface-3)',
           border: '1px solid var(--color-border)',
@@ -51,15 +51,15 @@ function StackableExperienceCard({ exp, index, total }) {
       </div>
 
       {/* RIGHT SIDE: Experience Content Spec */}
-      <div className="space-y-1.5 flex-1 w-full">
-        <div className="flex flex-wrap items-center justify-between gap-2 pb-1.5" style={{ borderBottom: '1px solid var(--color-border)' }}>
+      <div className="space-y-2.5 flex-1 w-full">
+        <div className="flex flex-wrap items-center justify-between gap-2 pb-2" style={{ borderBottom: '1px solid var(--color-border)' }}>
           <div>
-            <div className="flex items-center gap-2 mb-0.5">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider" style={{ color: 'var(--color-accent)' }}>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider" style={{ color: 'var(--color-accent)' }}>
                 {exp.category || exp.type}
               </span>
               <span 
-                className="text-[9px] font-mono px-2 py-0.2 rounded-full font-bold"
+                className="text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold"
                 style={{
                   background: 'var(--color-surface-2)',
                   color: 'var(--color-accent)',
@@ -69,14 +69,14 @@ function StackableExperienceCard({ exp, index, total }) {
                 Role 0{index + 1} / 0{total}
               </span>
             </div>
-            <h3 className="text-base font-bold transition-colors leading-snug font-sans group-hover:text-accent" style={{ color: 'var(--color-text)' }}>
+            <h3 className="text-base sm:text-lg font-bold transition-colors leading-snug font-sans group-hover:text-accent" style={{ color: 'var(--color-text)' }}>
               {exp.role}
             </h3>
-            <p className="text-xs font-semibold font-sans" style={{ color: 'var(--color-text-muted)' }}>{exp.organization}</p>
+            <p className="text-xs sm:text-sm font-semibold font-sans pt-0.5" style={{ color: 'var(--color-text-muted)' }}>{exp.organization}</p>
           </div>
 
           <span 
-            className="flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-mono font-bold shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold shadow-sm"
             style={{
               background: 'var(--color-surface-2)',
               border: '1px solid var(--color-border-accent)',
@@ -89,14 +89,14 @@ function StackableExperienceCard({ exp, index, total }) {
         </div>
 
         {/* Achievements Bullet List */}
-        <div className="space-y-1 pt-0.5">
+        <div className="space-y-1.5 pt-1">
           {exp.bullets.map((bullet, i) => (
             <div 
               key={i} 
-              className="flex items-start gap-2 text-xs leading-relaxed font-sans"
+              className="flex items-start gap-2.5 text-xs sm:text-sm leading-relaxed font-sans"
               style={{ color: 'var(--color-text-muted)' }}
             >
-              <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style={{ color: 'var(--color-accent)' }} />
+              <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: 'var(--color-accent)' }} />
               <span>{bullet}</span>
             </div>
           ))}
@@ -181,15 +181,15 @@ export default function Experience({ experiences = [] }) {
           </div>
         </div>
 
-        {/* ULTRA-COMPACT TIGHT SCROLLSTACK CONTAINER */}
-        <div className="w-full h-[400px] relative">
+        {/* ELEGANT 1.5 CARDS VISIBLE SCROLLSTACK CONTAINER */}
+        <div className="w-full h-[330px] sm:h-[360px] relative">
           <ScrollStack
-            itemDistance={12}
-            itemScale={0.015}
-            itemStackDistance={18}
-            stackPosition="2%"
-            scaleEndPosition="1%"
-            baseScale={0.96}
+            itemDistance={24}
+            itemScale={0.02}
+            itemStackDistance={22}
+            stackPosition="3%"
+            scaleEndPosition="2%"
+            baseScale={0.95}
             blurAmount={0}
             useWindowScroll={false}
             className="w-full h-full pr-2 custom-scrollbar"
