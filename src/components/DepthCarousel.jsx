@@ -47,9 +47,45 @@ const DepthCarousel = ({
   const cfgRef = useRef({});
   const onChangeRef = useRef(onChange);
 
-  const wheelTimerRef = useRef(null);
   const touchStartRef = useRef(null);
   const [active, setActive] = useState(0);
+
+  // DYNAMIC RESPONSIVE CARD DIMENSIONS
+  const [currentWidth, setCurrentWidth] = useState(cardWidth);
+  const [currentHeight, setCurrentHeight] = useState(cardHeight);
+
+  useEffect(() => {
+    const handleResponsiveResize = () => {
+      if (typeof window === 'undefined') return;
+      const screenW = window.innerWidth;
+
+      if (screenW < 480) {
+        // Extra Small Phones (320px - 480px)
+        const targetW = Math.min(screenW - 32, cardWidth);
+        const targetH = Math.min(420, cardHeight);
+        setCurrentWidth(targetW);
+        setCurrentHeight(targetH);
+      } else if (screenW < 768) {
+        // Mobile / Small Tablets (480px - 768px)
+        const targetW = Math.min(screenW - 48, cardWidth);
+        setCurrentWidth(targetW);
+        setCurrentHeight(cardHeight);
+      } else if (screenW < 1024) {
+        // Tablets (768px - 1024px)
+        const targetW = Math.min(screenW - 64, cardWidth);
+        setCurrentWidth(targetW);
+        setCurrentHeight(cardHeight);
+      } else {
+        // Desktop (> 1024px)
+        setCurrentWidth(cardWidth);
+        setCurrentHeight(cardHeight);
+      }
+    };
+
+    handleResponsiveResize();
+    window.addEventListener('resize', handleResponsiveResize);
+    return () => window.removeEventListener('resize', handleResponsiveResize);
+  }, [cardWidth, cardHeight]);
 
   onChangeRef.current = onChange;
   cfgRef.current = {
@@ -63,7 +99,7 @@ const DepthCarousel = ({
     duration,
     ease,
     loop,
-    cardWidth
+    cardWidth: currentWidth
   };
 
   const layout = useCallback(pos => {
@@ -98,23 +134,21 @@ const DepthCarousel = ({
       const zi = Math.round(2000 - d * 20);
 
       el.style.transform = `translate3d(-50%, -50%, 0) scale(${sc}) translateX(${tx.toFixed(1)}px) translateZ(${tz.toFixed(1)}px) rotateY(${ry.toFixed(2)}deg)`;
-      el.style.opacity = opacity.toFixed(2);
-      el.style.filter = brightness < 0.98 ? `brightness(${brightness.toFixed(2)})` : 'none';
-      el.style.zIndex = String(zi);
-      el.style.pointerEvents = shown && opacity > 0.05 ? 'auto' : 'none';
+      el.style.opacity = opacity.toFixed(3);
+      el.style.zIndex = `${zi}`;
+      el.style.pointerEvents = Math.abs(d) < 0.5 ? 'auto' : 'none';
 
       const ov = overlayRefs.current[i];
-      if (ov) ov.style.opacity = clamp(back * cfg.falloff * 1.1, 0, 0.75).toFixed(2);
+      if (ov) {
+        ov.style.opacity = `${(1 - brightness).toFixed(2)}`;
+      }
     }
   }, []);
 
-  const notify = useCallback(
-    idx => {
-      setActive(idx);
-      onChangeRef.current?.(idx, data[idx]);
-    },
-    [data]
-  );
+  const notify = useCallback(idx => {
+    setActive(idx);
+    onChangeRef.current?.(idx);
+  }, []);
 
   const tweenTo = useCallback(
     (target, animate = true) => {
@@ -160,83 +194,28 @@ const DepthCarousel = ({
     [tweenTo, notify]
   );
 
-  const navigateBy = useCallback(step => setFocus(focusRef.current + step, true), [setFocus]);
+  const navigateBy = useCallback(
+    step => {
+      setFocus(focusRef.current + step, true);
+    },
+    [setFocus]
+  );
 
-  // WHEEL SCROLL CAROUSEL CHANGING HANDLER (Prevents page scroll-down during wheeling over carousel)
-  useEffect(() => {
-    const el = rootRef.current;
-    if (!el) return;
-
-    let isWheeling = false;
-
-    const onWheel = e => {
-      const cfg = cfgRef.current;
-      if (cfg.count < 2) return;
-
-      const rawDelta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      if (Math.abs(rawDelta) < 10) return;
-
-      // Intercept wheel scroll so webpage does not scroll down while rotating cards
-      if (e.cancelable) {
-        e.preventDefault();
-      }
-
-      if (!isWheeling) {
-        isWheeling = true;
-        if (rawDelta > 0) {
-          navigateBy(1); // Scroll Down / Right -> Next Card
-        } else {
-          navigateBy(-1); // Scroll Up / Left -> Prev Card
-        }
-
-        if (wheelTimerRef.current) clearTimeout(wheelTimerRef.current);
-        wheelTimerRef.current = setTimeout(() => {
-          isWheeling = false;
-        }, 300);
-      }
-    };
-
-    el.addEventListener('wheel', onWheel, { passive: false });
-    return () => {
-      el.removeEventListener('wheel', onWheel);
-      if (wheelTimerRef.current) clearTimeout(wheelTimerRef.current);
-    };
-  }, [navigateBy]);
-
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-    const ro = new ResizeObserver(entries => {
-      const w = entries[0].contentRect.width;
-      const cfg = cfgRef.current;
-      const needed = cfg.cardWidth + Math.abs(cfg.spread) * 2 + 80;
-      scaleRef.current = clamp(w / needed, 0.45, 1);
-      layout(posRef.current);
-    });
-    ro.observe(root);
-    return () => ro.disconnect();
-  }, [layout]);
-
-  // TOUCH & POINTER SWIPE HANDLERS
-  const handleTouchStart = (e) => {
-    if (e.target.closest('button') || e.target.closest('a')) return;
-    const touch = e.touches ? e.touches[0] : e;
-    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+  const handleTouchStart = e => {
+    const t = e.touches ? e.touches[0] : e;
+    touchStartRef.current = { x: t.clientX, y: t.clientY, time: Date.now() };
   };
 
-  const handleTouchEnd = (e) => {
+  const handleTouchEnd = e => {
     if (!touchStartRef.current) return;
-    const touch = e.changedTouches ? e.changedTouches[0] : e;
-    const dx = touch.clientX - touchStartRef.current.x;
-    const dy = touch.clientY - touchStartRef.current.y;
+    const t = e.changedTouches ? e.changedTouches[0] : e;
+    const dx = t.clientX - touchStartRef.current.x;
+    const dt = Date.now() - touchStartRef.current.time;
     touchStartRef.current = null;
 
-    if (Math.abs(dx) > 25 && Math.abs(dx) > Math.abs(dy)) {
-      if (dx < 0) {
-        navigateBy(1); // Swipe Left -> Next
-      } else {
-        navigateBy(-1); // Swipe Right -> Prev
-      }
+    if (Math.abs(dx) > 30 && dt < 400) {
+      if (dx < 0) navigateBy(1);
+      else navigateBy(-1);
     }
   };
 
@@ -255,7 +234,7 @@ const DepthCarousel = ({
 
   useEffect(() => {
     layout(posRef.current);
-  }, [layout, depth, spread, tilt, tiltDirection, visibleCards, falloff, cardWidth, cardHeight, radius, count]);
+  }, [layout, depth, spread, tilt, tiltDirection, visibleCards, falloff, currentWidth, currentHeight, radius, count]);
 
   useEffect(
     () => () => {
@@ -284,7 +263,7 @@ const DepthCarousel = ({
             key={i}
             className="depth-carousel__card"
             ref={el => (cardRefs.current[i] = el)}
-            style={{ width: cardWidth, height: cardHeight, borderRadius: radius }}
+            style={{ width: currentWidth, height: currentHeight, borderRadius: radius }}
             onClick={() => {
               setFocus(i, true);
             }}
@@ -310,59 +289,31 @@ const DepthCarousel = ({
           <button
             type="button"
             className="depth-carousel__arrow depth-carousel__arrow--prev"
-            aria-label="Previous slide"
-            onClick={(e) => {
-              e.stopPropagation();
-              navigateBy(-1);
-            }}
+            onClick={() => navigateBy(-1)}
+            aria-label="Previous card"
           >
-            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-              <path
-                d="M15 5l-7 7 7 7"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            &#8249;
           </button>
           <button
             type="button"
             className="depth-carousel__arrow depth-carousel__arrow--next"
-            aria-label="Next slide"
-            onClick={(e) => {
-              e.stopPropagation();
-              navigateBy(1);
-            }}
+            onClick={() => navigateBy(1)}
+            aria-label="Next card"
           >
-            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-              <path
-                d="M9 5l7 7-7 7"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            &#8250;
           </button>
         </>
       )}
 
       {showIndicators && count > 1 && (
-        <div className="depth-carousel__dots" role="tablist">
+        <div className="depth-carousel__dots">
           {data.map((_, i) => (
             <button
               key={i}
               type="button"
-              role="tab"
-              aria-selected={active === i}
-              className={`depth-carousel__dot${active === i ? ' is-active' : ''}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                setFocus(i, true);
-              }}
+              className={`depth-carousel__dot ${i === active ? 'is-active' : ''}`}
+              onClick={() => setFocus(i, true)}
+              aria-label={`Go to slide ${i + 1}`}
             />
           ))}
         </div>

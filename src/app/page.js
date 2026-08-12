@@ -12,6 +12,7 @@ import Experience from '@/components/Experience';
 import Activities from '@/components/Activities';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
+import AIAssistant from '@/components/ai/AIAssistant';
 
 export const revalidate = 60; // Revalidate dynamic data every 60 seconds
 
@@ -19,9 +20,12 @@ export default async function Home() {
   const data = await getPortfolioData();
 
   return (
-    <main className="relative min-h-screen">
+    <main className="relative min-h-screen w-full max-w-full overflow-x-hidden">
       {/* Intro Tile Curtain Loader */}
       <IntroLoader />
+
+      {/* Interactive Portfolio AI Assistant Floating Widget */}
+      <AIAssistant data={data} />
 
       {/* Scroll Progress Bar & Floating Side Indicator */}
       <ScrollProgress />

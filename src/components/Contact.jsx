@@ -5,6 +5,7 @@ import { GithubIcon, LinkedinIcon } from './SocialIcons';
 import SectionWrapper from './SectionWrapper';
 import SectionHeader from './SectionHeader';
 import Magnetic from './ux/Magnetic';
+import { submitContactMessage } from '@/lib/supabase';
 
 const card = {
   borderRadius: '1.5rem',
@@ -31,6 +32,7 @@ const inputStyle = {
 export default function Contact({ personInfo = {} }) {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const [copied, setCopied]       = useState(false);
 
   const email    = personInfo.email    || 'mhratul.dev@gmail.com';
@@ -44,8 +46,11 @@ export default function Contact({ personInfo = {} }) {
     setTimeout(() => setCopied(false), 2500);
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSending(true);
+    await submitContactMessage(formData);
+    setIsSending(false);
     setSubmitted(true);
     setTimeout(() => { setSubmitted(false); setFormData({ name:'', email:'', subject:'', message:'' }); }, 4000);
   };
