@@ -375,7 +375,12 @@ export default function Experience({ experiences = [] }) {
                     </span>
 
                     <div className="space-y-1.5">
-                      {activeExp.bullets?.map((bullet, i) => (
+                      {(Array.isArray(activeExp?.bullets) 
+                        ? activeExp.bullets 
+                        : typeof activeExp?.bullets === 'string' 
+                        ? activeExp.bullets.split('\n').filter(Boolean) 
+                        : []
+                      ).map((bullet, i) => (
                         <div 
                           key={i} 
                           className="flex items-start gap-2 p-2.5 rounded-xl transition-colors"

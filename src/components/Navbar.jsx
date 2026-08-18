@@ -14,10 +14,13 @@ const navItems = [
   { name: 'Contact',    href: '#contact',    icon: Mail      },
 ];
 
-export default function Navbar({ personInfo }) {
+export default function Navbar({ personInfo = {} }) {
   const [scrolled, setScrolled]           = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
+
+  const brandName = personInfo.name ? personInfo.name.split(' ').pop().toUpperCase() : 'RATUL';
+  const resumeLink = personInfo.resumeUrl || '/Mahmud_Hasan_Ratul_CV.pdf';
 
   useEffect(() => {
     const onScroll = () => {
@@ -56,10 +59,10 @@ export default function Navbar({ personInfo }) {
           </div>
           <div className="flex flex-col">
             <span className="font-mono text-sm font-bold tracking-tight" style={{ color: 'var(--color-text)' }}>
-              RATUL
+              {brandName}
             </span>
             <span className="hidden sm:inline-block text-[10px] font-mono uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>
-              Full-Stack &amp; AI
+              {personInfo.title || 'Full-Stack & AI'}
             </span>
           </div>
         </a>
@@ -101,7 +104,9 @@ export default function Navbar({ personInfo }) {
 
           {/* CV Button - Visible on sm screens and up */}
           <a
-            href="/Mahmud_Hasan_Ratul_CV.tex"
+            href={resumeLink}
+            target="_blank"
+            rel="noopener noreferrer"
             download
             className="hidden sm:flex glass-button px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold items-center gap-2 transition-all hover:scale-105"
           >
@@ -165,7 +170,9 @@ export default function Navbar({ personInfo }) {
             {/* CV Download button inside mobile drawer for quick access */}
             <div className="pt-3 mt-2 border-t border-theme">
               <a
-                href="/Mahmud_Hasan_Ratul_CV.tex"
+                href={resumeLink}
+                target="_blank"
+                rel="noopener noreferrer"
                 download
                 onClick={() => setMobileMenuOpen(false)}
                 className="w-full py-2.5 rounded-xl glass-button text-xs font-semibold flex items-center justify-center gap-2"

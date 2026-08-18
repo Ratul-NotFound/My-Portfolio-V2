@@ -1,7 +1,7 @@
 import * as fallbackData from '../data/portfolio';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
 export const isSupabaseConfigured = Boolean(
   supabaseUrl && 
@@ -144,14 +144,36 @@ export async function getPortfolioData() {
       supabase.from('education').select('*')
     ]);
 
+    const normalizedExperiences = (experiencesData && experiencesData.length > 0)
+      ? experiencesData.map(exp => ({
+          ...exp,
+          bullets: Array.isArray(exp.bullets)
+            ? exp.bullets
+            : typeof exp.bullets === 'string'
+            ? exp.bullets.split('\n').map(s => s.trim()).filter(Boolean)
+            : []
+        }))
+      : fallbackData.experiences;
+
+    const normalizedProjects = (projectsData && projectsData.length > 0)
+      ? projectsData.map(p => ({
+          ...p,
+          tech: Array.isArray(p.tech)
+            ? p.tech
+            : typeof p.tech === 'string'
+            ? p.tech.split(',').map(s => s.trim()).filter(Boolean)
+            : []
+        }))
+      : fallbackData.projects;
+
     return {
       personInfo: personInfoData || fallbackData.personInfo,
       stats: (statsData && statsData.length > 0) ? statsData : fallbackData.stats,
       techCategories: fallbackData.techCategories,
       techSkills: (skillsData && skillsData.length > 0) ? skillsData : fallbackData.techSkills,
-      projects: (projectsData && projectsData.length > 0) ? projectsData : fallbackData.projects,
+      projects: normalizedProjects,
       researchPapers: (researchData && researchData.length > 0) ? researchData : fallbackData.researchPapers,
-      experiences: (experiencesData && experiencesData.length > 0) ? experiencesData : fallbackData.experiences,
+      experiences: normalizedExperiences,
       activities: (activitiesData && activitiesData.length > 0) ? activitiesData : fallbackData.activities,
       education: (educationData && educationData.length > 0) ? educationData : fallbackData.education,
       isLiveSupabase: true

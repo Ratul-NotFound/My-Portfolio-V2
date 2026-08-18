@@ -67,7 +67,7 @@ export default function AIAssistant({ data = {} }) {
 
     // 3. Tech Stack Query
     if (q.includes('tech') || q.includes('skill') || q.includes('stack') || q.includes('language') || q.includes('next') || q.includes('react') || q.includes('c++')) {
-      const techSec = document.getElementById('techstack');
+      const techSec = document.getElementById('tech-stack');
       if (techSec) techSec.scrollIntoView({ behavior: 'smooth' });
 
       return {
@@ -82,14 +82,14 @@ export default function AIAssistant({ data = {} }) {
       if (contactSec) contactSec.scrollIntoView({ behavior: 'smooth' });
 
       return {
-        text: `You can reach Mahmud directly via:\n• **Email**: ${person.email || 'mhratul070@gmail.com'}\n• **Location**: ${person.location || 'Savar, Dhaka, Bangladesh'}\n• **GitHub**: ${person.github_url || 'https://github.com/Ratul-NotFound'}\n\nI have opened the **Contact** form section below!`,
+        text: `You can reach Mahmud directly via:\n• **Email**: ${person.email || 'mhratul.dev@gmail.com'}\n• **Location**: ${person.location || 'Savar, Dhaka, Bangladesh'}\n• **GitHub**: ${person.github || person.github_url || 'https://github.com/Ratul-NotFound'}\n\nI have opened the **Contact** form section below!`,
         action: 'contact'
       };
     }
 
     // 5. General Bio Query
     return {
-      text: `Mahmud Hasan Ratul is a **${person.role || 'Full-Stack & Edge AI Engineer'}** based in Bangladesh. He architects high-throughput web applications with Next.js & Node.js, and researches low-latency embedded AI hardware systems.`
+      text: `${person.name || 'Mahmud Hasan Ratul'} is a **${person.title || person.role || 'Full-Stack & Edge AI Engineer'}** based in ${person.location || 'Dhaka, Bangladesh'}. ${person.about || person.bio || 'He architects high-throughput web applications with Next.js & Node.js, and researches low-latency embedded AI hardware systems.'}`
     };
   };
 

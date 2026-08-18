@@ -119,6 +119,8 @@ export default function AdminPage() {
 
   const CAMPUS_CATEGORIES = [
     'University Events',
+    'National Events',
+    'International Events',
     'Volunteering & Community',
     'Workshops & Mentorship',
     'Clubs & Organizations'
@@ -283,15 +285,25 @@ export default function AdminPage() {
     loadData();
   };
 
-  // --- CAMPUS CRUD ---
+  // --- CAMPUS & LEADERSHIP CRUD ---
   const handleSaveActivity = async (e) => {
     e.preventDefault();
     if (!editingActivity) return;
     setSaving(true);
-    const res = await saveActivity(editingActivity);
+    const galleryArr = typeof editingActivity.gallery === 'string'
+      ? editingActivity.gallery.split('\n').map(s => s.trim()).filter(Boolean)
+      : (editingActivity.gallery || []);
+
+    const formatted = {
+      ...editingActivity,
+      gallery: galleryArr,
+      images: galleryArr.length > 0 ? galleryArr : (editingActivity.images || []),
+      img: editingActivity.img || (galleryArr.length > 0 ? galleryArr[0] : '/cpc1.jpg')
+    };
+    const res = await saveActivity(formatted);
     setSaving(false);
     if (res.error) showStatus(`Error: ${res.error}`);
-    else { showStatus('Campus activity saved!'); setEditingActivity(null); loadData(); }
+    else { showStatus('Campus & Leadership activity saved!'); setEditingActivity(null); loadData(); }
   };
 
   const handleDeleteActivity = async (id) => {
@@ -645,34 +657,92 @@ export default function AdminPage() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between pb-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
                     <div>
-                      <h2 className="text-base font-bold font-sans text-white">Campus & Leadership ({activities.length})</h2>
-                      <p className="text-xs text-zinc-400 font-mono">DIUCPC Vice President, ICPC Dhaka Regional Lead Volunteer</p>
+                      <h2 className="text-base font-bold font-sans text-white">Extracurricular & Leadership ({activities.length})</h2>
+                      <p className="text-xs text-zinc-400 font-mono">Multi-photo albums, event categories, roles, impact telemetry & stats</p>
                     </div>
 
                     <button
-                      onClick={() => setEditingActivity({ title: '', category: CAMPUS_CATEGORIES[0], role: 'Vice President & Lead Tech Director', year: '2023 - Present', img: '/cpc1.jpg', desc: 'Organized competitive programming bootcamps.' })}
+                      onClick={() => setEditingActivity({ 
+                        title: '', 
+                        category: CAMPUS_CATEGORIES[0], 
+                        role: 'Executive Member & Lead Organizer', 
+                        year: '2023 - Present', 
+                        impact: '500+ Donors Registered • 12 On-Campus Drives',
+                        stat: '500+ Donors',
+                        tag: 'Campus Leadership',
+                        img: '/cpc1.jpg', 
+                        gallery: '/cpc1.jpg\n/tech2.JPG',
+                        desc: 'Summary of event operations, leadership responsibilities, and achievements.' 
+                      })}
                       className="px-4 py-2 rounded-xl font-bold text-xs font-mono flex items-center gap-1.5 cursor-pointer shadow-md hover:opacity-90"
                       style={{ background: 'var(--color-accent)', color: '#000' }}
                     >
                       <Plus className="w-4 h-4" />
-                      <span>+ Add Activity</span>
+                      <span>+ Add Event / Activity</span>
                     </button>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {activities.map((act, idx) => (
-                      <div key={act.id || idx} className="p-4 rounded-xl border space-y-2" style={{ background: 'var(--color-surface-2)', borderColor: 'var(--color-border)' }}>
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] px-2 py-0.5 rounded-full font-mono text-accent font-bold" style={{ color: 'var(--color-accent)' }}>{act.category}</span>
-                          <div className="flex items-center gap-1">
-                            <button onClick={() => setEditingActivity(act)} className="p-1 rounded text-zinc-400 hover:text-white cursor-pointer"><Edit3 className="w-3.5 h-3.5" /></button>
-                            <button onClick={() => handleDeleteActivity(act.id)} className="p-1 rounded text-zinc-400 hover:text-red-400 cursor-pointer"><Trash2 className="w-3.5 h-3.5" /></button>
+                    {activities.map((act, idx) => {
+                      const photoCount = getGalleryArray(act.gallery || act.images).length || (act.img ? 1 : 0);
+
+                      return (
+                        <div key={act.id || idx} className="p-4 rounded-xl border space-y-3 flex flex-col justify-between" style={{ background: 'var(--color-surface-2)', borderColor: 'var(--color-border)' }}>
+                          <div className="space-y-2">
+                            {/* Card Image Thumbnail + Badges */}
+                            <div className="relative w-full h-32 rounded-lg overflow-hidden bg-black/40 border shadow-inner group" style={{ borderColor: 'var(--color-border)' }}>
+                              <img src={act.img || '/cpc1.jpg'} alt={act.title} className="w-full h-full object-cover" />
+                              <div className="absolute top-2 left-2 flex items-center gap-1">
+                                <span className="text-[10px] px-2 py-0.5 rounded-full font-mono font-bold uppercase shadow backdrop-blur-md" style={{ background: 'rgba(0,0,0,0.7)', color: 'var(--color-accent)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                                  {act.category}
+                                </span>
+                              </div>
+                              <div className="absolute bottom-2 right-2 flex items-center gap-1">
+                                <span className="text-[10px] px-2 py-0.5 rounded-full font-mono font-bold bg-black/80 text-white border border-white/10 shadow flex items-center gap-1">
+                                  <Images className="w-3 h-3 text-accent" style={{ color: 'var(--color-accent)' }} />
+                                  <span>{photoCount} {photoCount === 1 ? 'Photo' : 'Photos'}</span>
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className="flex items-start justify-between gap-2 pt-1">
+                              <div>
+                                <h3 className="text-sm font-bold text-white font-sans line-clamp-1">{act.title}</h3>
+                                <p className="text-xs font-semibold font-sans pt-0.5" style={{ color: 'var(--color-accent)' }}>{act.role}</p>
+                                <p className="text-[11px] text-zinc-400 font-mono">{act.year || '2023 - Present'}</p>
+                              </div>
+                            </div>
+
+                            {act.impact && (
+                              <div className="text-[11px] px-2.5 py-1 rounded-lg font-mono font-semibold truncate shadow-inner" style={{ background: 'rgba(56, 189, 248, 0.08)', color: 'var(--color-accent)', border: '1px solid rgba(56, 189, 248, 0.2)' }}>
+                                ⚡ {act.impact}
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="flex items-center justify-between pt-2 border-t" style={{ borderColor: 'var(--color-border)' }}>
+                            <span className="text-[10px] text-zinc-400 font-mono truncate max-w-[140px]">{act.tag || act.stat || ''}</span>
+                            <div className="flex items-center gap-2">
+                              <button 
+                                onClick={() => setEditingActivity({
+                                  ...act,
+                                  gallery: Array.isArray(act.gallery || act.images) 
+                                    ? (act.gallery || act.images).join('\n') 
+                                    : (act.gallery || act.images || act.img || '')
+                                })} 
+                                className="px-2.5 py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-1 border cursor-pointer" 
+                                style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)', color: 'var(--color-accent)' }}
+                              >
+                                <Edit3 className="w-3.5 h-3.5" /> Edit
+                              </button>
+                              <button onClick={() => handleDeleteActivity(act.id)} className="p-1 rounded-lg border text-zinc-400 hover:text-red-400 cursor-pointer" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
                           </div>
                         </div>
-                        <h3 className="text-sm font-bold text-white font-sans">{act.title}</h3>
-                        <p className="text-xs text-zinc-400 font-sans">{act.role} ({act.year})</p>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -1139,20 +1209,20 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* ================= CLEAN MODAL 3: CAMPUS ACTIVITY ================= */}
+      {/* ================= CLEAN MODAL 3: CAMPUS ACTIVITY WITH MULTI-IMAGE UPLOADING ================= */}
       {editingActivity && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in font-sans">
-          <div className="w-full max-w-xl rounded-2xl p-6 space-y-4 shadow-2xl relative border max-h-[90vh] overflow-y-auto" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+          <div className="w-full max-w-2xl rounded-2xl p-6 space-y-4 shadow-2xl relative border max-h-[90vh] overflow-y-auto custom-scrollbar" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
             <div className="flex items-center justify-between pb-3 border-b" style={{ borderColor: 'var(--color-border)' }}>
-              <h3 className="text-base font-bold text-white">{editingActivity.id ? '✏️ Edit Campus Activity' : '🏫 Add Campus Activity'}</h3>
+              <h3 className="text-base font-bold text-white">{editingActivity.id ? '✏️ Edit Event / Leadership Activity' : '🏫 Add Event / Leadership Activity'}</h3>
               <button onClick={() => setEditingActivity(null)} className="p-1 text-zinc-400 hover:text-white cursor-pointer"><X className="w-5 h-5" /></button>
             </div>
 
-            <form onSubmit={handleSaveActivity} className="space-y-3 text-xs font-sans">
+            <form onSubmit={handleSaveActivity} className="space-y-3.5 text-xs font-sans">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block mb-1 text-zinc-400">Activity Title</label>
-                  <input type="text" value={editingActivity.title || ''} onChange={e => setEditingActivity({ ...editingActivity, title: e.target.value })} placeholder="e.g. DIU Computer Programming Club" className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} required />
+                  <label className="block mb-1 text-zinc-400">Activity / Event Title</label>
+                  <input type="text" value={editingActivity.title || ''} onChange={e => setEditingActivity({ ...editingActivity, title: e.target.value })} placeholder="e.g. DIU Blood Donors Club (DIU BDC)" className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} required />
                 </div>
                 <div>
                   <label className="block mb-1 text-zinc-400">Category Dropdown</label>
@@ -1162,30 +1232,105 @@ export default function AdminPage() {
                 </div>
                 <div>
                   <label className="block mb-1 text-zinc-400">Role / Position</label>
-                  <input type="text" value={editingActivity.role || ''} onChange={e => setEditingActivity({ ...editingActivity, role: e.target.value })} placeholder="e.g. Vice President" className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} required />
+                  <input type="text" value={editingActivity.role || ''} onChange={e => setEditingActivity({ ...editingActivity, role: e.target.value })} placeholder="e.g. Executive Member & Lead Organizer" className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} required />
                 </div>
                 <div>
-                  <label className="block mb-1 text-zinc-400">Year Range</label>
-                  <input type="text" value={editingActivity.year || ''} onChange={e => setEditingActivity({ ...editingActivity, year: e.target.value })} placeholder="2023 - Present" className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                  <label className="block mb-1 text-zinc-400">Tenure / Year Range</label>
+                  <input type="text" value={editingActivity.year || ''} onChange={e => setEditingActivity({ ...editingActivity, year: e.target.value })} placeholder="2022 - Present / 2024" className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                </div>
+                <div>
+                  <label className="block mb-1 text-zinc-400">Key Impact Metric</label>
+                  <input type="text" value={editingActivity.impact || ''} onChange={e => setEditingActivity({ ...editingActivity, impact: e.target.value })} placeholder="500+ Donors Registered • 12 On-Campus Drives" className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                </div>
+                <div>
+                  <label className="block mb-1 text-zinc-400">Short Stat Badge / Tag</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <input type="text" value={editingActivity.stat || ''} onChange={e => setEditingActivity({ ...editingActivity, stat: e.target.value })} placeholder="500+ Donors" className="w-full px-3 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                    <input type="text" value={editingActivity.tag || ''} onChange={e => setEditingActivity({ ...editingActivity, tag: e.target.value })} placeholder="Campus Leadership" className="w-full px-3 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                  </div>
                 </div>
               </div>
 
               <div>
-                <label className="block mb-1 text-zinc-400">Photo / Badge Image (URL or Upload File)</label>
+                <label className="block mb-1 text-zinc-400">Primary Cover Image (Single Upload or URL)</label>
                 <div className="flex items-center gap-2">
                   <input type="text" value={editingActivity.img || ''} onChange={e => setEditingActivity({ ...editingActivity, img: e.target.value })} placeholder="/cpc1.jpg" className="flex-1 px-3.5 py-2 rounded-xl outline-none text-white font-mono text-[11px]" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
-                  <label className="px-3 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer border" style={{ background: 'var(--color-surface-2)', borderColor: 'var(--color-border)', color: 'var(--color-accent)' }}>
+                  <label className="px-3.5 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer border" style={{ background: 'var(--color-surface-2)', borderColor: 'var(--color-border)', color: 'var(--color-accent)' }}>
                     <Upload className="w-3.5 h-3.5" />
-                    <span>Upload</span>
+                    <span>Upload Cover</span>
                     <input type="file" accept="image/*" className="hidden" onChange={e => handleSingleFileUpload(e, url => setEditingActivity({ ...editingActivity, img: url }))} />
                   </label>
                 </div>
               </div>
 
-              <div>
-                <label className="block mb-1 text-zinc-400">Description Summary</label>
-                <textarea rows={3} value={editingActivity.desc || ''} onChange={e => setEditingActivity({ ...editingActivity, desc: e.target.value })} placeholder="Summary of responsibilities..." className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} required />
+              {/* MULTI-IMAGE EVENT PHOTO ALBUM MANAGER */}
+              <div className="p-3.5 rounded-xl border space-y-3" style={{ background: 'var(--color-surface-2)', borderColor: 'var(--color-border)' }}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Images className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
+                    <label className="font-bold text-white text-xs">Event Photo Album ({getGalleryArray(editingActivity.gallery || editingActivity.images).length} Photos)</label>
+                  </div>
+
+                  <label className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer border shadow-sm" style={{ background: 'var(--color-accent)', color: '#000', borderColor: 'var(--color-accent)' }}>
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>+ Upload Multiple Photos</span>
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      multiple 
+                      className="hidden" 
+                      onChange={e => handleMultipleFilesUpload(e, urls => {
+                        const current = getGalleryArray(editingActivity.gallery || editingActivity.images);
+                        const updated = [...current, ...urls];
+                        setEditingActivity({ 
+                          ...editingActivity, 
+                          gallery: updated.join('\n'),
+                          images: updated,
+                          img: editingActivity.img || updated[0] || ''
+                        });
+                      })} 
+                    />
+                  </label>
+                </div>
+
+                {/* Thumbnails Grid Preview */}
+                {getGalleryArray(editingActivity.gallery || editingActivity.images).length > 0 && (
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
+                    {getGalleryArray(editingActivity.gallery || editingActivity.images).map((url, i) => (
+                      <div key={i} className="relative group rounded-xl overflow-hidden border aspect-video bg-black/60 shadow-inner" style={{ borderColor: 'var(--color-border)' }}>
+                        <img src={url} alt={`Event photo ${i + 1}`} className="w-full h-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const current = getGalleryArray(editingActivity.gallery || editingActivity.images);
+                            const updated = current.filter((_, idx) => idx !== i);
+                            setEditingActivity({ 
+                              ...editingActivity, 
+                              gallery: updated.join('\n'),
+                              images: updated 
+                            });
+                          }}
+                          className="absolute top-1 right-1 p-1 rounded-lg bg-red-600/90 hover:bg-red-600 text-white shadow-md cursor-pointer transition-transform group-hover:scale-105"
+                          title="Remove picture"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div>
+                  <label className="block mb-1 text-[11px] text-zinc-400 font-mono">Event Image URLs (One URL per line)</label>
+                  <textarea rows={2} value={typeof editingActivity.gallery === 'string' ? editingActivity.gallery : (getGalleryArray(editingActivity.gallery || editingActivity.images).join('\n'))} onChange={e => setEditingActivity({ ...editingActivity, gallery: e.target.value })} placeholder="/cpc1.jpg&#10;/tech2.JPG&#10;/icpc1.jpg" className="w-full px-3 py-2 rounded-xl outline-none text-white font-mono text-[11px]" style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }} />
+                </div>
               </div>
+
+              <div>
+                <label className="block mb-1 text-zinc-400">Detailed Description & Responsibilities</label>
+                <textarea rows={3} value={editingActivity.desc || editingActivity.description || ''} onChange={e => setEditingActivity({ ...editingActivity, desc: e.target.value, description: e.target.value })} placeholder="Summary of responsibilities, achievements, and impact..." className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} required />
+              </div>
+
               <div className="flex items-center justify-end gap-2 pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
                 <button type="button" onClick={() => setEditingActivity(null)} className="px-4 py-2 rounded-xl font-bold cursor-pointer text-zinc-400">Cancel</button>
                 <button type="submit" className="px-5 py-2 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer shadow-md font-mono" style={{ background: 'var(--color-accent)', color: '#000' }}><Check className="w-4 h-4" /><span>Save Activity</span></button>

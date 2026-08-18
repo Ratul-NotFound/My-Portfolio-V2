@@ -31,6 +31,10 @@ export default function Footer({ personInfo = {} }) {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const name = personInfo.name || 'Mahmud Hasan Ratul';
+  const title = personInfo.title || personInfo.role || 'Full-Stack & Edge AI Architect';
+  const tagline = personInfo.tagline || 'Architecting high-throughput full-stack web platforms, low-latency Edge AI hardware systems, and enterprise RAG search engines.';
+
   return (
     <footer
       className="pt-12 pb-28 md:pb-12 relative z-10 text-xs font-mono"
@@ -49,15 +53,15 @@ export default function Footer({ personInfo = {} }) {
               </div>
               <div>
                 <span className="text-base font-bold font-sans block" style={{ color: 'var(--color-text)' }}>
-                  {personInfo.name || 'Mahmud Hasan Ratul'}
+                  {name}
                 </span>
                 <span className="text-xs font-semibold" style={{ color: 'var(--color-accent)' }}>
-                  Full-Stack &amp; Edge AI Architect
+                  {title}
                 </span>
               </div>
             </div>
             <p className="text-xs leading-relaxed font-sans max-w-sm" style={{ color: 'var(--color-text-muted)' }}>
-              Architecting high-throughput full-stack web platforms, low-latency Edge AI hardware systems, and enterprise RAG search engines.
+              {tagline}
             </p>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold"
               style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border-accent)', color: 'var(--color-accent)' }}>
@@ -100,30 +104,34 @@ export default function Footer({ personInfo = {} }) {
             <Magnetic>
               <button
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="px-4 py-2 rounded-2xl font-mono font-bold text-xs flex items-center gap-2 cursor-pointer transition-opacity"
-                style={{ background: 'var(--color-accent)', color: '#000' }}
-                onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
-                onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all hover:scale-105"
+                style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)', color: 'var(--color-text)', cursor: 'pointer' }}
+                aria-label="Back to top"
               >
-                Back To Top <ArrowUp className="w-4 h-4" />
+                Back to Top
+                <ArrowUp className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
               </button>
             </Magnetic>
           </div>
         </div>
 
-        {/* BOTTOM: copyright */}
-        <div className="flex flex-wrap items-center justify-between gap-4" style={{ color: 'var(--color-text-muted)' }}>
-          <p>© {new Date().getFullYear()} {personInfo.name || 'Mahmud Hasan Ratul'}. All rights reserved.</p>
-          <div className="flex items-center gap-2">
-            <span>Engineered with</span>
-            {['Next.js 14', 'Three.js', 'Tailwind CSS', 'Supabase'].map((tech, i, arr) => (
-              <span key={tech}>
-                <span style={{ color: i === arr.length - 1 ? 'var(--color-accent)' : 'var(--color-text)', fontWeight: 700 }}>{tech}</span>
-                {i < arr.length - 1 && <span className="mx-1">•</span>}
-              </span>
-            ))}
+        {/* BOTTOM: Credits */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
+          <div>
+            &copy; {new Date().getFullYear()} {name}. All rights reserved.
+          </div>
+          <div className="flex items-center gap-4">
+            <a href="https://github.com/Ratul-NotFound" target="_blank" rel="noopener noreferrer"
+              className="hover:text-accent transition-colors flex items-center gap-1.5" style={{ color: 'var(--color-text-muted)' }}>
+              <GithubIcon className="w-3.5 h-3.5 fill-current" /> GitHub
+            </a>
+            <a href="https://linkedin.com/in/ratul-notfound" target="_blank" rel="noopener noreferrer"
+              className="hover:text-accent transition-colors flex items-center gap-1.5" style={{ color: 'var(--color-text-muted)' }}>
+              <LinkedinIcon className="w-3.5 h-3.5 fill-current" /> LinkedIn
+            </a>
           </div>
         </div>
+
       </div>
     </footer>
   );

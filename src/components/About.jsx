@@ -16,12 +16,15 @@ const card = {
 };
 
 export default function About({ personInfo = {}, stats, education }) {
-  const edu = (education?.length > 0) ? education[0] : {
+  const edu = (education && education.length > 0) ? education[0] : {
     degree: 'B.Sc. in Computer Science & Engineering',
     institution: 'Daffodil International University (DIU)',
     period: '2021 - Present',
     cgpa: '3.85 / 4.00',
   };
+
+  const bioText = personInfo.about || personInfo.bio || 
+    "I specialize in architecting high-throughput full-stack web applications and low-latency Edge AI hardware systems. My work spans building modern React/Next.js production platforms, engineering RAG document vector search engines, and deploying quantized neural networks onto microcontrollers.";
 
   return (
     <SectionWrapper id="about" variant="flip-left">
@@ -43,14 +46,14 @@ export default function About({ personInfo = {}, stats, education }) {
             <div className="absolute inset-x-0 top-0 h-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }} />
 
-            <PhotoCircle src="/images/profile/Profile Pic Without BG.png" alt="Mahmud Hasan Ratul" />
+            <PhotoCircle src={personInfo.avatar || "/images/profile/Profile Pic Without BG.png"} alt={personInfo.name || "Mahmud Hasan Ratul"} />
 
             <div className="space-y-1">
               <h3 className="text-xl font-bold font-sans" style={{ color: 'var(--color-text)' }}>
                 {personInfo.name || 'Mahmud Hasan Ratul'}
               </h3>
               <p className="text-xs font-mono font-bold" style={{ color: 'var(--color-accent)' }}>
-                Full-Stack &amp; Edge AI Architect
+                {personInfo.title || personInfo.role || 'Full-Stack & Edge AI Architect'}
               </p>
             </div>
 
@@ -58,9 +61,11 @@ export default function About({ personInfo = {}, stats, education }) {
               style={{ borderTop: '1px solid var(--color-border)', color: 'var(--color-text-muted)' }}>
               <span className="flex items-center gap-1.5" style={{ color: 'var(--color-text)' }}>
                 <MapPin className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
-                Savar, Dhaka, BD
+                {personInfo.location || 'Savar, Dhaka, BD'}
               </span>
-              <span className="font-bold" style={{ color: 'var(--color-accent)' }}>VP @ DIUCPC</span>
+              <span className="font-bold" style={{ color: 'var(--color-accent)' }}>
+                {personInfo.tagline ? 'Open for Roles' : 'VP @ DIUCPC'}
+              </span>
             </div>
           </motion.div>
 
@@ -83,9 +88,7 @@ export default function About({ personInfo = {}, stats, education }) {
                 <h3 className="text-lg font-bold font-sans" style={{ color: 'var(--color-text)' }}>Engineering Journey</h3>
               </div>
               <p className="text-sm leading-relaxed font-sans" style={{ color: 'var(--color-text-muted)' }}>
-                I specialize in architecting high-throughput full-stack web applications and low-latency Edge AI hardware
-                systems. My work spans building modern React/Next.js production platforms, engineering RAG document vector
-                search engines, and deploying quantized neural networks onto microcontrollers.
+                {bioText}
               </p>
               <div className="flex flex-wrap gap-2 pt-2">
                 {['Next.js 14 / React', 'Edge AI & TinyML', 'RAG Vector Search'].map(tag => (

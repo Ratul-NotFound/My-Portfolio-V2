@@ -241,7 +241,11 @@ export const activities = [
     role: "Executive Member & Lead Organizer",
     year: "2022 - Present",
     desc: "Organized emergency blood donation drives and digital donor management systems across DIU campus.",
-    img: "/cpc1.jpg"
+    img: "/cpc1.jpg",
+    gallery: ["/cpc1.jpg", "/tech2.JPG"],
+    impact: "500+ Donors Registered • 12 On-Campus Drives",
+    stat: "500+ Donors",
+    tag: "Campus Leadership"
   },
   {
     id: "act-2",
@@ -250,7 +254,11 @@ export const activities = [
     role: "Judge & Problem Setter",
     year: "2023 - 2024",
     desc: "Authored algorithm challenges and managed real-time Vjudge scoring systems for 500+ freshmen programmers.",
-    img: "/cpc2.jpg"
+    img: "/cpc2.jpg",
+    gallery: ["/cpc2.jpg", "/icpc1.jpg"],
+    impact: "500+ Freshmen Competitors • 8 Algorithm Problems",
+    stat: "500+ Competitors",
+    tag: "Competitive Programming"
   },
   {
     id: "act-3",
@@ -259,7 +267,11 @@ export const activities = [
     role: "Head of Technical Operations",
     year: "2023",
     desc: "Managed venue scheduling, tech infrastructure, and online registration for 1,200+ event participants.",
-    img: "/tech2.JPG"
+    img: "/tech2.JPG",
+    gallery: ["/tech2.JPG", "/cpc1.jpg"],
+    impact: "1,200+ Event Attendees",
+    stat: "1,200+ Attendees",
+    tag: "Tech Operations"
   },
   {
     id: "act-4",
@@ -268,7 +280,11 @@ export const activities = [
     role: "Lead Student Instructor",
     year: "2023",
     desc: "Conducted hands-on web security and ethical hacking bootcamps for computer science undergraduate students.",
-    img: "/icpc1.jpg"
+    img: "/icpc1.jpg",
+    gallery: ["/icpc1.jpg", "/cpc2.jpg"],
+    impact: "150+ Workshop Participants",
+    stat: "150+ Students",
+    tag: "Security Workshop"
   },
 
   // 🇧🇩 NATIONAL EVENTS
@@ -279,7 +295,11 @@ export const activities = [
     role: "Volunteer Co-Lead",
     year: "2023",
     desc: "Coordinated contest platforms and venue systems for high school competitive programmers nationwide.",
-    img: "/icpc1.jpg"
+    img: "/icpc1.jpg",
+    gallery: ["/icpc1.jpg", "/tech2.JPG"],
+    impact: "National Finals Coordinator • 300+ Students",
+    stat: "300+ Students",
+    tag: "National Olympiad"
   },
   {
     id: "act-6",
@@ -288,7 +308,11 @@ export const activities = [
     role: "National Finalist & Presenter",
     year: "2024",
     desc: "Pitched automated software solutions for enterprise brand management at the national finals.",
-    img: "/tech2.JPG"
+    img: "/tech2.JPG",
+    gallery: ["/tech2.JPG", "/cpc1.jpg"],
+    impact: "National Top 5 Finalist • Enterprise Brand Pitch",
+    stat: "Top 5 Finalist",
+    tag: "Business & Tech"
   },
   {
     id: "act-7",
@@ -297,7 +321,11 @@ export const activities = [
     role: "Technical Operations Co-Lead",
     year: "2024",
     desc: "Managed network scoring infrastructure and contest arena setup for 300+ university teams across Bangladesh.",
-    img: "/icpc1.jpg"
+    img: "/icpc1.jpg",
+    gallery: ["/icpc1.jpg", "/cpc2.jpg"],
+    impact: "300+ University Teams • Regional Arena Infrastructure",
+    stat: "300+ Teams",
+    tag: "Arena Infrastructure"
   },
   {
     id: "act-8",
@@ -306,7 +334,11 @@ export const activities = [
     role: "Team Lead & Innovator",
     year: "2023",
     desc: "Built an AI-driven IoT agricultural monitoring prototype, securing top 10 national ranking.",
-    img: "/cpc2.jpg"
+    img: "/cpc2.jpg",
+    gallery: ["/cpc2.jpg", "/tech2.JPG"],
+    impact: "Top 10 National Rank",
+    stat: "Top 10 National",
+    tag: "IoT & AI Innovation"
   },
 
   // 🌐 INTERNATIONAL EVENTS
@@ -317,7 +349,11 @@ export const activities = [
     role: "Organizer & Tech Lead",
     year: "2023",
     desc: "Managed digital evaluation platforms and pitch mentoring for 40+ social entrepreneurship teams.",
-    img: "/cpc2.jpg"
+    img: "/cpc2.jpg",
+    gallery: ["/cpc2.jpg", "/icpc1.jpg"],
+    impact: "40+ Startup Teams • Global Social Entrepreneurship",
+    stat: "40+ Teams",
+    tag: "Global Social Impact"
   },
   {
     id: "act-10",
@@ -326,6 +362,10 @@ export const activities = [
     role: "Global Finalist Team Member",
     year: "2023",
     desc: "Built interactive 3D satellite visualization tools for Earth observation datasets.",
-    img: "/cpc1.jpg"
+    img: "/cpc1.jpg",
+    gallery: ["/cpc1.jpg", "/tech2.JPG"],
+    impact: "NASA Global Finalist",
+    stat: "Global Finalist",
+    tag: "NASA Space Apps"
   }
 ];

@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Download, Mail } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from './SocialIcons';
@@ -22,7 +22,7 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] } }
 };
 
-export default function Hero({ personInfo }) {
+export default function Hero({ personInfo = {} }) {
   const [fontSize, setFontSize] = useState(120);
 
   useEffect(() => {
@@ -37,6 +37,12 @@ export default function Hero({ personInfo }) {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const resumeLink = personInfo.resumeUrl || '/Mahmud_Hasan_Ratul_CV.pdf';
+  const tagline = personInfo.tagline || 'Building high-performance web systems, low-latency Edge AI nodes, and enterprise RAG document intelligence platforms.';
+  const githubLink = personInfo.github || 'https://github.com/Ratul-NotFound';
+  const linkedinLink = personInfo.linkedin || 'https://linkedin.com/in/ratul-notfound';
+  const emailLink = personInfo.email ? `mailto:${personInfo.email}` : 'mailto:mhratul.dev@gmail.com';
 
   return (
     <SectionWrapper id="hero" variant="recede" className="min-h-[100svh]">
@@ -73,7 +79,7 @@ export default function Hero({ personInfo }) {
           {/* Animated Name */}
           <motion.div variants={itemVariants} className="w-full py-1 sm:py-2 flex justify-center">
             <StrokeText
-              text={personInfo?.name || 'Mahmud Hasan Ratul'}
+              text={personInfo.name || 'Mahmud Hasan Ratul'}
               strokeColor="var(--color-accent)"
               fillColor="var(--color-text)"
               strokeWidth={fontSize < 70 ? 1 : 1.5}
@@ -93,7 +99,7 @@ export default function Hero({ personInfo }) {
           {/* Subtitle */}
           <motion.div variants={itemVariants} className="pt-2">
             <p className="text-sm sm:text-base lg:text-lg max-w-2xl mx-auto leading-relaxed font-sans" style={{ color: 'var(--color-text-muted)' }}>
-              Building high-performance web systems, low-latency Edge AI nodes, and enterprise RAG document intelligence platforms.
+              {tagline}
             </p>
           </motion.div>
 
@@ -114,9 +120,10 @@ export default function Hero({ personInfo }) {
 
             <Magnetic>
               <a
-                href="/Mahmud_Hasan_Ratul_CV.pdf"
+                href={resumeLink}
                 target="_blank"
                 rel="noopener noreferrer"
+                download
                 className="w-full sm:w-auto px-7 py-3.5 rounded-2xl glass-panel font-mono font-bold text-sm flex items-center justify-center gap-2 group cursor-pointer transition-all"
                 style={{ color: 'var(--color-text)' }}
               >
@@ -129,9 +136,9 @@ export default function Hero({ personInfo }) {
           {/* Social Links */}
           <motion.div variants={itemVariants} className="flex items-center justify-center gap-4 pt-4">
             {[
-              { href: 'https://github.com/Ratul-NotFound', icon: <GithubIcon className="w-5 h-5 fill-current" />, label: 'GitHub' },
-              { href: 'https://linkedin.com/in/ratul-notfound', icon: <LinkedinIcon className="w-5 h-5 fill-current" />, label: 'LinkedIn' },
-              { href: 'mailto:mhratul.dev@gmail.com', icon: <Mail className="w-5 h-5" />, label: 'Email' },
+              { href: githubLink, icon: <GithubIcon className="w-5 h-5 fill-current" />, label: 'GitHub' },
+              { href: linkedinLink, icon: <LinkedinIcon className="w-5 h-5 fill-current" />, label: 'LinkedIn' },
+              { href: emailLink, icon: <Mail className="w-5 h-5" />, label: 'Email' },
             ].map(({ href, icon, label }) => (
               <a
                 key={label}

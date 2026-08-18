@@ -20,7 +20,8 @@ import {
   Play,
   Pause,
   Zap,
-  Activity
+  Activity,
+  Images
 } from 'lucide-react';
 import SectionWrapper from './SectionWrapper';
 import SectionHeader from './SectionHeader';
@@ -168,6 +169,24 @@ export default function Activities({ activities = fallbackActivities }) {
   const [direction, setDirection] = useState(1);
   const [isPlayingTour, setIsPlayingTour] = useState(false);
   const [inspectedAct, setInspectedAct] = useState(null);
+  const [modalPhotoIdx, setModalPhotoIdx] = useState(0);
+
+  // Helper to extract all images for an activity
+  const getActImages = (act) => {
+    if (!act) return [];
+    const list = [];
+    if (act.img) list.push(act.img);
+    if (act.image && !list.includes(act.image)) list.push(act.image);
+    if (Array.isArray(act.gallery)) {
+      act.gallery.forEach(u => { if (u && !list.includes(u)) list.push(u); });
+    } else if (typeof act.gallery === 'string') {
+      act.gallery.split('\n').map(s => s.trim()).forEach(u => { if (u && !list.includes(u)) list.push(u); });
+    }
+    if (Array.isArray(act.images)) {
+      act.images.forEach(u => { if (u && !list.includes(u)) list.push(u); });
+    }
+    return list.length > 0 ? list : ['/cpc1.jpg'];
+  };
 
   // 3D Parallax Tilt for Spotlight Card
   const cardRef = useRef(null);
@@ -213,16 +232,86 @@ export default function Activities({ activities = fallbackActivities }) {
     setCurrentIndex((prev) => (prev - 1 + total) % total);
   }, [total]);
 
+  // Expedition Stream Rail Ref & Drag-to-Scroll State
+  const railRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeftState, setScrollLeftState] = useState(0);
+  const [dragMoved, setDragMoved] = useState(false);
+
   const handleSelectIndex = (idx) => {
     if (idx === currentIndex) return;
     setDirection(idx > currentIndex ? 1 : -1);
     setCurrentIndex(idx);
   };
 
+  // Auto-center active card on expedition rail
+  useEffect(() => {
+    if (railRef.current && railRef.current.children && railRef.current.children[currentIndex]) {
+      const selectedElem = railRef.current.children[currentIndex];
+      selectedElem.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest'
+      });
+    }
+  }, [currentIndex]);
+
   // Reset index when category filter changes
   useEffect(() => {
     setCurrentIndex(0);
   }, [activeCategory]);
+
+  // Native non-passive Wheel listener to guarantee horizontal scroll with any mouse
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+
+    const handleWheelNative = (e) => {
+      if (rail.scrollWidth > rail.clientWidth) {
+        e.preventDefault();
+        const delta = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+        rail.scrollLeft += delta * 1.5;
+      }
+    };
+
+    rail.addEventListener('wheel', handleWheelNative, { passive: false });
+    return () => {
+      rail.removeEventListener('wheel', handleWheelNative);
+    };
+  }, [filteredActivities.length]);
+
+  // HTML5 Pointer Drag-to-Scroll Handlers (Works on Mouse & Touch without losing focus)
+  const handlePointerDown = (e) => {
+    if (!railRef.current) return;
+    setIsDragging(true);
+    setDragMoved(false);
+    setStartX(e.clientX);
+    setScrollLeftState(railRef.current.scrollLeft);
+    railRef.current.setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e) => {
+    if (!isDragging || !railRef.current) return;
+    const delta = e.clientX - startX;
+    if (Math.abs(delta) > 5) {
+      setDragMoved(true);
+    }
+    railRef.current.scrollLeft = scrollLeftState - delta * 1.5;
+  };
+
+  const handlePointerUp = (e) => {
+    setIsDragging(false);
+    if (railRef.current && railRef.current.hasPointerCapture(e.pointerId)) {
+      railRef.current.releasePointerCapture(e.pointerId);
+    }
+  };
+
+  const scrollRail = (dir) => {
+    if (railRef.current) {
+      railRef.current.scrollBy({ left: dir * 260, behavior: 'smooth' });
+    }
+  };
 
   // Autoplay Tour
   useEffect(() => {
@@ -403,17 +492,33 @@ export default function Activities({ activities = fallbackActivities }) {
                       <span>{activeAct.category || "Event"}</span>
                     </span>
 
-                    <span 
-                      className="text-xs font-mono font-bold px-3 py-1 rounded-full shadow-lg backdrop-blur-md flex items-center gap-1.5"
-                      style={{
-                        background: 'rgba(0,0,0,0.65)',
-                        color: '#fff',
-                        border: '1px solid rgba(255,255,255,0.15)',
-                      }}
-                    >
-                      <Calendar className="w-3.5 h-3.5 text-accent" />
-                      <span>{activeAct.year || "2023 - Present"}</span>
-                    </span>
+                    <div className="flex items-center gap-2">
+                      {getActImages(activeAct).length > 1 && (
+                        <span 
+                          className="text-xs font-mono font-bold px-2.5 py-1 rounded-full shadow-lg backdrop-blur-md flex items-center gap-1.5"
+                          style={{
+                            background: 'rgba(0,0,0,0.65)',
+                            color: 'var(--color-accent)',
+                            border: '1px solid rgba(255,255,255,0.15)',
+                          }}
+                        >
+                          <Images className="w-3.5 h-3.5" />
+                          <span>{getActImages(activeAct).length} Photos</span>
+                        </span>
+                      )}
+
+                      <span 
+                        className="text-xs font-mono font-bold px-3 py-1 rounded-full shadow-lg backdrop-blur-md flex items-center gap-1.5"
+                        style={{
+                          background: 'rgba(0,0,0,0.65)',
+                          color: '#fff',
+                          border: '1px solid rgba(255,255,255,0.15)',
+                        }}
+                      >
+                        <Calendar className="w-3.5 h-3.5 text-accent" />
+                        <span>{activeAct.year || "2023 - Present"}</span>
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -484,7 +589,7 @@ export default function Activities({ activities = fallbackActivities }) {
           </AnimatePresence>
         </div>
 
-        {/* 🎞️ INTERACTIVE HOLOGRAPHIC EVENT PASS STREAM */}
+        {/* 🎞️ INTERACTIVE HOLOGRAPHIC EVENT PASS STREAM (DRAG / WHEEL / CLICK SCROLLABLE) */}
         <div className="space-y-3 font-mono select-none">
           <div className="flex items-center justify-between text-xs pb-0.5" style={{ color: 'var(--color-text-muted)' }}>
             <div className="flex items-center gap-2">
@@ -493,10 +598,34 @@ export default function Activities({ activities = fallbackActivities }) {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
               </span>
               <span className="font-bold">Interactive Expedition Stream:</span>
-              <span className="opacity-75 hidden sm:inline text-[11px]">(Click or slide to broadcast event)</span>
+              <span className="opacity-75 hidden sm:inline text-[11px]">(Drag, scroll, or click to explore)</span>
             </div>
 
             <div className="flex items-center gap-2">
+              {/* Rail Left/Right Scroll Chevrons */}
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => scrollRail(-1)}
+                  className="p-1 rounded-lg border text-zinc-400 hover:text-white hover:border-accent transition-colors cursor-pointer"
+                  style={{ background: 'var(--color-surface-2)', borderColor: 'var(--color-border)' }}
+                  aria-label="Scroll left"
+                  title="Scroll Left"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollRail(1)}
+                  className="p-1 rounded-lg border text-zinc-400 hover:text-white hover:border-accent transition-colors cursor-pointer"
+                  style={{ background: 'var(--color-surface-2)', borderColor: 'var(--color-border)' }}
+                  aria-label="Scroll right"
+                  title="Scroll Right"
+                >
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
               <span className="text-[11px] px-2 py-0.5 rounded-md font-bold" style={{ background: 'var(--color-surface-2)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}>
                 {currentIndex + 1} / {filteredActivities.length} Selected
               </span>
@@ -505,18 +634,31 @@ export default function Activities({ activities = fallbackActivities }) {
 
           {/* Horizontal Event Cards Rail */}
           <div 
+            ref={railRef}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
             className="flex items-stretch gap-3.5 overflow-x-auto pb-2.5 pt-1 px-1 custom-scrollbar"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            style={{ 
+              cursor: isDragging ? 'grabbing' : 'grab',
+              scrollbarWidth: 'none', 
+              msOverflowStyle: 'none',
+              touchAction: 'pan-y',
+              userSelect: 'none'
+            }}
           >
             {filteredActivities.map((act, idx) => {
               const isSelected = idx === currentIndex;
               const Icon = categoryIcons[act.category] || Award;
 
               return (
-                <button
+                <div
                   key={act.id || idx}
-                  onClick={() => handleSelectIndex(idx)}
-                  className="w-52 sm:w-60 p-3 rounded-2xl text-left transition-all duration-300 flex-shrink-0 cursor-pointer shadow-sm relative flex flex-col justify-between group hover:-translate-y-1"
+                  onClick={() => {
+                    if (!dragMoved) handleSelectIndex(idx);
+                  }}
+                  className="w-52 sm:w-60 p-3 rounded-2xl text-left transition-all duration-300 flex-shrink-0 cursor-pointer shadow-sm relative flex flex-col justify-between group hover:-translate-y-1 select-none"
                   style={{
                     background: isSelected ? 'var(--color-surface-2)' : 'var(--color-surface)',
                     border: isSelected ? '2px solid var(--color-accent)' : '1px solid var(--color-border)',
@@ -534,7 +676,7 @@ export default function Activities({ activities = fallbackActivities }) {
                   )}
 
                   {/* Thumbnail Image Banner */}
-                  <div className="w-full h-24 rounded-xl overflow-hidden bg-black/40 relative shadow-inner mb-2.5 flex-shrink-0">
+                  <div className="w-full h-24 rounded-xl overflow-hidden bg-black/40 relative shadow-inner mb-2.5 flex-shrink-0 pointer-events-none">
                     <img
                       src={act.img || '/tech2.JPG'}
                       alt={act.title}
@@ -576,7 +718,7 @@ export default function Activities({ activities = fallbackActivities }) {
                   </div>
 
                   {/* Card Content (Clean 2-line title wrapping, no clipping) */}
-                  <div className="space-y-1 flex-1 flex flex-col justify-between">
+                  <div className="space-y-1 flex-1 flex flex-col justify-between pointer-events-none">
                     <div>
                       <h4 className="text-xs font-bold font-sans line-clamp-2 leading-tight tracking-tight min-h-[32px]" style={{ color: isSelected ? '#fff' : 'var(--color-text)' }}>
                         {act.title}
@@ -589,19 +731,28 @@ export default function Activities({ activities = fallbackActivities }) {
                     {/* Key Metric Badge */}
                     {act.stat && (
                       <div className="pt-1.5 mt-1 border-t flex items-center justify-between text-[10px]" style={{ borderColor: 'var(--color-border)' }}>
-                        <span className="text-text-muted text-[9px] uppercase tracking-wider">Impact:</span>
+                        <span className="text-zinc-400 text-[9px] uppercase tracking-wider">Impact:</span>
                         <span className="font-bold text-accent truncate max-w-[120px]">{act.stat}</span>
                       </div>
                     )}
                   </div>
-                </button>
+                </div>
               );
             })}
           </div>
 
-          {/* 🎚️ Interactive Laser Progress Scrub Bar */}
-          <div className="w-full pt-1">
-            <div className="w-full h-1.5 rounded-full overflow-hidden relative shadow-inner" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }}>
+          {/* 🎚️ Interactive Laser Progress Scrub Bar (Click to Scrub) */}
+          <div 
+            className="w-full pt-1 cursor-pointer"
+            onClick={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              const clickX = e.clientX - rect.left;
+              const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+              const targetIdx = Math.min(filteredActivities.length - 1, Math.floor(ratio * filteredActivities.length));
+              handleSelectIndex(targetIdx);
+            }}
+          >
+            <div className="w-full h-2 rounded-full overflow-hidden relative shadow-inner" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }}>
               <div 
                 className="h-full rounded-full transition-all duration-300"
                 style={{ 
@@ -618,95 +769,173 @@ export default function Activities({ activities = fallbackActivities }) {
 
       {/* Event Inspection Spec Modal Drawer */}
       <AnimatePresence>
-        {inspectedAct && (
-          <div 
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-xl" 
-            style={{ background: 'rgba(0,0,0,0.65)' }}
-            onClick={() => setInspectedAct(null)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-2xl rounded-3xl p-6 space-y-4 relative overflow-hidden font-mono shadow-2xl"
-              style={{
-                border: '1px solid var(--color-border)',
-                background: 'var(--color-surface)',
-              }}
-            >
-              {/* Top Holographic Accent Line */}
-              <div 
-                className="absolute inset-x-0 top-0 h-[2px]" 
-                style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }} 
-              />
+        {inspectedAct && (() => {
+          const modalImages = getActImages(inspectedAct);
+          const activePhoto = modalImages[modalPhotoIdx] || modalImages[0] || inspectedAct.img || '/tech2.JPG';
 
-              <button
-                onClick={() => setInspectedAct(null)}
-                className="absolute top-4 right-4 p-2 rounded-full hover:opacity-85 transition-opacity cursor-pointer shadow-md"
+          return (
+            <div 
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-xl" 
+              style={{ background: 'rgba(0,0,0,0.75)' }}
+              onClick={() => setInspectedAct(null)}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                onClick={(e) => e.stopPropagation()}
+                className="w-full max-w-2xl rounded-3xl p-5 sm:p-6 space-y-4 relative overflow-hidden font-mono shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar"
                 style={{
-                  background: 'var(--color-surface-2)',
                   border: '1px solid var(--color-border)',
-                  color: 'var(--color-text)',
+                  background: 'var(--color-surface)',
                 }}
               >
-                <X className="w-4 h-4" />
-              </button>
+                {/* Top Holographic Accent Line */}
+                <div 
+                  className="absolute inset-x-0 top-0 h-[2px]" 
+                  style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }} 
+                />
 
-              {/* Event Image Banner */}
-              <div className="relative w-full h-56 rounded-2xl overflow-hidden bg-black/40 shadow-inner" style={{ border: '1px solid var(--color-border)' }}>
-                <img src={inspectedAct.img || '/tech2.JPG'} alt={inspectedAct.title} className="w-full h-full object-cover" />
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-xs px-3 py-1 rounded-full font-bold shadow-sm" style={{ background: 'var(--color-surface-2)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}>
-                    {inspectedAct.category}
-                  </span>
-                  <span className="text-xs font-mono" style={{ color: 'var(--color-text-muted)' }}>
-                    Tenure: {inspectedAct.year || "2023 - Present"}
-                  </span>
-                </div>
-
-                <div>
-                  <h2 className="text-xl font-bold leading-snug font-sans" style={{ color: 'var(--color-text)' }}>
-                    {inspectedAct.title}
-                  </h2>
-                  <p className="text-xs font-semibold font-sans pt-0.5" style={{ color: 'var(--color-accent)' }}>
-                    Role: {inspectedAct.role}
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-2xl space-y-1 shadow-sm" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)', borderLeft: '4px solid var(--color-accent)' }}>
-                  <span className="text-xs font-bold block" style={{ color: 'var(--color-accent)' }}>FULL EVENT DETAILS:</span>
-                  <p className="text-xs leading-relaxed font-sans" style={{ color: 'var(--color-text-muted)' }}>
-                    {inspectedAct.desc}
-                  </p>
-                </div>
-
-                {inspectedAct.impact && (
-                  <div className="p-3 rounded-xl text-xs flex items-center gap-2 shadow-inner" style={{ background: 'rgba(56, 189, 248, 0.1)', color: 'var(--color-accent)', border: '1px solid rgba(56, 189, 248, 0.25)' }}>
-                    <TrendingUp className="w-4 h-4 flex-shrink-0" />
-                    <span className="font-bold">{inspectedAct.impact}</span>
-                  </div>
-                )}
-              </div>
-
-              <div className="pt-3 flex justify-end gap-2" style={{ borderTop: '1px solid var(--color-border)' }}>
                 <button
                   onClick={() => setInspectedAct(null)}
-                  className="px-5 py-2 rounded-xl font-bold text-xs hover:opacity-90 transition-all cursor-pointer shadow-md"
+                  className="absolute top-4 right-4 p-2 rounded-full hover:opacity-85 transition-opacity cursor-pointer shadow-md z-30"
                   style={{
-                    background: 'var(--color-accent)',
-                    color: '#000',
+                    background: 'var(--color-surface-2)',
+                    border: '1px solid var(--color-border)',
+                    color: 'var(--color-text)',
                   }}
                 >
-                  Close Inspection
+                  <X className="w-4 h-4" />
                 </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
+
+                {/* Event Multi-Image Banner & Gallery Viewer */}
+                <div className="space-y-2">
+                  <div className="relative w-full h-56 sm:h-64 rounded-2xl overflow-hidden bg-black/50 shadow-inner group" style={{ border: '1px solid var(--color-border)' }}>
+                    <img 
+                      src={activePhoto} 
+                      alt={`${inspectedAct.title} photo ${modalPhotoIdx + 1}`} 
+                      className="w-full h-full object-cover transition-all duration-300" 
+                    />
+
+                    {/* Multi-Photo Counter Badge */}
+                    {modalImages.length > 1 && (
+                      <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-bold font-mono shadow-md backdrop-blur-md flex items-center gap-1.5" style={{ background: 'rgba(0,0,0,0.7)', color: 'var(--color-accent)', border: '1px solid rgba(255,255,255,0.15)' }}>
+                        <Images className="w-3.5 h-3.5" />
+                        <span>{modalPhotoIdx + 1} / {modalImages.length} Photos</span>
+                      </div>
+                    )}
+
+                    {/* Prev / Next Photo Overlay Buttons */}
+                    {modalImages.length > 1 && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setModalPhotoIdx((prev) => (prev - 1 + modalImages.length) % modalImages.length);
+                          }}
+                          className="absolute left-2.5 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/70 hover:bg-black text-white border border-white/20 shadow-lg cursor-pointer transition-transform active:scale-90"
+                          aria-label="Previous photo"
+                        >
+                          <ChevronLeft className="w-4 h-4" />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setModalPhotoIdx((prev) => (prev + 1) % modalImages.length);
+                          }}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/70 hover:bg-black text-white border border-white/20 shadow-lg cursor-pointer transition-transform active:scale-90"
+                          aria-label="Next photo"
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Horizontal Thumbnail Strip Preview */}
+                  {modalImages.length > 1 && (
+                    <div className="flex items-center gap-2 overflow-x-auto pb-1 custom-scrollbar">
+                      {modalImages.map((imgUrl, i) => {
+                        const isCurrentPhoto = i === modalPhotoIdx;
+                        return (
+                          <button
+                            key={i}
+                            type="button"
+                            onClick={() => setModalPhotoIdx(i)}
+                            className="relative w-16 h-12 rounded-xl overflow-hidden flex-shrink-0 transition-all duration-200 cursor-pointer shadow-sm"
+                            style={{
+                              border: isCurrentPhoto ? '2px solid var(--color-accent)' : '1px solid var(--color-border)',
+                              opacity: isCurrentPhoto ? 1 : 0.6,
+                              transform: isCurrentPhoto ? 'scale(1.05)' : 'scale(1)',
+                              boxShadow: isCurrentPhoto ? '0 0 10px var(--color-accent)' : 'none'
+                            }}
+                          >
+                            <img src={imgUrl} alt={`Thumbnail ${i + 1}`} className="w-full h-full object-cover" />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-3 pt-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs px-3 py-1 rounded-full font-bold shadow-sm" style={{ background: 'var(--color-surface-2)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}>
+                      {inspectedAct.category}
+                    </span>
+                    <span className="text-xs font-mono" style={{ color: 'var(--color-text-muted)' }}>
+                      Tenure: {inspectedAct.year || "2023 - Present"}
+                    </span>
+                    {inspectedAct.tag && (
+                      <span className="text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase" style={{ background: 'var(--color-surface-2)', color: 'var(--color-text-muted)', border: '1px solid var(--color-border)' }}>
+                        {inspectedAct.tag}
+                      </span>
+                    )}
+                  </div>
+
+                  <div>
+                    <h2 className="text-lg sm:text-xl font-bold leading-snug font-sans" style={{ color: 'var(--color-text)' }}>
+                      {inspectedAct.title}
+                    </h2>
+                    <p className="text-xs font-semibold font-sans pt-0.5" style={{ color: 'var(--color-accent)' }}>
+                      Role: {inspectedAct.role}
+                    </p>
+                  </div>
+
+                  <div className="p-4 rounded-2xl space-y-1 shadow-sm" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)', borderLeft: '4px solid var(--color-accent)' }}>
+                    <span className="text-xs font-bold block" style={{ color: 'var(--color-accent)' }}>FULL EVENT DETAILS & IMPACT:</span>
+                    <p className="text-xs leading-relaxed font-sans" style={{ color: 'var(--color-text-muted)' }}>
+                      {inspectedAct.desc || inspectedAct.description}
+                    </p>
+                  </div>
+
+                  {inspectedAct.impact && (
+                    <div className="p-3 rounded-xl text-xs flex items-center gap-2 shadow-inner" style={{ background: 'rgba(56, 189, 248, 0.1)', color: 'var(--color-accent)', border: '1px solid rgba(56, 189, 248, 0.25)' }}>
+                      <TrendingUp className="w-4 h-4 flex-shrink-0" />
+                      <span className="font-bold">{inspectedAct.impact}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="pt-3 flex justify-end gap-2" style={{ borderTop: '1px solid var(--color-border)' }}>
+                  <button
+                    onClick={() => setInspectedAct(null)}
+                    className="px-5 py-2 rounded-xl font-bold text-xs hover:opacity-90 transition-all cursor-pointer shadow-md"
+                    style={{
+                      background: 'var(--color-accent)',
+                      color: '#000',
+                    }}
+                  >
+                    Close Inspection
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          );
+        })()}
       </AnimatePresence>
 
     </SectionWrapper>
