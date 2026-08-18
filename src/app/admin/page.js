@@ -1101,11 +1101,35 @@ export default function AdminPage() {
                   <label className="block mb-1 text-zinc-400">Project Title</label>
                   <input type="text" value={editingProject.title || ''} onChange={e => setEditingProject({ ...editingProject, title: e.target.value })} placeholder="e.g. SIPPRQ Engine" className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} required />
                 </div>
-                <div>
-                  <label className="block mb-1 text-zinc-400">Category (Dropdown)</label>
-                  <select value={editingProject.category || PROJECT_CATEGORIES[0]} onChange={e => setEditingProject({ ...editingProject, category: e.target.value })} className="w-full px-3 py-2 rounded-xl outline-none text-white cursor-pointer font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }}>
-                    {PROJECT_CATEGORIES.map(c => <option key={c} value={c} style={{ background: '#141419' }}>{c}</option>)}
-                  </select>
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label className="text-zinc-400">Category (Select or Type Custom)</label>
+                    <span className="text-[10px] font-mono text-accent" style={{ color: 'var(--color-accent)' }}>Customizable</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input 
+                      type="text" 
+                      list="project-categories-list"
+                      value={editingProject.category || ''} 
+                      onChange={e => setEditingProject({ ...editingProject, category: e.target.value })} 
+                      placeholder="e.g. Full-Stack Web App, Robotics, AI..." 
+                      className="flex-1 px-3.5 py-2 rounded-xl outline-none text-white font-sans" 
+                      style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} 
+                      required 
+                    />
+                    <select 
+                      value={PROJECT_CATEGORIES.includes(editingProject.category) ? editingProject.category : ''} 
+                      onChange={e => { if (e.target.value) setEditingProject({ ...editingProject, category: e.target.value }); }} 
+                      className="w-32 px-2.5 py-2 rounded-xl outline-none text-xs text-white cursor-pointer font-sans" 
+                      style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }}
+                    >
+                      <option value="">Presets ▾</option>
+                      {PROJECT_CATEGORIES.map(c => <option key={c} value={c} style={{ background: '#141419' }}>{c}</option>)}
+                    </select>
+                  </div>
+                  <datalist id="project-categories-list">
+                    {PROJECT_CATEGORIES.map(c => <option key={c} value={c} />)}
+                  </datalist>
                 </div>
                 <div>
                   <label className="block mb-1 text-zinc-400">Status (Dropdown)</label>
@@ -1246,11 +1270,35 @@ export default function AdminPage() {
                   <label className="block mb-1 text-zinc-400">Company / Organization</label>
                   <input type="text" value={editingExperience.organization || ''} onChange={e => setEditingExperience({ ...editingExperience, organization: e.target.value })} placeholder="e.g. Tech Solutions" className="w-full px-3.5 py-2 rounded-xl outline-none text-white" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} required />
                 </div>
-                <div>
-                  <label className="block mb-1 text-zinc-400">Category Dropdown</label>
-                  <select value={editingExperience.category || EXPERIENCE_CATEGORIES[0]} onChange={e => setEditingExperience({ ...editingExperience, category: e.target.value })} className="w-full px-3 py-2 rounded-xl outline-none text-white cursor-pointer" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }}>
-                    {EXPERIENCE_CATEGORIES.map(c => <option key={c} value={c} style={{ background: '#141419' }}>{c}</option>)}
-                  </select>
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label className="text-zinc-400">Category (Select or Type Custom)</label>
+                    <span className="text-[10px] font-mono text-accent" style={{ color: 'var(--color-accent)' }}>Customizable</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input 
+                      type="text" 
+                      list="experience-categories-list"
+                      value={editingExperience.category || ''} 
+                      onChange={e => setEditingExperience({ ...editingExperience, category: e.target.value })} 
+                      placeholder="e.g. Internship, Full-Time..." 
+                      className="flex-1 px-3.5 py-2 rounded-xl outline-none text-white font-sans" 
+                      style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} 
+                      required 
+                    />
+                    <select 
+                      value={EXPERIENCE_CATEGORIES.includes(editingExperience.category) ? editingExperience.category : ''} 
+                      onChange={e => { if (e.target.value) setEditingExperience({ ...editingExperience, category: e.target.value }); }} 
+                      className="w-28 px-2 py-2 rounded-xl outline-none text-xs text-white cursor-pointer font-sans" 
+                      style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }}
+                    >
+                      <option value="">Presets ▾</option>
+                      {EXPERIENCE_CATEGORIES.map(c => <option key={c} value={c} style={{ background: '#141419' }}>{c}</option>)}
+                    </select>
+                  </div>
+                  <datalist id="experience-categories-list">
+                    {EXPERIENCE_CATEGORIES.map(c => <option key={c} value={c} />)}
+                  </datalist>
                 </div>
                 <div>
                   <label className="block mb-1 text-zinc-400">Timeline Period</label>
@@ -1299,11 +1347,35 @@ export default function AdminPage() {
                   <label className="block mb-1 text-zinc-400">Activity / Event Title</label>
                   <input type="text" value={editingActivity.title || ''} onChange={e => setEditingActivity({ ...editingActivity, title: e.target.value })} placeholder="e.g. DIU Blood Donors Club (DIU BDC)" className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} required />
                 </div>
-                <div>
-                  <label className="block mb-1 text-zinc-400">Category Dropdown</label>
-                  <select value={editingActivity.category || CAMPUS_CATEGORIES[0]} onChange={e => setEditingActivity({ ...editingActivity, category: e.target.value })} className="w-full px-3 py-2 rounded-xl outline-none text-white cursor-pointer font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }}>
-                    {CAMPUS_CATEGORIES.map(c => <option key={c} value={c} style={{ background: '#141419' }}>{c}</option>)}
-                  </select>
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label className="text-zinc-400">Category (Select or Type Custom)</label>
+                    <span className="text-[10px] font-mono text-accent" style={{ color: 'var(--color-accent)' }}>Customizable</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input 
+                      type="text" 
+                      list="campus-categories-list"
+                      value={editingActivity.category || ''} 
+                      onChange={e => setEditingActivity({ ...editingActivity, category: e.target.value })} 
+                      placeholder="e.g. University Events, Hackathons..." 
+                      className="flex-1 px-3.5 py-2 rounded-xl outline-none text-white font-sans" 
+                      style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} 
+                      required 
+                    />
+                    <select 
+                      value={CAMPUS_CATEGORIES.includes(editingActivity.category) ? editingActivity.category : ''} 
+                      onChange={e => { if (e.target.value) setEditingActivity({ ...editingActivity, category: e.target.value }); }} 
+                      className="w-28 px-2 py-2 rounded-xl outline-none text-xs text-white cursor-pointer font-sans" 
+                      style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }}
+                    >
+                      <option value="">Presets ▾</option>
+                      {CAMPUS_CATEGORIES.map(c => <option key={c} value={c} style={{ background: '#141419' }}>{c}</option>)}
+                    </select>
+                  </div>
+                  <datalist id="campus-categories-list">
+                    {CAMPUS_CATEGORIES.map(c => <option key={c} value={c} />)}
+                  </datalist>
                 </div>
                 <div>
                   <label className="block mb-1 text-zinc-400">Role / Position</label>
