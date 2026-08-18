@@ -1,6 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
-import { MapPin, GraduationCap, Sparkles } from 'lucide-react';
+import { MapPin, GraduationCap, Terminal } from 'lucide-react';
 import SectionWrapper from './SectionWrapper';
 import SectionHeader from './SectionHeader';
 import PhotoCircle from './ux/PhotoCircle';
@@ -79,7 +79,7 @@ export default function About({ personInfo = {}, stats, education }) {
             {/* Bio */}
             <div className="space-y-3">
               <div className="flex items-center gap-2 pb-3" style={{ borderBottom: '1px solid var(--color-border)' }}>
-                <Sparkles className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
+                <Terminal className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
                 <h3 className="text-lg font-bold font-sans" style={{ color: 'var(--color-text)' }}>Engineering Journey</h3>
               </div>
               <p className="text-sm leading-relaxed font-sans" style={{ color: 'var(--color-text-muted)' }}>

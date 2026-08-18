@@ -217,10 +217,10 @@ export default function FloatingSideControls({ personInfo }) {
         ))}
       </nav>
 
-      {/* Right social dock */}
+      {/* Left social dock */}
       <aside
         aria-label="Social Profiles"
-        className="fixed right-6 bottom-10 z-40 hidden lg:flex flex-col items-end gap-3.5 pointer-events-auto"
+        className="fixed left-6 bottom-10 z-40 hidden lg:flex flex-col items-start gap-3.5 pointer-events-auto"
       >
         {/* Get in Touch */}
         <button
@@ -229,20 +229,20 @@ export default function FloatingSideControls({ personInfo }) {
           aria-label="Get in Touch"
         >
           <span
-            className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-xl px-3 py-1.5 text-xs font-mono font-bold opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-2 transition-all duration-300 flex items-center gap-1.5"
-            style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border-accent)', color: 'var(--color-accent)', boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}
-          >
-            Get in Touch <Hand className="w-3.5 h-3.5" />
-          </span>
-          <span
             className="flex h-11 w-11 items-center justify-center rounded-full transition-all duration-300 group-hover:scale-110"
             style={{ ...iconBtn, width: 44, height: 44, color: 'var(--color-accent)', borderColor: 'var(--color-border-accent)' }}
           >
             <Hand className="h-5 w-5 animate-pulse" />
           </span>
+          <span
+            className="pointer-events-none absolute left-full ml-3 whitespace-nowrap rounded-xl px-3 py-1.5 text-xs font-mono font-bold opacity-0 group-hover:opacity-100 group-hover:translate-x-0 -translate-x-2 transition-all duration-300 flex items-center gap-1.5 shadow-xl"
+            style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border-accent)', color: 'var(--color-accent)', boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}
+          >
+            Get in Touch <Hand className="w-3.5 h-3.5" />
+          </span>
         </button>
 
-        {/* GitHub */}
+        {/* GitHub, LinkedIn, Email */}
         {[
           { href: personInfo?.github || '#', label: 'GitHub Profile', icon: <GithubIcon className="h-4 w-4" /> },
           { href: personInfo?.linkedin || '#', label: 'LinkedIn', icon: <LinkedinIcon className="h-4 w-4" /> },
@@ -251,16 +251,16 @@ export default function FloatingSideControls({ personInfo }) {
           <a key={label} href={href} target={href.startsWith('http') ? '_blank' : undefined}
             rel="noopener noreferrer" className="group relative flex items-center" aria-label={label}>
             <span
-              className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-lg px-3 py-1 text-[11px] font-mono opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-2 transition-all duration-300"
-              style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', color: 'var(--color-text)', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
-            >
-              {label}
-            </span>
-            <span
-              className="transition-all duration-300 group-hover:-translate-x-1 group-hover:scale-110"
+              className="transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110"
               style={iconBtn}
             >
               {icon}
+            </span>
+            <span
+              className="pointer-events-none absolute left-full ml-3 whitespace-nowrap rounded-lg px-3 py-1 text-[11px] font-mono opacity-0 group-hover:opacity-100 group-hover:translate-x-0 -translate-x-2 transition-all duration-300 shadow-xl"
+              style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', color: 'var(--color-text)', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
+            >
+              {label}
             </span>
           </a>
         ))}

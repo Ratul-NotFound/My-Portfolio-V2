@@ -2,7 +2,7 @@
 
 import { useState, useRef, forwardRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Sparkles, Layers, Code2, Server, Brain, Terminal, Cpu, Search, Orbit, LayoutGrid, TerminalSquare } from 'lucide-react';
+import { Layers, Code2, Server, Brain, Terminal, Cpu, Search, Orbit, LayoutGrid, TerminalSquare } from 'lucide-react';
 import SectionWrapper from './SectionWrapper';
 import SectionHeader from './SectionHeader';
 import { GetTechLogo } from './TechLogos';

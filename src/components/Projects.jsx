@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Layers, Globe, Cpu, Brain, Sparkles, X, ChevronRight, Activity } from 'lucide-react';
+import { ExternalLink, Layers, Globe, Cpu, Brain, Award, X, ChevronRight, Activity, Zap, Eye } from 'lucide-react';
 import SectionWrapper from './SectionWrapper';
 import SectionHeader from './SectionHeader';
 import ScrollStack, { ScrollStackItem } from './ScrollStack';
@@ -67,7 +67,7 @@ function StackableDeckCard({ project, index, total, onInspect }) {
                   border: '1px solid var(--color-border)',
                 }}
               >
-                <Sparkles className="w-3 h-3" style={{ color: 'var(--color-accent)' }} />
+                <Award className="w-3 h-3" style={{ color: 'var(--color-accent)' }} />
                 <span>Flagship</span>
               </span>
             )}
@@ -82,7 +82,7 @@ function StackableDeckCard({ project, index, total, onInspect }) {
         {/* 2-Column Side-by-Side Body (50% Picture, 50% Content) */}
         <div className="grid grid-cols-12 gap-2.5 sm:gap-6 items-center my-1 sm:my-3">
           
-          {/* LEFT COLUMN (6/12 Mobile & Desktop): Wider Horizontal Picture */}
+          {/* LEFT COLUMN: Project Screenshot */}
           <div className="col-span-6 md:col-span-6 relative rounded-lg sm:rounded-2xl overflow-hidden bg-black/40 h-28 sm:h-60 group/img shadow-inner" style={{ border: '1px solid var(--color-border)' }}>
             <img
               src={mainImage}
@@ -102,13 +102,13 @@ function StackableDeckCard({ project, index, total, onInspect }) {
               style={{ color: 'var(--color-accent)' }}
             >
               <span className="p-1.5 sm:p-2 rounded-full bg-white/10 border border-white/20 transform group-hover/img:scale-110 transition-transform">
-                <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color: 'var(--color-accent)' }} />
+                <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color: 'var(--color-accent)' }} />
               </span>
               <span className="tracking-wide uppercase text-[9px] sm:text-[10px]">Inspect Spec</span>
             </button>
           </div>
 
-          {/* RIGHT COLUMN (6/12 Mobile & Desktop): Content Spec */}
+          {/* RIGHT COLUMN: Project Content & Specs */}
           <div className="col-span-6 md:col-span-6 space-y-1 sm:space-y-3">
             <div>
               <h3 className="text-xs sm:text-xl font-bold transition-colors leading-snug font-sans tracking-tight line-clamp-2" style={{ color: 'var(--color-text)' }}>
@@ -119,7 +119,7 @@ function StackableDeckCard({ project, index, total, onInspect }) {
               </p>
             </div>
 
-            {/* Priority 4: Metric Telemetry Chip */}
+            {/* Metric Telemetry Chip */}
             {project.metrics && (
               <div 
                 className="p-1 sm:p-2 rounded-md sm:rounded-xl flex items-center gap-1.5 sm:gap-2.5 text-[9px] sm:text-xs font-mono shadow-sm"
@@ -134,7 +134,7 @@ function StackableDeckCard({ project, index, total, onInspect }) {
               </div>
             )}
 
-            {/* Priority 5: Tech Stack Micro-Chips */}
+            {/* Tech Stack Micro-Chips */}
             <div className="flex flex-wrap gap-1 pt-0.5">
               {projectTechTags.slice(0, 3).map((tag) => (
                 <span
@@ -154,7 +154,7 @@ function StackableDeckCard({ project, index, total, onInspect }) {
 
         </div>
 
-        {/* Priority 2: Action Links Footer Bar (High Conversion CTAs) */}
+        {/* Action Links Footer Bar */}
         <div className="pt-2 sm:pt-3 flex items-center justify-between gap-1.5" style={{ borderTop: '1px solid var(--color-border)' }}>
           <Magnetic>
             <a
@@ -233,7 +233,7 @@ export default function Projects({ projects = [] }) {
     : projects.filter(p => p.category === activeCategory);
 
   return (
-    <SectionWrapper id="projects" variant="zoom-portal" className="">
+    <SectionWrapper id="projects" variant="zoom-portal" className="py-12 sm:py-16">
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-5 lg:space-y-6 perspective-1200">
         
         {/* Section Header */}
@@ -244,15 +244,9 @@ export default function Projects({ projects = [] }) {
           highlight="Works"
         />
 
-        {/* SUBSECTION TAB FILTER BAR */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pb-3 w-full" style={{ borderBottom: '1px solid var(--color-border)' }}>
-          <div 
-            className="flex items-center gap-1.5 p-1.5 rounded-2xl border w-full sm:w-auto overflow-x-auto no-scrollbar max-w-full"
-            style={{
-              background: 'var(--color-surface-2)',
-              borderColor: 'var(--color-border)',
-            }}
-          >
+        {/* 🎛️ SLEEK MODERN CATEGORY FILTER PILLS */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-3 w-full" style={{ borderBottom: '1px solid var(--color-border)' }}>
+          <div className="flex flex-wrap items-center gap-2">
             {categories.map((cat) => {
               const count = cat.id === 'all'
                 ? projects.length
@@ -265,16 +259,18 @@ export default function Projects({ projects = [] }) {
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
-                  className="px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer select-none flex-shrink-0"
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all duration-200 flex items-center gap-2 cursor-pointer select-none shadow-sm hover:scale-105 active:scale-95"
                   style={{
-                    background: isActive ? 'var(--color-accent)' : 'transparent',
+                    background: isActive ? 'var(--color-accent)' : 'var(--color-surface-2)',
                     color: isActive ? '#000' : 'var(--color-text-muted)',
+                    border: `1px solid ${isActive ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                    boxShadow: isActive ? '0 0 15px rgba(56, 189, 248, 0.35)' : 'none',
                   }}
                 >
                   <Icon className="w-3.5 h-3.5" />
                   <span>{cat.label}</span>
                   <span 
-                    className="text-[9px] sm:text-[10px] px-1.5 py-0.2 rounded-full font-bold"
+                    className="text-[10px] px-1.5 py-0.5 rounded-full font-bold"
                     style={{
                       background: isActive ? 'rgba(0,0,0,0.2)' : 'var(--color-surface)',
                       color: isActive ? '#000' : 'var(--color-accent)',
@@ -288,14 +284,14 @@ export default function Projects({ projects = [] }) {
             })}
           </div>
 
-          <div className="text-xs font-mono flex items-center gap-1.5" style={{ color: 'var(--color-text-muted)' }}>
-            <span>Scroll Deck:</span>
-            <strong style={{ color: 'var(--color-accent)' }}>{filteredProjects.length} Works Listed</strong>
+          <div className="text-xs font-mono flex items-center gap-2 opacity-80" style={{ color: 'var(--color-text-muted)' }}>
+            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+            <span>Showing <strong style={{ color: 'var(--color-accent)' }}>{filteredProjects.length} Projects</strong></span>
           </div>
         </div>
 
         {/* SCROLLSTACK FOLDER DECK CONTAINER */}
-        <div className="w-full h-[400px] sm:h-[500px] relative pt-6 sm:pt-4">
+        <div className="w-full h-[420px] sm:h-[520px] relative pt-6 sm:pt-4">
           <ScrollStack
             itemDistance={isMobile ? 24 : 32}
             itemScale={0.02}
@@ -342,7 +338,7 @@ export default function Projects({ projects = [] }) {
 function ProjectInspectModal({ inspectedProject, onClose }) {
   const gallery = Array.isArray(inspectedProject.gallery) && inspectedProject.gallery.length > 0
     ? inspectedProject.gallery
-    : [inspectedProject.image || '/images/projects/sipprq1.png'];
+    : [inspectedProject.image || '/tech1.jpg'];
 
   const [activeImg, setActiveImg] = useState(gallery[0]);
 
@@ -428,7 +424,7 @@ function ProjectInspectModal({ inspectedProject, onClose }) {
                   border: '1px solid var(--color-border)',
                 }}
               >
-                <Sparkles className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
+                <Award className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
                 <span>Flagship Project</span>
               </span>
             )}

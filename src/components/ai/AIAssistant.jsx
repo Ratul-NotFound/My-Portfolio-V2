@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Bot, Sparkles, X, Send, ChevronRight, MessageSquare, Code, Briefcase, Mail, User, Terminal, Activity } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Bot, X, Send, ChevronRight, MessageSquare, Code, Briefcase, Mail, User, Terminal, Activity } from 'lucide-react';
 
 export default function AIAssistant({ data = {} }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -119,49 +120,46 @@ export default function AIAssistant({ data = {} }) {
   };
 
   return (
-    <div className="fixed bottom-6 left-6 z-50 font-mono select-none">
-      {/* Floating File Folder Deck Launcher Button */}
+    <div className="fixed bottom-6 right-6 z-50 font-mono select-none">
+      {/* Floating Compact Circular AI Icon Launcher Button */}
       {!isOpen && (
-        <div className="relative group">
-          {/* Raised Folder Tab Top */}
-          <div className="flex justify-end pr-4 relative z-20">
-            <div 
-              className="px-3.5 py-0.5 rounded-t-xl text-[10px] font-mono font-bold flex items-center gap-1.5 shadow-md relative -mb-[1px]"
-              style={{
-                background: 'var(--color-surface)',
-                borderTop: '1px solid var(--color-border-accent)',
-                borderLeft: '1px solid var(--color-border-accent)',
-                borderRight: '1px solid var(--color-border-accent)',
-                color: 'var(--color-accent)',
-              }}
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-              <span>RATUL AI // 01</span>
-            </div>
+        <motion.div 
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="relative group flex justify-end"
+        >
+          {/* Hover Tooltip (Left Side of Button) */}
+          <div 
+            className="absolute right-16 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none translate-x-2 group-hover:translate-x-0"
+            style={{
+              background: 'var(--color-surface-2)',
+              border: '1px solid var(--color-border)',
+              color: 'var(--color-text)',
+            }}
+          >
+            Ratul AI Assistant
           </div>
 
-          {/* Folder Launcher Card Body */}
           <button
             onClick={() => setIsOpen(true)}
-            className="w-full px-4 py-3 rounded-2xl rounded-tr-none transition-all duration-300 relative z-10 shadow-xl flex items-center gap-2.5 cursor-pointer backdrop-blur-xl group-hover:scale-102"
+            aria-label="Open AI Assistant"
+            className="w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-2xl flex items-center justify-center cursor-pointer transition-all duration-300 relative backdrop-blur-xl group-hover:scale-110 active:scale-95"
             style={{
-              border: '1px solid var(--color-border)',
               background: 'var(--color-surface)',
+              border: '2px solid var(--color-accent)',
+              boxShadow: '0 0 24px rgba(56, 189, 248, 0.45), 0 8px 20px rgba(0,0,0,0.5)',
             }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-accent)'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; }}
           >
-            {/* Top Laser Accent Sweep */}
-            <div 
-              className="absolute inset-x-0 top-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30" 
-              style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }} 
-            />
+            {/* Pulsating Ping Ring */}
+            <span className="absolute -inset-1 rounded-full border border-accent/60 animate-ping pointer-events-none" />
 
-            <Bot className="w-5 h-5 transition-transform group-hover:scale-110" style={{ color: 'var(--color-accent)' }} />
-            <span className="text-xs font-bold font-mono tracking-wide" style={{ color: 'var(--color-text)' }}>Portfolio AI Engine</span>
-            <Sparkles className="w-3.5 h-3.5 animate-pulse" style={{ color: 'var(--color-accent)' }} />
+            {/* AI Bot Icon */}
+            <Bot className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover:scale-110" style={{ color: 'var(--color-accent)' }} />
+
+            {/* Online Live Status Beacon Dot */}
+            <span className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-green-500 border-2 border-[var(--color-surface)] shadow-md" />
           </button>
-        </div>
+        </motion.div>
       )}
 
       {/* Interactive Folder Deck Chat Window Modal */}

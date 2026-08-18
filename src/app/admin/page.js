@@ -37,7 +37,6 @@ import {
   Check, 
   RefreshCw, 
   ArrowLeft, 
-  Sparkles, 
   Database,
   Search,
   Eye,
@@ -494,7 +493,7 @@ export default function AdminPage() {
         {/* Status Toast */}
         {statusMsg && (
           <div className="p-3.5 rounded-xl text-xs font-mono flex items-center gap-2 shadow-sm border animate-fade-in" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border-accent)', color: 'var(--color-accent)' }}>
-            <Sparkles className="w-4 h-4 flex-shrink-0" />
+            <Check className="w-4 h-4 flex-shrink-0" />
             <span>{statusMsg}</span>
           </div>
         )}

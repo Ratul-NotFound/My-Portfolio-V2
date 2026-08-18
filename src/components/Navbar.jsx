@@ -1,11 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Terminal, Download, Menu, X, Sparkles, Layers, Cpu, Briefcase, Mail, Award, BookOpen } from 'lucide-react';
+import { Terminal, Download, Menu, X, User, Layers, Cpu, Briefcase, Mail, Award, BookOpen } from 'lucide-react';
 import ThemeToggle from './ux/ThemeToggle';
 
 const navItems = [
-  { name: 'About',      href: '#about',      icon: Sparkles  },
+  { name: 'About',      href: '#about',      icon: User      },
   { name: 'Skills',     href: '#tech-stack',  icon: Layers    },
   { name: 'Projects',   href: '#projects',   icon: Cpu       },
   { name: 'Research',   href: '#research',   icon: BookOpen  },
