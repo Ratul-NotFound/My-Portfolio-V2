@@ -516,3 +516,58 @@ export async function deleteContactMessage(id) {
   deleteLocalItem('messages', [], id);
   return { data, error };
 }
+
+// ====================================================================
+// SUPABASE AUTHENTICATION (NO HARDCODED PASSWORDS)
+// ====================================================================
+
+/** Sign in with Email and Password via Supabase Auth */
+export async function signInAdmin(email, password) {
+  const supabase = await getSupabaseClient();
+  if (!supabase) {
+    return { data: null, error: { message: 'Supabase client is not configured in .env.local' } };
+  }
+  return await supabase.auth.signInWithPassword({ email, password });
+}
+
+/** Create / Sign Up Master Admin Account via Supabase Auth */
+export async function signUpAdmin(email, password) {
+  const supabase = await getSupabaseClient();
+  if (!supabase) {
+    return { data: null, error: { message: 'Supabase client is not configured in .env.local' } };
+  }
+  return await supabase.auth.signUp({ email, password });
+}
+
+/** Sign in with Magic Link OTP */
+export async function sendMagicLink(email) {
+  const supabase = await getSupabaseClient();
+  if (!supabase) {
+    return { data: null, error: { message: 'Supabase client is not configured in .env.local' } };
+  }
+  return await supabase.auth.signInWithOtp({ email });
+}
+
+/** Sign out from Supabase Auth */
+export async function signOutAdmin() {
+  const supabase = await getSupabaseClient();
+  if (!supabase) return { error: null };
+  return await supabase.auth.signOut();
+}
+
+/** Get current active session */
+export async function getAdminSession() {
+  const supabase = await getSupabaseClient();
+  if (!supabase) return { session: null, user: null };
+  const { data: { session }, error } = await supabase.auth.getSession();
+  return { session, user: session?.user || null, error };
+}
+
+/** Subscribe to auth state changes */
+export async function onAdminAuthStateChange(callback) {
+  const supabase = await getSupabaseClient();
+  if (!supabase) return { unsubscribe: () => {} };
+  const { data: { subscription } } = supabase.auth.onAuthStateChange(callback);
+  return subscription;
+}
+

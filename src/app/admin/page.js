@@ -21,7 +21,13 @@ import {
   submitContactMessage, 
   getContactMessages, 
   deleteContactMessage,
-  uploadImageToSupabase
+  uploadImageToSupabase,
+  signInAdmin,
+  signUpAdmin,
+  sendMagicLink,
+  signOutAdmin,
+  getAdminSession,
+  onAdminAuthStateChange
 } from '@/lib/supabase';
 import { 
   Lock, 
@@ -52,13 +58,19 @@ import {
   Github,
   Linkedin,
   Twitter,
-  Images
+  Images,
+  KeyRound,
+  Sparkles,
+  AlertCircle
 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState('');
   const [activeTab, setActiveTab] = useState('projects');
 
@@ -130,10 +142,30 @@ export default function AdminPage() {
   const SKILL_LEVELS = ['Advanced', 'Intermediate', 'Expert'];
 
   useEffect(() => {
-    const savedAuth = sessionStorage.getItem('admin_authenticated');
-    if (savedAuth === 'true') {
-      setIsAuthenticated(true);
-    }
+    // Check existing active Supabase session
+    getAdminSession().then(({ session, user }) => {
+      if (session && user) {
+        setCurrentUser(user);
+        setIsAuthenticated(true);
+      }
+    });
+
+    // Listen to real-time auth events
+    const unsubscribePromise = onAdminAuthStateChange((event, session) => {
+      if (session?.user) {
+        setCurrentUser(session.user);
+        setIsAuthenticated(true);
+      } else if (event === 'SIGNED_OUT') {
+        setCurrentUser(null);
+        setIsAuthenticated(false);
+      }
+    });
+
+    return () => {
+      if (unsubscribePromise?.then) {
+        unsubscribePromise.then(sub => sub?.unsubscribe?.());
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -160,21 +192,30 @@ export default function AdminPage() {
     setLoading(false);
   };
 
-  const handleLogin = (e) => {
+  const handleAuthSubmit = async (e) => {
     e.preventDefault();
-    const adminKey = process.env.NEXT_PUBLIC_ADMIN_KEY || 'admin123';
-    if (password === adminKey || password === 'admin') {
-      setIsAuthenticated(true);
-      sessionStorage.setItem('admin_authenticated', 'true');
-      setAuthError('');
-    } else {
-      setAuthError('Invalid Admin Key. Default key is "admin123"');
+    setAuthLoading(true);
+    setAuthError('');
+
+    try {
+      const { data, error } = await signInAdmin(email.trim(), password);
+      if (error) {
+        setAuthError(error.message || 'Invalid admin credentials.');
+      } else if (data?.user) {
+        setCurrentUser(data.user);
+        setIsAuthenticated(true);
+      }
+    } catch (err) {
+      setAuthError(err.message || 'Authentication error occurred.');
+    } finally {
+      setAuthLoading(false);
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await signOutAdmin();
+    setCurrentUser(null);
     setIsAuthenticated(false);
-    sessionStorage.removeItem('admin_authenticated');
   };
 
   const showStatus = (msg) => {
@@ -419,41 +460,72 @@ export default function AdminPage() {
   if (!isAuthenticated) {
     return (
       <main className="min-h-screen w-full flex items-center justify-center p-4 select-none font-sans" style={{ background: 'var(--color-bg)' }}>
-        <div className="w-full max-w-md p-8 rounded-2xl space-y-6 shadow-2xl border" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+        <div className="w-full max-w-md p-6 sm:p-8 rounded-3xl space-y-6 shadow-2xl border" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+          
+          {/* Header */}
           <div className="text-center space-y-2">
-            <div className="w-12 h-12 rounded-xl mx-auto flex items-center justify-center shadow-md" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }}>
-              <Lock className="w-6 h-6 text-accent" style={{ color: 'var(--color-accent)' }} />
+            <div className="w-12 h-12 rounded-2xl mx-auto flex items-center justify-center shadow-md" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }}>
+              <Lock className="w-6 h-6" style={{ color: 'var(--color-accent)' }} />
             </div>
-            <h1 className="text-xl font-bold text-white font-sans">Portfolio Admin Dashboard</h1>
-            <p className="text-xs text-zinc-400 font-mono">Simple & Powerful Content Manager</p>
+            <h1 className="text-xl font-bold text-white font-sans">Admin Control Center</h1>
+            <p className="text-xs text-zinc-400 font-mono">Authenticate with your Supabase account</p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-4 font-mono">
+          {/* Error Notification */}
+          {authError && (
+            <div className="p-3.5 rounded-xl text-xs font-mono flex items-center gap-2 text-red-400 bg-red-950/40 border border-red-800/50">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{authError}</span>
+            </div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleAuthSubmit} className="space-y-4 font-mono">
             <div>
-              <label className="text-xs block mb-1 text-zinc-400">Admin Password</label>
+              <label className="text-xs block mb-1.5 text-zinc-300">Admin Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="mhratul.dev@gmail.com"
+                className="w-full px-4 py-2.5 rounded-xl text-sm outline-none text-white transition-colors focus:border-accent"
+                style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="text-xs block mb-1.5 text-zinc-300">Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Default password: admin123"
-                className="w-full px-4 py-2.5 rounded-xl text-sm outline-none text-white"
+                placeholder="Enter password"
+                className="w-full px-4 py-2.5 rounded-xl text-sm outline-none text-white transition-colors focus:border-accent"
                 style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }}
                 required
               />
-              {authError && <p className="text-xs text-red-400 mt-2">{authError}</p>}
             </div>
 
             <button
               type="submit"
-              className="w-full py-2.5 rounded-xl font-bold text-sm cursor-pointer shadow-md font-sans hover:opacity-90"
+              disabled={authLoading}
+              className="w-full py-2.5 rounded-xl font-bold text-sm cursor-pointer shadow-md font-sans flex items-center justify-center gap-2 transition-all hover:opacity-90 disabled:opacity-50"
               style={{ background: 'var(--color-accent)', color: '#000' }}
             >
-              Login to Dashboard &rarr;
+              {authLoading ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <span>Verifying Credentials...</span>
+                </>
+              ) : (
+                <span>Unlock Dashboard &rarr;</span>
+              )}
             </button>
           </form>
 
           <div className="pt-4 text-center border-t" style={{ borderColor: 'var(--color-border)' }}>
-            <Link href="/" className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-white">
+            <Link href="/" className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-white transition-colors">
               <ArrowLeft className="w-3.5 h-3.5" /> Back to Portfolio
             </Link>
           </div>
@@ -475,7 +547,9 @@ export default function AdminPage() {
             </div>
             <div>
               <h1 className="text-base sm:text-lg font-bold font-sans text-white">Portfolio Admin Dashboard</h1>
-              <p className="text-xs font-mono text-zinc-400">Simple & Friendly Content Management</p>
+              <p className="text-xs font-mono text-zinc-400">
+                {currentUser?.email ? `Logged in as ${currentUser.email}` : 'Authenticated via Supabase Auth'}
+              </p>
             </div>
           </div>
 
@@ -496,8 +570,9 @@ export default function AdminPage() {
               <Eye className="w-3.5 h-3.5" /> View Live Site
             </Link>
 
-            <button onClick={handleLogout} className="p-2 rounded-xl border text-zinc-400 hover:text-white cursor-pointer" style={{ background: 'var(--color-surface-2)', borderColor: 'var(--color-border)' }} title="Logout">
+            <button onClick={handleLogout} className="p-2 rounded-xl border text-zinc-400 hover:text-red-400 cursor-pointer flex items-center gap-1.5 text-xs font-mono" style={{ background: 'var(--color-surface-2)', borderColor: 'var(--color-border)' }} title="Logout">
               <LogOut className="w-4 h-4" />
+              <span className="hidden sm:inline">Logout</span>
             </button>
           </div>
         </header>
