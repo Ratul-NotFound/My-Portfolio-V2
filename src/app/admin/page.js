@@ -1141,9 +1141,67 @@ export default function AdminPage() {
                   <label className="block mb-1 text-zinc-400">Timeline / Date</label>
                   <input type="text" value={editingProject.time || ''} onChange={e => setEditingProject({ ...editingProject, time: e.target.value })} placeholder="Q3 2024 / Jan 2024 - Present" className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
                 </div>
-                <div>
-                  <label className="block mb-1 text-zinc-400">Tech Stack (comma separated)</label>
-                  <input type="text" value={Array.isArray(editingProject.tech) ? editingProject.tech.join(', ') : (editingProject.tech || '')} onChange={e => setEditingProject({ ...editingProject, tech: e.target.value })} placeholder="Next.js 14, React, Node.js" className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                <div className="space-y-1.5 sm:col-span-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-zinc-400">Tech Stack (Synced with Tech Arsenal)</label>
+                    <span className="text-[10px] font-mono text-accent" style={{ color: 'var(--color-accent)' }}>
+                      Click pills to toggle or type below
+                    </span>
+                  </div>
+
+                  {/* Live Tech Skills Quick Toggle Pills */}
+                  {techSkills.length > 0 && (
+                    <div className="p-2.5 rounded-xl border space-y-1.5" style={{ background: 'rgba(0,0,0,0.35)', borderColor: 'var(--color-border)' }}>
+                      <div className="flex items-center justify-between text-[11px] text-zinc-400 font-mono">
+                        <span>⚡ Quick Add from Tech Skills ({techSkills.length}):</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto custom-scrollbar p-1">
+                        {techSkills.map((s) => {
+                          const currentTechs = Array.isArray(editingProject.tech) 
+                            ? editingProject.tech 
+                            : typeof editingProject.tech === 'string' 
+                            ? editingProject.tech.split(',').map(t => t.trim()).filter(Boolean) 
+                            : [];
+                          const isSelected = currentTechs.some(t => t.toLowerCase() === s.name.toLowerCase());
+
+                          return (
+                            <button
+                              key={s.id || s.name}
+                              type="button"
+                              onClick={() => {
+                                let updated;
+                                if (isSelected) {
+                                  updated = currentTechs.filter(t => t.toLowerCase() !== s.name.toLowerCase());
+                                } else {
+                                  updated = [...currentTechs, s.name];
+                                }
+                                setEditingProject({ ...editingProject, tech: updated.join(', ') });
+                              }}
+                              className="px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold flex items-center gap-1 border transition-all cursor-pointer shadow-sm hover:scale-105"
+                              style={{
+                                background: isSelected ? 'var(--color-accent)' : 'var(--color-surface)',
+                                color: isSelected ? '#000' : 'var(--color-text-muted)',
+                                borderColor: isSelected ? 'var(--color-accent)' : 'var(--color-border)',
+                                fontWeight: isSelected ? 'bold' : 'normal'
+                              }}
+                            >
+                              <span>{isSelected ? '✓' : '+'}</span>
+                              <span>{s.name}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  <input 
+                    type="text" 
+                    value={Array.isArray(editingProject.tech) ? editingProject.tech.join(', ') : (editingProject.tech || '')} 
+                    onChange={e => setEditingProject({ ...editingProject, tech: e.target.value })} 
+                    placeholder="Next.js 14, React, Node.js, PyTorch..." 
+                    className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" 
+                    style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} 
+                  />
                 </div>
                 <div>
                   <label className="block mb-1 text-zinc-400">Metrics Chip</label>

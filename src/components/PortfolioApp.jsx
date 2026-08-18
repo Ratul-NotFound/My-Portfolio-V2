@@ -72,10 +72,14 @@ export default function PortfolioApp({ initialData }) {
       <TechStack
         categories={data.techCategories}
         skills={data.techSkills}
+        projects={data.projects}
       />
 
       {/* 4. Featured Projects Section */}
-      <Projects projects={data.projects} />
+      <Projects 
+        projects={data.projects}
+        techSkills={data.techSkills}
+      />
 
       {/* 5. Research & Academic Achievements Section */}
       <Research researchPapers={data.researchPapers} />

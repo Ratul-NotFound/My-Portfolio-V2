@@ -209,8 +209,9 @@ function StackableDeckCard({ project, index, total, onInspect }) {
   );
 }
 
-export default function Projects({ projects = [] }) {
+export default function Projects({ projects = [], techSkills = [] }) {
   const [activeCategory, setActiveCategory] = useState('all');
+  const [activeTechFilter, setActiveTechFilter] = useState('all');
   const [inspectedProject, setInspectedProject] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -221,6 +222,18 @@ export default function Projects({ projects = [] }) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Listen for tech click events from TechStack component hover popups
+  useEffect(() => {
+    const handleFilterTech = (e) => {
+      if (e.detail) {
+        setActiveTechFilter(e.detail);
+        setActiveCategory('all');
+      }
+    };
+    window.addEventListener('filter-project-tech', handleFilterTech);
+    return () => window.removeEventListener('filter-project-tech', handleFilterTech);
+  }, []);
+
   const categories = [
     { id: 'all', label: 'All Projects', icon: Layers },
     { id: 'Full-Stack Web App', label: 'Full-Stack Web', icon: Globe },
@@ -228,9 +241,38 @@ export default function Projects({ projects = [] }) {
     { id: 'Interactive Canvas & Game', label: 'Canvas & Game', icon: Brain }
   ];
 
-  const filteredProjects = activeCategory === 'all'
-    ? projects
-    : projects.filter(p => p.category === activeCategory);
+  // Extract all unique tech tags across all projects and tech skills
+  const availableTechTags = Array.from(new Set([
+    ...(techSkills || []).map(s => s.name).filter(Boolean),
+    ...projects.flatMap(p => {
+      if (!p.tech) return [];
+      return Array.isArray(p.tech) ? p.tech : String(p.tech).split(',').map(s => s.trim());
+    }).filter(Boolean)
+  ])).sort();
+
+  const filteredProjects = projects.filter(p => {
+    const matchesCategory = activeCategory === 'all' || p.category === activeCategory;
+    if (!matchesCategory) return false;
+
+    if (!activeTechFilter || activeTechFilter === 'all') return true;
+
+    const pTechs = Array.isArray(p.tech) 
+      ? p.tech 
+      : typeof p.tech === 'string' 
+      ? p.tech.split(',').map(s => s.trim()) 
+      : [];
+
+    const target = activeTechFilter.toLowerCase().trim();
+    return pTechs.some(t => {
+      const norm = t.toLowerCase().trim();
+      if (norm === target || norm.includes(target) || target.includes(norm)) return true;
+      if (target === 'next.js' && norm.includes('next')) return true;
+      if (target === 'react' && norm.includes('react')) return true;
+      if (target === 'c++' && (norm.includes('c++') || norm.includes('cpp'))) return true;
+      if (target === 'pytorch' && (norm.includes('pytorch') || norm.includes('tinyml'))) return true;
+      return false;
+    });
+  });
 
   return (
     <SectionWrapper id="projects" variant="zoom-portal" className="py-12 sm:py-16">
@@ -244,49 +286,114 @@ export default function Projects({ projects = [] }) {
           highlight="Works"
         />
 
-        {/* 🎛️ SLEEK MODERN CATEGORY FILTER PILLS */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pb-3 w-full" style={{ borderBottom: '1px solid var(--color-border)' }}>
-          <div className="flex flex-wrap items-center gap-2">
-            {categories.map((cat) => {
-              const count = cat.id === 'all'
-                ? projects.length
-                : projects.filter(p => p.category === cat.id).length;
+        {/* 🎛️ SLEEK MODERN CATEGORY & TECH STACK FILTER BAR */}
+        <div className="space-y-3 pb-3 w-full" style={{ borderBottom: '1px solid var(--color-border)' }}>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            {/* Category Filter Pills */}
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+              {categories.map((cat) => {
+                const count = cat.id === 'all'
+                  ? projects.length
+                  : projects.filter(p => p.category === cat.id).length;
 
-              const Icon = cat.icon;
-              const isActive = activeCategory === cat.id;
+                const Icon = cat.icon;
+                const isActive = activeCategory === cat.id;
 
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
-                  className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all duration-200 flex items-center gap-2 cursor-pointer select-none shadow-sm hover:scale-105 active:scale-95"
-                  style={{
-                    background: isActive ? 'var(--color-accent)' : 'var(--color-surface-2)',
-                    color: isActive ? '#000' : 'var(--color-text-muted)',
-                    border: `1px solid ${isActive ? 'var(--color-accent)' : 'var(--color-border)'}`,
-                    boxShadow: isActive ? '0 0 15px rgba(56, 189, 248, 0.35)' : 'none',
-                  }}
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                  <span>{cat.label}</span>
-                  <span 
-                    className="text-[10px] px-1.5 py-0.5 rounded-full font-bold"
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => setActiveCategory(cat.id)}
+                    className="px-3 py-1.5 sm:px-3.5 sm:py-1.5 rounded-xl text-xs font-mono font-bold transition-all duration-200 flex items-center gap-1.5 cursor-pointer select-none shadow-sm hover:scale-105 active:scale-95"
                     style={{
-                      background: isActive ? 'rgba(0,0,0,0.2)' : 'var(--color-surface)',
-                      color: isActive ? '#000' : 'var(--color-accent)',
-                      border: isActive ? 'none' : '1px solid var(--color-border)',
+                      background: isActive ? 'var(--color-accent)' : 'var(--color-surface-2)',
+                      color: isActive ? '#000' : 'var(--color-text-muted)',
+                      border: `1px solid ${isActive ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                      boxShadow: isActive ? '0 0 15px rgba(56, 189, 248, 0.35)' : 'none',
                     }}
                   >
-                    {count}
-                  </span>
+                    <Icon className="w-3.5 h-3.5" />
+                    <span>{cat.label}</span>
+                    <span 
+                      className="text-[10px] px-1.5 py-0.2 rounded-full font-bold"
+                      style={{
+                        background: isActive ? 'rgba(0,0,0,0.2)' : 'var(--color-surface)',
+                        color: isActive ? '#000' : 'var(--color-accent)',
+                        border: isActive ? 'none' : '1px solid var(--color-border)',
+                      }}
+                    >
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* ⚡ SYNCHRONIZED TECH STACK DROPDOWN SELECTOR */}
+            <div className="flex items-center gap-2">
+              <div className="relative flex items-center">
+                <select
+                  value={activeTechFilter}
+                  onChange={(e) => setActiveTechFilter(e.target.value)}
+                  className="px-3 py-1.5 sm:py-2 rounded-xl text-xs font-mono font-bold outline-none cursor-pointer border shadow-sm transition-all"
+                  style={{
+                    background: activeTechFilter !== 'all' ? 'var(--color-accent)' : 'var(--color-surface-2)',
+                    color: activeTechFilter !== 'all' ? '#000' : 'var(--color-text)',
+                    borderColor: activeTechFilter !== 'all' ? 'var(--color-accent)' : 'var(--color-border)',
+                  }}
+                >
+                  <option value="all" style={{ background: '#12131a', color: '#fff' }}>⚡ All Tech Stacks ({availableTechTags.length})</option>
+                  {availableTechTags.map(tech => {
+                    const matchCount = projects.filter(p => {
+                      const pTechs = Array.isArray(p.tech) ? p.tech : (typeof p.tech === 'string' ? p.tech.split(',').map(s => s.trim()) : []);
+                      const norm = tech.toLowerCase();
+                      return pTechs.some(t => t.toLowerCase().includes(norm) || norm.includes(t.toLowerCase()));
+                    }).length;
+                    return (
+                      <option key={tech} value={tech} style={{ background: '#12131a', color: '#fff' }}>
+                        {tech} {matchCount > 0 ? `(${matchCount} Project${matchCount > 1 ? 's' : ''})` : ''}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+
+              {activeTechFilter !== 'all' && (
+                <button
+                  type="button"
+                  onClick={() => setActiveTechFilter('all')}
+                  className="px-2.5 py-1.5 rounded-xl text-[11px] font-mono font-bold flex items-center gap-1 border cursor-pointer hover:bg-red-500/20 text-red-400 border-red-500/30"
+                  title="Clear tech filter"
+                >
+                  <span>Reset Tech</span>
+                  <X className="w-3 h-3" />
                 </button>
-              );
-            })}
+              )}
+            </div>
           </div>
 
-          <div className="text-xs font-mono flex items-center gap-2 opacity-80" style={{ color: 'var(--color-text-muted)' }}>
-            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-            <span>Showing <strong style={{ color: 'var(--color-accent)' }}>{filteredProjects.length} Projects</strong></span>
+          {/* Active Filter Status & Count */}
+          <div className="flex items-center justify-between text-xs font-mono pt-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+              <span className="text-zinc-400">
+                Filtered: <strong style={{ color: 'var(--color-accent)' }}>{filteredProjects.length} Projects</strong>
+                {activeTechFilter !== 'all' && (
+                  <span className="ml-1.5 px-2 py-0.5 rounded-full text-[10px] bg-accent/15 text-accent font-bold" style={{ color: 'var(--color-accent)' }}>
+                    Stack: {activeTechFilter}
+                  </span>
+                )}
+              </span>
+            </div>
+
+            {filteredProjects.length === 0 && (
+              <button 
+                onClick={() => { setActiveCategory('all'); setActiveTechFilter('all'); }} 
+                className="text-accent underline hover:opacity-80 text-[11px]"
+                style={{ color: 'var(--color-accent)' }}
+              >
+                Clear all filters
+              </button>
+            )}
           </div>
         </div>
 
