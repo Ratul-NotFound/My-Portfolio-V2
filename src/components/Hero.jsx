@@ -55,7 +55,7 @@ export default function Hero({ personInfo = {} }) {
         style={{ backgroundColor: 'rgba(56,189,248,0.12)' }}
       />
 
-      <motion.div className="w-full flex flex-col justify-center items-center relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-8 pb-28 sm:pb-8">
+      <motion.div className="w-full flex flex-col justify-center items-center relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-6 sm:py-8">
         <motion.div
           variants={containerVariants}
           initial="hidden"

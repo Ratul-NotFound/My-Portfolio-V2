@@ -245,14 +245,20 @@ export default function Activities({ activities = fallbackActivities }) {
     setCurrentIndex(idx);
   };
 
-  // Auto-center active card on expedition rail
+  // Auto-center active card on expedition rail horizontally only (Never jump the window viewport)
+  const isFirstMount = useRef(true);
   useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
     if (railRef.current && railRef.current.children && railRef.current.children[currentIndex]) {
-      const selectedElem = railRef.current.children[currentIndex];
-      selectedElem.scrollIntoView({
-        behavior: 'smooth',
-        inline: 'center',
-        block: 'nearest'
+      const rail = railRef.current;
+      const selectedElem = rail.children[currentIndex];
+      const targetScroll = selectedElem.offsetLeft - (rail.clientWidth / 2) + (selectedElem.clientWidth / 2);
+      rail.scrollTo({
+        left: Math.max(0, targetScroll),
+        behavior: 'smooth'
       });
     }
   }, [currentIndex]);

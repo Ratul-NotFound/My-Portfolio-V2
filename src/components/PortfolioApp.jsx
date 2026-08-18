@@ -21,6 +21,16 @@ export default function PortfolioApp({ initialData }) {
   const [data, setData] = useState(initialData || {});
 
   useEffect(() => {
+    // Reset scroll to top on fresh reload if no specific anchor hash is present
+    if (typeof window !== 'undefined') {
+      if ('scrollRestoration' in window.history) {
+        window.history.scrollRestoration = 'manual';
+      }
+      if (!window.location.hash) {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      }
+    }
+
     // Client-side instant synchronization with Supabase or LocalStorage cache
     getPortfolioData().then((freshData) => {
       if (freshData) {
