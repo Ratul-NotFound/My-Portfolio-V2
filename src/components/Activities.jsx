@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Award, Globe, Building, Flag, Sparkles, X, ArrowRight, Radio } from 'lucide-react';
 import SectionWrapper from './SectionWrapper';
 import SectionHeader from './SectionHeader';
-import DepthCarousel from './DepthCarousel';
+import ScrollStack, { ScrollStackItem } from './ScrollStack';
 
 const fallbackActivities = [
   {
@@ -118,79 +118,79 @@ const categoryIcons = {
   "International Events": Globe
 };
 
-// Activity Depth Card Inner Content
-function ActivityDepthCard({ act, index, total, onInspect }) {
+// Distinct Widescreen Event Pass Card Component
+function StackableActivityCard({ act, index, total, onInspect }) {
   const catName = act.category || "University Events";
   const CatIcon = categoryIcons[catName] || Sparkles;
 
   return (
-    <div 
-      className="w-full h-full p-5 sm:p-6 flex flex-col justify-between select-none relative z-10 rounded-[24px] group shadow-card"
-      style={{
-        border: '1px solid var(--color-border)',
-        background: 'var(--glass-bg)',
-        backdropFilter: 'blur(14px)',
-        WebkitBackdropFilter: 'blur(14px)',
-      }}
-    >
-      {/* Top Laser Shimmer Beam */}
-      <div className="absolute inset-x-0 top-0 h-[2.5px] z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }} />
+    <div className="w-full relative z-10 select-none group font-mono mt-2">
+      {/* Main Widescreen Event Container (No Top Folder Tab - Unique Event Pass Identity) */}
+      <div 
+        className="w-full rounded-2xl sm:rounded-3xl transition-all duration-300 relative z-10 p-3.5 sm:p-5 shadow-xl hover:shadow-2xl overflow-hidden space-y-3"
+        style={{
+          border: '1px solid var(--color-border)',
+          background: 'var(--color-surface)',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-accent)'; }}
+        onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; }}
+      >
+        {/* Top Laser Accent Line on Hover */}
+        <div className="absolute inset-x-0 top-0 h-[2px] z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }} />
 
-      {/* Top Image Banner */}
-      <div className="relative w-full h-44 overflow-hidden rounded-2xl flex-shrink-0" style={{ background: 'var(--color-surface-3)', border: '1px solid var(--color-border)' }}>
-        <img
-          src={act.img || '/tech2.JPG'}
-          alt={act.title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[rgba(20,20,25,0.7)] via-transparent to-transparent pointer-events-none" />
+        {/* Top Full-Width Hero Event Image Banner */}
+        <div className="relative w-full h-24 sm:h-32 rounded-xl sm:rounded-2xl overflow-hidden group/banner shadow-inner" style={{ background: 'var(--color-surface-3)', border: '1px solid var(--color-border)' }}>
+          <img
+            src={act.img || '/tech2.JPG'}
+            alt={act.title}
+            className="w-full h-full object-cover group-hover/banner:scale-108 transition-transform duration-700"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[rgba(15,17,23,0.9)] via-[rgba(15,17,23,0.3)] to-transparent pointer-events-none" />
 
-        {/* Category Badge Pill */}
-        <span 
-          className="absolute top-2.5 left-2.5 text-[11px] font-mono font-bold px-3 py-0.5 rounded-full border backdrop-blur-md flex items-center gap-1.5 shadow-md"
-          style={{
-            background: 'var(--color-surface-2)',
-            borderColor: 'var(--color-border-accent)',
-            color: 'var(--color-accent)',
-          }}
-        >
-          <CatIcon className="w-3.5 h-3.5" />
-          <span>{catName}</span>
-        </span>
+          {/* Floating Category Pill */}
+          <span 
+            className="absolute top-2 left-2 text-[9px] sm:text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full border backdrop-blur-md flex items-center gap-1 shadow-md"
+            style={{
+              background: 'var(--color-surface-2)',
+              borderColor: 'var(--color-border-accent)',
+              color: 'var(--color-accent)',
+            }}
+          >
+            <CatIcon className="w-3 h-3" />
+            <span>{catName}</span>
+          </span>
 
-        {/* Year Badge */}
-        <span 
-          className="absolute bottom-2.5 right-2.5 text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md backdrop-blur-md shadow-md"
-          style={{
-            background: 'var(--color-surface)',
-            border: '1px solid var(--color-border)',
-            color: 'var(--color-text)',
-          }}
-        >
-          {act.year || '2023'}
-        </span>
-      </div>
+          {/* Floating Year Pill & Event Index */}
+          <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-[9px] sm:text-[10px] font-mono font-bold text-white z-10">
+            <span className="px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-md border border-white/10">
+              {act.year || '2023'}
+            </span>
+            <span className="px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-md border border-white/10 text-accent">
+              EVENT 0{index + 1} / 0{total}
+            </span>
+          </div>
+        </div>
 
-      {/* Card Content Body */}
-      <div className="space-y-2.5 flex-1 flex flex-col justify-between my-2">
-        <div className="space-y-1">
-          <h3 className="text-base font-bold group-hover:text-accent transition-colors leading-snug tracking-tight" style={{ color: 'var(--color-text)' }}>
+        {/* Body Content */}
+        <div className="space-y-1.5 sm:space-y-2">
+          <h3 className="text-xs sm:text-base font-bold group-hover:text-accent transition-colors leading-snug tracking-tight font-sans line-clamp-2" style={{ color: 'var(--color-text)' }}>
             {act.title}
           </h3>
-          <p className="text-xs font-mono font-semibold flex items-center gap-1.5" style={{ color: 'var(--color-accent)' }}>
+
+          <p className="text-[10px] sm:text-xs font-mono font-semibold flex items-center gap-1.5" style={{ color: 'var(--color-accent)' }}>
             <Award className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'var(--color-accent)' }} />
             <span className="truncate">{act.role}</span>
           </p>
+
+          <p className="text-[10px] sm:text-xs leading-snug sm:leading-relaxed line-clamp-2 font-sans" style={{ color: 'var(--color-text-muted)' }}>
+            {act.desc}
+          </p>
         </div>
 
-        <p className="text-xs leading-relaxed line-clamp-2" style={{ color: 'var(--color-text-muted)' }}>
-          {act.desc}
-        </p>
-
-        {/* Action Footer */}
-        <div className="pt-2 flex items-center justify-between" style={{ borderTop: '1px solid var(--color-border)' }}>
-          <span className="text-[10px] font-mono font-bold" style={{ color: 'var(--color-accent)' }}>
+        {/* Footer Action Bar */}
+        <div className="pt-2 flex items-center justify-between gap-2 flex-shrink-0 z-20" style={{ borderTop: '1px solid var(--color-border)' }}>
+          <span className="text-[9px] sm:text-[10px] font-mono font-bold truncate" style={{ color: 'var(--color-accent)' }}>
             {act.impact ? act.impact.split(' • ')[0] : 'Verified Event Node'}
           </span>
           <button
@@ -198,13 +198,13 @@ function ActivityDepthCard({ act, index, total, onInspect }) {
               e.stopPropagation();
               onInspect(act);
             }}
-            className="px-3 py-1 rounded-xl text-xs font-mono font-bold hover:opacity-90 transition-all flex items-center gap-1 shadow-md cursor-pointer"
+            className="px-3 py-1 sm:px-4 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-mono font-bold hover:opacity-90 transition-all flex items-center gap-1 shadow-md cursor-pointer flex-shrink-0"
             style={{
               background: 'var(--color-accent)',
               color: '#000',
             }}
           >
-            <span>Inspect</span>
+            <span>Inspect Spec</span>
             <ArrowRight className="w-3 h-3" />
           </button>
         </div>
@@ -220,38 +220,43 @@ export default function Activities({ activities }) {
 
   const [activeCategory, setActiveCategory] = useState("All");
   const [inspectedAct, setInspectedAct] = useState(null);
+  const isMobile = typeof window !== 'undefined' ? window.innerWidth < 640 : false;
 
   const filteredActivities = activeCategory === "All"
     ? safeActivities
-    : safeActivities.filter(act => (act.category || "University Events") === activeCategory);
+    : safeActivities.filter(a => {
+        const c = a.category || "";
+        return c.includes(activeCategory);
+      });
 
   return (
-    <SectionWrapper id="activities" variant="elastic-pop" className="">
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-5 lg:space-y-6 perspective-1400">
+    <SectionWrapper id="activities" variant="fade" className="">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-4 lg:space-y-6">
         
         {/* Section Header */}
         <SectionHeader
           number="07"
-          category="Activities & Honors"
-          title="Campus &"
+          category="Leadership & Events"
+          title="Extracurricular &"
           highlight="Leadership"
         />
 
         {/* SUBSECTION TAB FILTER BAR */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pb-3" style={{ borderBottom: '1px solid var(--color-border)' }}>
-          
-          {/* Subsections Filter Bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pb-3 w-full" style={{ borderBottom: '1px solid var(--color-border)' }}>
           <div 
-            className="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl border"
+            className="flex items-center gap-1.5 p-1 rounded-2xl w-full sm:w-auto overflow-x-auto no-scrollbar max-w-full"
             style={{
               background: 'var(--color-surface-2)',
-              borderColor: 'var(--color-border)',
+              border: '1px solid var(--color-border)',
             }}
           >
             {categories.map((cat) => {
               const count = cat === "All"
                 ? safeActivities.length
-                : safeActivities.filter(a => (a.category || "University Events") === cat).length;
+                : safeActivities.filter(a => {
+                    const c = a.category || "";
+                    return c.includes(cat);
+                  }).length;
 
               const Icon = categoryIcons[cat] || Sparkles;
               const isActive = activeCategory === cat;
@@ -260,7 +265,7 @@ export default function Activities({ activities }) {
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer select-none"
+                  className="px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer select-none flex-shrink-0"
                   style={{
                     background: isActive ? 'var(--color-accent)' : 'transparent',
                     color: isActive ? '#000' : 'var(--color-text-muted)',
@@ -269,7 +274,7 @@ export default function Activities({ activities }) {
                   <Icon className="w-3.5 h-3.5" />
                   <span>{cat}</span>
                   <span 
-                    className="text-[10px] px-1.5 py-0.2 rounded-full font-bold"
+                    className="text-[9px] sm:text-[10px] px-1.5 py-0.2 rounded-full font-bold"
                     style={{
                       background: isActive ? 'rgba(0,0,0,0.2)' : 'var(--color-surface)',
                       color: isActive ? '#000' : 'var(--color-accent)',
@@ -285,39 +290,39 @@ export default function Activities({ activities }) {
 
           <div className="flex items-center justify-between sm:justify-end gap-3 text-xs font-mono font-bold animate-pulse" style={{ color: 'var(--color-accent)' }}>
             <Radio className="w-3.5 h-3.5" />
-            <span>3D DEPTH RAIL ({filteredActivities.length} EVENTS)</span>
+            <span>SCROLL DECK ({filteredActivities.length} EVENTS)</span>
           </div>
         </div>
 
-        {/* DepthCarousel */}
-        <div className="w-full h-[440px] relative">
-          <DepthCarousel
-            items={filteredActivities}
-            cardWidth={440}
-            cardHeight={370}
-            radius={24}
-            depth={200}
-            spread={100}
-            tilt={20}
-            tiltDirection="right"
-            perspective={1400}
-            visibleCards={4}
-            falloff={0.18}
-            autoplay={false}
-            loop={true}
-            showControls={true}
-            showIndicators={true}
-            renderCard={(act, idx, isActive) => (
-              <ActivityDepthCard
-                act={act}
-                index={idx}
-                total={filteredActivities.length}
-                onInspect={setInspectedAct}
-              />
-            )}
-          />
+        {/* SCROLLSTACK CONTAINER */}
+        <div className="w-full h-[400px] sm:h-[500px] relative pt-6 sm:pt-4">
+          <ScrollStack
+            itemDistance={isMobile ? 24 : 32}
+            itemScale={0.02}
+            itemStackDistance={isMobile ? 14 : 24}
+            stackPosition="3%"
+            scaleEndPosition="2%"
+            baseScale={0.95}
+            blurAmount={0}
+            useWindowScroll={false}
+            duration={0.4}
+            wheelMultiplier={2.8}
+            touchMultiplier={4.5}
+            className="w-full h-full pr-2 custom-scrollbar"
+          >
+            {filteredActivities.map((act, index) => (
+              <ScrollStackItem key={act.id || index}>
+                <StackableActivityCard
+                  act={act}
+                  index={index}
+                  total={filteredActivities.length}
+                  onInspect={setInspectedAct}
+                />
+              </ScrollStackItem>
+            ))}
+          </ScrollStack>
         </div>
-
+        
         {/* Event Inspection Modal Drawer */}
         <AnimatePresence>
           {inspectedAct && (

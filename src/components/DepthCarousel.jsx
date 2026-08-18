@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import gsap from 'gsap';
 import './DepthCarousel.css';
 
@@ -11,28 +11,43 @@ const normalizeItem = it => (typeof it === 'string' ? { image: it, alt: '' } : i
 
 const DepthCarousel = ({
   items = DEFAULT_ITEMS,
-  cardWidth = 360,
+  renderCard,
+  activeItemIndex = 0,
+  cardWidth = 300,
   cardHeight = 400,
-  radius = 24,
-  tint = '#05060a',
-  depth = 180,
-  spread = 80,
-  tilt = 16,
-  tiltDirection = 'right',
+  depth = 80,
+  spread = 45,
+  tilt = 12,
+  tiltDirection = 'left',
+  visibleCards = 3,
+  falloff = 0.25,
   perspective = 1400,
-  visibleCards = 4,
-  falloff = 0.15,
-  duration = 450,
-  ease = 'power2.out',
-  autoplay = false,
-  autoplayDelay = 3500,
+  duration = 600,
+  ease = 'power3.out',
   loop = true,
   showControls = true,
   showIndicators = true,
-  onChange,
-  renderCard,
-  className = ''
+  radius = '24px',
+  tint = 'rgba(0,0,0,0.6)',
+  className = '',
+  onChange
 }) => {
+  const [active, setActive] = useState(activeItemIndex);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const currentWidth = isMobile ? (typeof window !== 'undefined' ? Math.min(340, window.innerWidth - 32) : 320) : cardWidth;
+  const currentHeight = isMobile ? Math.min(410, currentWidth * 1.18) : cardHeight;
+  const currentSpread = isMobile ? 18 : spread;
+  const currentTilt = isMobile ? 6 : tilt;
+  const currentVisibleCards = isMobile ? 2 : visibleCards;
+
   const data = useMemo(() => (Array.isArray(items) ? items : []).map(normalizeItem), [items]);
   const count = data.length;
 
@@ -40,61 +55,21 @@ const DepthCarousel = ({
   const cardRefs = useRef([]);
   const overlayRefs = useRef([]);
 
-  const posRef = useRef(0);
-  const focusRef = useRef(0);
+  const posRef = useRef(activeItemIndex);
+  const focusRef = useRef(activeItemIndex);
   const tweenRef = useRef(null);
   const scaleRef = useRef(1);
   const cfgRef = useRef({});
   const onChangeRef = useRef(onChange);
 
-  const touchStartRef = useRef(null);
-  const [active, setActive] = useState(0);
-
-  // DYNAMIC RESPONSIVE CARD DIMENSIONS
-  const [currentWidth, setCurrentWidth] = useState(cardWidth);
-  const [currentHeight, setCurrentHeight] = useState(cardHeight);
-
-  useEffect(() => {
-    const handleResponsiveResize = () => {
-      if (typeof window === 'undefined') return;
-      const screenW = window.innerWidth;
-
-      if (screenW < 480) {
-        // Extra Small Phones (320px - 480px)
-        const targetW = Math.min(screenW - 32, cardWidth);
-        const targetH = Math.min(420, cardHeight);
-        setCurrentWidth(targetW);
-        setCurrentHeight(targetH);
-      } else if (screenW < 768) {
-        // Mobile / Small Tablets (480px - 768px)
-        const targetW = Math.min(screenW - 48, cardWidth);
-        setCurrentWidth(targetW);
-        setCurrentHeight(cardHeight);
-      } else if (screenW < 1024) {
-        // Tablets (768px - 1024px)
-        const targetW = Math.min(screenW - 64, cardWidth);
-        setCurrentWidth(targetW);
-        setCurrentHeight(cardHeight);
-      } else {
-        // Desktop (> 1024px)
-        setCurrentWidth(cardWidth);
-        setCurrentHeight(cardHeight);
-      }
-    };
-
-    handleResponsiveResize();
-    window.addEventListener('resize', handleResponsiveResize);
-    return () => window.removeEventListener('resize', handleResponsiveResize);
-  }, [cardWidth, cardHeight]);
-
   onChangeRef.current = onChange;
   cfgRef.current = {
     count,
     depth,
-    spread,
-    tilt,
+    spread: currentSpread,
+    tilt: currentTilt,
     tiltDirection,
-    visibleCards,
+    visibleCards: currentVisibleCards,
     falloff,
     duration,
     ease,
@@ -201,23 +176,53 @@ const DepthCarousel = ({
     [setFocus]
   );
 
-  const handleTouchStart = e => {
-    const t = e.touches ? e.touches[0] : e;
-    touchStartRef.current = { x: t.clientX, y: t.clientY, time: Date.now() };
-  };
+  // ─── Touch / Pointer handling (registered with passive:false for mobile) ────
+  const touchStartRef2 = useRef(null);
 
-  const handleTouchEnd = e => {
-    if (!touchStartRef.current) return;
-    const t = e.changedTouches ? e.changedTouches[0] : e;
-    const dx = t.clientX - touchStartRef.current.x;
-    const dt = Date.now() - touchStartRef.current.time;
-    touchStartRef.current = null;
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
 
-    if (Math.abs(dx) > 30 && dt < 400) {
-      if (dx < 0) navigateBy(1);
-      else navigateBy(-1);
-    }
-  };
+    const onTouchStart = e => {
+      const t = e.touches[0];
+      touchStartRef2.current = { x: t.clientX, y: t.clientY, time: Date.now() };
+    };
+
+    const onTouchMove = e => {
+      if (!touchStartRef2.current) return;
+      const t = e.touches[0];
+      const dx = Math.abs(t.clientX - touchStartRef2.current.x);
+      const dy = Math.abs(t.clientY - touchStartRef2.current.y);
+      // Claim the gesture if horizontal movement is dominant
+      if (dx > dy && dx > 8) {
+        e.preventDefault();
+      }
+    };
+
+    const onTouchEnd = e => {
+      if (!touchStartRef2.current) return;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - touchStartRef2.current.x;
+      const dy = t.clientY - touchStartRef2.current.y;
+      const dt = Date.now() - touchStartRef2.current.time;
+      touchStartRef2.current = null;
+
+      if (Math.abs(dx) > 20 && Math.abs(dx) > Math.abs(dy) * 1.2 && dt < 600) {
+        if (dx < 0) navigateBy(1);
+        else navigateBy(-1);
+      }
+    };
+
+    root.addEventListener('touchstart', onTouchStart, { passive: true });
+    root.addEventListener('touchmove', onTouchMove, { passive: false });
+    root.addEventListener('touchend', onTouchEnd, { passive: true });
+
+    return () => {
+      root.removeEventListener('touchstart', onTouchStart);
+      root.removeEventListener('touchmove', onTouchMove);
+      root.removeEventListener('touchend', onTouchEnd);
+    };
+  }, [navigateBy]);
 
   const onKeyDown = useCallback(
     e => {
@@ -251,10 +256,6 @@ const DepthCarousel = ({
       role="group"
       aria-label="Depth carousel"
       tabIndex={0}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-      onMouseDown={handleTouchStart}
-      onMouseUp={handleTouchEnd}
       onKeyDown={onKeyDown}
     >
       <div className="depth-carousel__stage">

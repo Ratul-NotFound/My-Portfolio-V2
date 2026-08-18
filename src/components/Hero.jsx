@@ -1,5 +1,5 @@
 'use client';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Download, Mail } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from './SocialIcons';
@@ -23,8 +23,23 @@ const itemVariants = {
 };
 
 export default function Hero({ personInfo }) {
+  const [fontSize, setFontSize] = useState(120);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const w = window.innerWidth;
+      if (w < 480) setFontSize(54);
+      else if (w < 640) setFontSize(72);
+      else if (w < 1024) setFontSize(96);
+      else setFontSize(120);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
-    <SectionWrapper id="hero" variant="recede">
+    <SectionWrapper id="hero" variant="recede" className="min-h-[100svh]">
       {/* 3D Background Canvas */}
       <HeroCanvas />
 
@@ -34,7 +49,7 @@ export default function Hero({ personInfo }) {
         style={{ backgroundColor: 'rgba(56,189,248,0.12)' }}
       />
 
-      <motion.div className="w-full h-full flex flex-col justify-center items-center relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <motion.div className="w-full flex flex-col justify-center items-center relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-8 pb-28 sm:pb-8">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -56,21 +71,21 @@ export default function Hero({ personInfo }) {
           </motion.div>
 
           {/* Animated Name */}
-          <motion.div variants={itemVariants} className="w-full py-2">
+          <motion.div variants={itemVariants} className="w-full py-1 sm:py-2 flex justify-center">
             <StrokeText
               text={personInfo?.name || 'Mahmud Hasan Ratul'}
               strokeColor="var(--color-accent)"
               fillColor="var(--color-text)"
-              strokeWidth={1.5}
+              strokeWidth={fontSize < 70 ? 1 : 1.5}
               drawDuration={1.5}
               fillDelay={0.2}
               stagger={0.05}
               ease="power2.out"
               trigger="mount"
               fillMode="wipe"
-              fontSize={120}
+              fontSize={fontSize}
               fontWeight={900}
-              letterSpacing={-3}
+              letterSpacing={fontSize < 70 ? -1 : -3}
               delay={1.15}
             />
           </motion.div>
@@ -83,11 +98,11 @@ export default function Hero({ personInfo }) {
           </motion.div>
 
           {/* CTA Buttons */}
-          <motion.div variants={itemVariants} className="flex flex-wrap items-center justify-center gap-4 pt-2">
+          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2">
             <Magnetic>
               <a
                 href="#projects"
-                className="px-7 py-3.5 rounded-2xl font-mono font-bold text-sm flex items-center gap-2 group cursor-pointer transition-all"
+                className="w-full sm:w-auto px-7 py-3.5 rounded-2xl font-mono font-bold text-sm flex items-center justify-center gap-2 group cursor-pointer transition-all"
                 style={{ background: 'var(--color-accent)', color: '#000', boxShadow: '0 0 25px rgba(56,189,248,0.35)' }}
                 onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
                 onMouseLeave={e => e.currentTarget.style.opacity = '1'}
@@ -102,7 +117,7 @@ export default function Hero({ personInfo }) {
                 href="/Mahmud_Hasan_Ratul_CV.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-7 py-3.5 rounded-2xl glass-panel font-mono font-bold text-sm flex items-center gap-2 group cursor-pointer transition-all"
+                className="w-full sm:w-auto px-7 py-3.5 rounded-2xl glass-panel font-mono font-bold text-sm flex items-center justify-center gap-2 group cursor-pointer transition-all"
                 style={{ color: 'var(--color-text)' }}
               >
                 <Download className="w-4 h-4 group-hover:scale-110 transition-transform" style={{ color: 'var(--color-accent)' }} />

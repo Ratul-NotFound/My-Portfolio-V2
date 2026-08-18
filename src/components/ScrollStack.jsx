@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Lenis from 'lenis';
 import './ScrollStack.css';
 
@@ -21,8 +21,13 @@ const ScrollStack = ({
   rotationAmount = 0,
   blurAmount = 0,
   useWindowScroll = false,
+  duration = 0.6,
+  wheelMultiplier = 2.5,
+  touchMultiplier = 3.5,
   onStackComplete
 }) => {
+
+
   const scrollerRef = useRef(null);
   const stackCompletedRef = useRef(false);
   const animationFrameRef = useRef(null);
@@ -185,6 +190,10 @@ const ScrollStack = ({
   }, [updateCardTransforms]);
 
   const setupLenis = useCallback(() => {
+    if (lenisRef.current) {
+      lenisRef.current.destroy();
+    }
+    
     if (useWindowScroll) {
       const lenis = new Lenis({
         duration: 1.2,
@@ -215,19 +224,19 @@ const ScrollStack = ({
       const lenis = new Lenis({
         wrapper: scroller,
         content: scroller.querySelector('.scroll-stack-inner'),
-        duration: 1.2,
+        duration: duration,
         easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true,
-        touchMultiplier: 2,
+        touchMultiplier: touchMultiplier,
         infinite: false,
         gestureOrientationHandler: true,
         normalizeWheel: true,
-        wheelMultiplier: 1,
-        touchInertiaMultiplier: 35,
-        lerp: 0.1,
+        wheelMultiplier: wheelMultiplier,
+        touchInertiaMultiplier: 50,
+        lerp: 0.15,
         syncTouch: true,
-        syncTouchLerp: 0.075,
-        touchInertia: 0.6
+        syncTouchLerp: 0.15,
+        touchInertia: 0.8
       });
 
       lenis.on('scroll', handleScroll);
@@ -305,6 +314,53 @@ const ScrollStack = ({
     setupLenis,
     updateCardTransforms
   ]);
+
+  // Seamless scroll chaining pass-through to main window when stack finishes
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller || useWindowScroll) return;
+
+    let touchStartY = 0;
+
+    const handleWheelPassThrough = (e) => {
+      const atBottom = scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 8;
+      const atTop = scroller.scrollTop <= 4;
+
+      if ((atBottom && e.deltaY > 0) || (atTop && e.deltaY < 0)) {
+        window.scrollBy({ top: e.deltaY, behavior: 'auto' });
+      }
+    };
+
+    const handleTouchStart = (e) => {
+      if (e.touches && e.touches[0]) {
+        touchStartY = e.touches[0].clientY;
+      }
+    };
+
+    const handleTouchMovePassThrough = (e) => {
+      if (!e.touches || !e.touches[0]) return;
+      const touchCurrentY = e.touches[0].clientY;
+      const deltaY = touchStartY - touchCurrentY;
+      const atBottom = scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 8;
+      const atTop = scroller.scrollTop <= 4;
+
+      if ((atBottom && deltaY > 0) || (atTop && deltaY < 0)) {
+        window.scrollBy({ top: deltaY * 1.2, behavior: 'auto' });
+      }
+    };
+
+    scroller.addEventListener('wheel', handleWheelPassThrough, { passive: true });
+    scroller.addEventListener('touchstart', handleTouchStart, { passive: true });
+    scroller.addEventListener('touchmove', handleTouchMovePassThrough, { passive: true });
+
+    return () => {
+      scroller.removeEventListener('wheel', handleWheelPassThrough);
+      scroller.removeEventListener('touchstart', handleTouchStart);
+      scroller.removeEventListener('touchmove', handleTouchMovePassThrough);
+    };
+  }, [useWindowScroll]);
+
+
 
   return (
     <div className={`scroll-stack-scroller ${className}`.trim()} ref={scrollerRef}>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Layers, Globe, Cpu, Brain, Sparkles, X, ChevronRight, Activity } from 'lucide-react';
 import SectionWrapper from './SectionWrapper';
@@ -11,7 +11,7 @@ import Magnetic from './ux/Magnetic';
 
 // Glassmorphic Project Card Component (Supports Dark & Light Themes)
 function StackableDeckCard({ project, index, total, onInspect }) {
-  const mainImage = project.image || '/images/projects/sipprq1.png';
+  const mainImage = project.image || '/tech1.jpg';
   const githubLink = project.githubUrl || 'https://github.com/Ratul-NotFound';
   const liveLink = project.liveUrl || 'https://vercel.com';
 
@@ -20,25 +20,25 @@ function StackableDeckCard({ project, index, total, onInspect }) {
     : (typeof project.tech === 'string' ? project.tech.split(',') : ['Next.js', 'React']);
 
   return (
-    <div className="w-full relative z-10 select-none group font-mono mt-4">
-      {/* Seamless Single Top-Right File Folder Tab */}
-      <div className="flex items-center justify-end pr-6 relative z-20">
+    <div className="w-full relative z-10 select-none group font-mono mt-3">
+      {/* Sleek Compact Top-Right File Folder Tab */}
+      <div className="flex items-center justify-end pr-4 sm:pr-6 relative z-20">
         <div 
-          className="px-5 py-1.5 rounded-t-2xl text-[11px] font-mono font-bold flex items-center gap-2 shadow-md border-t border-x relative -mb-[1px]"
+          className="px-3.5 py-1 sm:px-4 sm:py-1.5 rounded-t-xl sm:rounded-t-2xl text-[9px] sm:text-[11px] font-mono font-bold flex items-center gap-1.5 shadow-md border-t border-x relative -mb-[1px]"
           style={{
             background: 'var(--color-surface)',
             borderColor: 'var(--color-border)',
             color: 'var(--color-accent)',
           }}
         >
-          <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
           <span>PROJECT 0{index + 1} / 0{total}</span>
         </div>
       </div>
 
       {/* Main Folder Card Container */}
       <div 
-        className="w-full rounded-2xl sm:rounded-3xl rounded-tr-none transition-all duration-300 relative z-10 p-5 sm:p-6 shadow-xl hover:shadow-2xl overflow-hidden"
+        className="w-full rounded-2xl sm:rounded-3xl rounded-tr-none transition-all duration-300 relative z-10 p-3 sm:p-5 shadow-xl hover:shadow-2xl overflow-hidden"
         style={{
           border: '1px solid var(--color-border)',
           background: 'var(--color-surface)',
@@ -52,15 +52,15 @@ function StackableDeckCard({ project, index, total, onInspect }) {
           style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }} 
         />
 
-        {/* Top Bar Header */}
-        <div className="flex items-center justify-between gap-4 pb-3.5 flex-shrink-0 z-20" style={{ borderBottom: '1px solid var(--color-border)' }}>
-          <div className="flex items-center gap-2">
-            <h3 className="text-lg sm:text-xl font-bold font-sans tracking-tight" style={{ color: 'var(--color-text)' }}>
-              {project.title}
-            </h3>
+        {/* Top Bar Header inside Card */}
+        <div className="flex items-center justify-between gap-2 pb-2 flex-shrink-0 z-20" style={{ borderBottom: '1px solid var(--color-border)' }}>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[9px] sm:text-xs font-bold px-2 py-0.5 rounded-full uppercase tracking-wider" style={{ background: 'var(--color-surface-2)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}>
+              {project.category || 'Featured'}
+            </span>
             {project.featured && (
               <span 
-                className="text-[10px] px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1 shadow-sm"
+                className="text-[9px] px-2 py-0.5 rounded-full font-bold flex items-center gap-1 shadow-sm hidden sm:inline-flex"
                 style={{
                   background: 'var(--color-surface-2)',
                   color: 'var(--color-accent)',
@@ -73,144 +73,153 @@ function StackableDeckCard({ project, index, total, onInspect }) {
             )}
           </div>
 
-          <span className="inline-flex items-center gap-1.5 text-[10px] px-2.5 py-0.5 rounded-full font-bold" style={{ background: 'rgba(34, 197, 94, 0.12)', color: '#22c55e', border: '1px solid rgba(34, 197, 94, 0.25)' }}>
+          <span className="inline-flex items-center gap-1 text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-bold flex-shrink-0" style={{ background: 'rgba(34, 197, 94, 0.12)', color: '#22c55e', border: '1px solid rgba(34, 197, 94, 0.25)' }}>
             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping" />
             LIVE DEMO
           </span>
         </div>
 
-      {/* 2-Column Split Body */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center my-4">
-        
-        {/* LEFT COLUMN (6/12 Width): Interactive Project Thumbnail */}
-        <div className="md:col-span-6 relative rounded-2xl overflow-hidden bg-black/40 h-52 sm:h-60 group/img shadow-inner" style={{ border: '1px solid var(--color-border)' }}>
-          <img
-            src={mainImage}
-            alt={project.title}
-            className="w-full h-full object-cover group-hover/img:scale-108 transition-transform duration-700 ease-out"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+        {/* 2-Column Side-by-Side Body (50% Picture, 50% Content) */}
+        <div className="grid grid-cols-12 gap-2.5 sm:gap-6 items-center my-1 sm:my-3">
           
-          <div className="absolute top-3 left-3 opacity-90 backdrop-blur-md px-2.5 py-1 rounded-lg text-[10px] font-bold font-mono tracking-wider text-white bg-black/50 border border-white/10">
-            {projectTechTags[0] || 'Web'}
+          {/* LEFT COLUMN (6/12 Mobile & Desktop): Wider Horizontal Picture */}
+          <div className="col-span-6 md:col-span-6 relative rounded-lg sm:rounded-2xl overflow-hidden bg-black/40 h-28 sm:h-60 group/img shadow-inner" style={{ border: '1px solid var(--color-border)' }}>
+            <img
+              src={mainImage}
+              alt={project.title}
+              onError={(e) => { e.currentTarget.src = '/tech2.JPG'; }}
+              className="w-full h-full object-cover group-hover/img:scale-108 transition-transform duration-700 ease-out"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+            
+            <div className="absolute top-1 left-1 sm:top-3 sm:left-3 opacity-90 backdrop-blur-md px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-md text-[8px] sm:text-[10px] font-bold font-mono tracking-wider text-white bg-black/50 border border-white/10">
+              {projectTechTags[0] || 'Web'}
+            </div>
+
+            <button
+              onClick={() => onInspect(project)}
+              className="absolute inset-0 flex flex-col items-center justify-center bg-black/65 opacity-0 group-hover/img:opacity-100 transition-all duration-300 font-mono text-xs font-bold gap-2 cursor-pointer backdrop-blur-xs"
+              style={{ color: 'var(--color-accent)' }}
+            >
+              <span className="p-1.5 sm:p-2 rounded-full bg-white/10 border border-white/20 transform group-hover/img:scale-110 transition-transform">
+                <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color: 'var(--color-accent)' }} />
+              </span>
+              <span className="tracking-wide uppercase text-[9px] sm:text-[10px]">Inspect Spec</span>
+            </button>
           </div>
 
-          <button
-            onClick={() => onInspect(project)}
-            className="absolute inset-0 flex flex-col items-center justify-center bg-black/65 opacity-0 group-hover/img:opacity-100 transition-all duration-300 font-mono text-xs font-bold gap-2 cursor-pointer backdrop-blur-xs"
-            style={{ color: 'var(--color-accent)' }}
-          >
-            <span className="p-2.5 rounded-full bg-white/10 border border-white/20 transform group-hover/img:scale-110 transition-transform">
-              <Sparkles className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
-            </span>
-            <span className="tracking-wide uppercase text-[11px]">Inspect Full Spec & Gallery</span>
-          </button>
+          {/* RIGHT COLUMN (6/12 Mobile & Desktop): Content Spec */}
+          <div className="col-span-6 md:col-span-6 space-y-1 sm:space-y-3">
+            <div>
+              <h3 className="text-xs sm:text-xl font-bold transition-colors leading-snug font-sans tracking-tight line-clamp-2" style={{ color: 'var(--color-text)' }}>
+                {project.title}
+              </h3>
+              <p className="text-[10px] sm:text-xs leading-snug sm:leading-relaxed pt-0.5 line-clamp-2 sm:line-clamp-3 font-sans" style={{ color: 'var(--color-text-muted)' }}>
+                {project.longDesc || project.description}
+              </p>
+            </div>
+
+            {/* Priority 4: Metric Telemetry Chip */}
+            {project.metrics && (
+              <div 
+                className="p-1 sm:p-2 rounded-md sm:rounded-xl flex items-center gap-1.5 sm:gap-2.5 text-[9px] sm:text-xs font-mono shadow-sm"
+                style={{
+                  background: 'var(--color-surface-2)',
+                  border: '1px solid var(--color-border)',
+                  color: 'var(--color-accent)',
+                }}
+              >
+                <Activity className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0 animate-pulse" style={{ color: 'var(--color-accent)' }} />
+                <span className="truncate font-bold tracking-wide">{project.metrics}</span>
+              </div>
+            )}
+
+            {/* Priority 5: Tech Stack Micro-Chips */}
+            <div className="flex flex-wrap gap-1 pt-0.5">
+              {projectTechTags.slice(0, 3).map((tag) => (
+                <span
+                  key={tag}
+                  className="text-[8px] sm:text-[10px] font-mono px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-md sm:rounded-lg font-semibold transition-all"
+                  style={{
+                    background: 'var(--color-surface-3)',
+                    color: 'var(--color-text-muted)',
+                    border: '1px solid var(--color-border)',
+                  }}
+                >
+                  {tag.trim()}
+                </span>
+              ))}
+            </div>
+          </div>
+
         </div>
 
-        {/* RIGHT COLUMN (6/12 Width): Content Spec */}
-        <div className="md:col-span-6 space-y-3.5">
-          <div>
-            <h3 className="text-xl sm:text-2xl font-bold transition-colors leading-tight font-sans tracking-tight" style={{ color: 'var(--color-text)' }}>
-              {project.title}
-            </h3>
-            <p className="text-xs leading-relaxed pt-2 line-clamp-3 font-sans" style={{ color: 'var(--color-text-muted)' }}>
-              {project.longDesc || project.description}
-            </p>
-          </div>
+        {/* Priority 2: Action Links Footer Bar (High Conversion CTAs) */}
+        <div className="pt-2 sm:pt-3 flex items-center justify-between gap-1.5" style={{ borderTop: '1px solid var(--color-border)' }}>
+          <Magnetic>
+            <a
+              href={githubLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-[10px] sm:text-xs font-mono font-bold transition-colors px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-transparent hover:border-border hover:bg-surface-2"
+              style={{ color: 'var(--color-text-muted)' }}
+              onMouseEnter={e => e.currentTarget.style.color = 'var(--color-text)'}
+              onMouseLeave={e => e.currentTarget.style.color = 'var(--color-text-muted)'}
+            >
+              <GithubIcon className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
+              <span>Code</span>
+            </a>
+          </Magnetic>
 
-          {/* Metric Telemetry Chip */}
-          {project.metrics && (
-            <div 
-              className="p-2.5 rounded-xl flex items-center gap-2.5 text-xs font-mono shadow-sm"
+          <div className="flex items-center gap-1.5 sm:gap-2.5">
+            <button
+              onClick={() => onInspect(project)}
+              className="px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
               style={{
                 background: 'var(--color-surface-2)',
                 border: '1px solid var(--color-border)',
-                color: 'var(--color-accent)',
+                color: 'var(--color-text)',
               }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'var(--color-accent)'; e.currentTarget.style.color = '#000'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'var(--color-surface-2)'; e.currentTarget.style.color = 'var(--color-text)'; }}
             >
-              <Activity className="w-4 h-4 flex-shrink-0 animate-pulse" style={{ color: 'var(--color-accent)' }} />
-              <span className="truncate font-bold tracking-wide">{project.metrics}</span>
-            </div>
-          )}
+              <span>Inspect</span>
+              <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+            </button>
 
-          {/* Tech Stack Micro-Chips */}
-          <div className="flex flex-wrap gap-1.5 pt-0.5">
-            {projectTechTags.map((tag) => (
-              <span
-                key={tag}
-                className="text-[10px] font-mono px-2.5 py-1 rounded-lg font-semibold transition-all hover:border-accent"
+            <Magnetic>
+              <a
+                href={liveLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1 sm:px-4 sm:py-1.5 rounded-lg sm:rounded-xl font-mono font-bold text-[10px] sm:text-xs transition-all flex items-center gap-1 cursor-pointer shadow-md hover:shadow-lg"
                 style={{
-                  background: 'var(--color-surface-3)',
-                  color: 'var(--color-text-muted)',
-                  border: '1px solid var(--color-border)',
+                  background: 'var(--color-accent)',
+                  color: '#000',
                 }}
               >
-                {tag.trim()}
-              </span>
-            ))}
+                <span>Live Demo</span>
+                <ExternalLink className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+              </a>
+            </Magnetic>
           </div>
-        </div>
-
-      </div>
-
-      {/* Action Links Bar */}
-      <div className="pt-3.5 flex items-center justify-between gap-2" style={{ borderTop: '1px solid var(--color-border)' }}>
-        <Magnetic>
-          <a
-            href={githubLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-xs font-mono font-bold transition-colors px-3 py-1.5 rounded-xl border border-transparent hover:border-border hover:bg-surface-2"
-            style={{ color: 'var(--color-text-muted)' }}
-            onMouseEnter={e => e.currentTarget.style.color = 'var(--color-text)'}
-            onMouseLeave={e => e.currentTarget.style.color = 'var(--color-text-muted)'}
-          >
-            <GithubIcon className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
-            <span>Code</span>
-          </a>
-        </Magnetic>
-
-        <div className="flex items-center gap-2.5">
-          <button
-            onClick={() => onInspect(project)}
-            className="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-            style={{
-              background: 'var(--color-surface-2)',
-              border: '1px solid var(--color-border)',
-              color: 'var(--color-text)',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'var(--color-accent)'; e.currentTarget.style.color = '#000'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'var(--color-surface-2)'; e.currentTarget.style.color = 'var(--color-text)'; }}
-          >
-            <span>Inspect Spec</span>
-            <ChevronRight className="w-3.5 h-3.5" />
-          </button>
-
-          <Magnetic>
-            <a
-              href={liveLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-1.5 rounded-xl font-mono font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-md hover:shadow-lg"
-              style={{
-                background: 'var(--color-accent)',
-                color: '#000',
-              }}
-            >
-              <span>Live Demo</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          </Magnetic>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
 }
 
 export default function Projects({ projects = [] }) {
   const [activeCategory, setActiveCategory] = useState('all');
   const [inspectedProject, setInspectedProject] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const categories = [
     { id: 'all', label: 'All Projects', icon: Layers },
@@ -236,9 +245,9 @@ export default function Projects({ projects = [] }) {
         />
 
         {/* SUBSECTION TAB FILTER BAR */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pb-3" style={{ borderBottom: '1px solid var(--color-border)' }}>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pb-3 w-full" style={{ borderBottom: '1px solid var(--color-border)' }}>
           <div 
-            className="flex flex-wrap items-center justify-center sm:justify-start gap-2 p-1.5 rounded-2xl border"
+            className="flex items-center gap-1.5 p-1.5 rounded-2xl border w-full sm:w-auto overflow-x-auto no-scrollbar max-w-full"
             style={{
               background: 'var(--color-surface-2)',
               borderColor: 'var(--color-border)',
@@ -256,7 +265,7 @@ export default function Projects({ projects = [] }) {
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
-                  className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer select-none"
+                  className="px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer select-none flex-shrink-0"
                   style={{
                     background: isActive ? 'var(--color-accent)' : 'transparent',
                     color: isActive ? '#000' : 'var(--color-text-muted)',
@@ -265,7 +274,7 @@ export default function Projects({ projects = [] }) {
                   <Icon className="w-3.5 h-3.5" />
                   <span>{cat.label}</span>
                   <span 
-                    className="text-[10px] px-1.5 py-0.2 rounded-full font-bold"
+                    className="text-[9px] sm:text-[10px] px-1.5 py-0.2 rounded-full font-bold"
                     style={{
                       background: isActive ? 'rgba(0,0,0,0.2)' : 'var(--color-surface)',
                       color: isActive ? '#000' : 'var(--color-accent)',
@@ -286,16 +295,19 @@ export default function Projects({ projects = [] }) {
         </div>
 
         {/* SCROLLSTACK FOLDER DECK CONTAINER */}
-        <div className="w-full h-[460px] sm:h-[500px] relative">
+        <div className="w-full h-[400px] sm:h-[500px] relative pt-6 sm:pt-4">
           <ScrollStack
-            itemDistance={32}
+            itemDistance={isMobile ? 24 : 32}
             itemScale={0.02}
-            itemStackDistance={24}
+            itemStackDistance={isMobile ? 14 : 24}
             stackPosition="3%"
             scaleEndPosition="2%"
             baseScale={0.95}
             blurAmount={0}
             useWindowScroll={false}
+            duration={0.4}
+            wheelMultiplier={2.8}
+            touchMultiplier={4.5}
             className="w-full h-full pr-2 custom-scrollbar"
           >
             {filteredProjects.map((project, index) => (

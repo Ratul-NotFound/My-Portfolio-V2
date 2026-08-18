@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, CheckCircle2, Award, HeartHandshake, Layers } from 'lucide-react';
 import SectionWrapper from './SectionWrapper';
@@ -14,74 +14,72 @@ const categoryIcons = {
   "Volunteering": HeartHandshake
 };
 
-// 100% Solid Opaque Compact Stackable Experience Card Component
+// Distinct Executive Career Timeline Card Component
 function StackableExperienceCard({ exp, index, total }) {
   const logoPath = exp.logo || '/cpc1.jpg';
 
   return (
-    <div className="w-full relative z-10 select-none group font-mono mt-4">
-      {/* Seamless Single Top-Right File Folder Tab */}
-      <div className="flex items-center justify-end pr-6 relative z-20">
-        <div 
-          className="px-5 py-1.5 rounded-t-2xl text-[11px] font-mono font-bold flex items-center gap-2 shadow-md border-t border-x relative -mb-[1px]"
-          style={{
-            background: 'var(--color-surface)',
-            borderColor: 'var(--color-border)',
-            color: 'var(--color-accent)',
-          }}
-        >
-          <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-          <span>ROLE 0{index + 1} / 0{total}</span>
-        </div>
-      </div>
-
-      {/* Main Folder Card Container */}
+    <div className="w-full relative z-10 select-none group font-mono mt-2">
+      {/* Main Career Badge Container (No Top Folder Tab - Unique Career Timeline Design) */}
       <div 
-        className="w-full rounded-2xl sm:rounded-3xl rounded-tr-none transition-all duration-300 relative z-10 p-5 sm:p-6 shadow-xl hover:shadow-2xl overflow-hidden flex flex-col sm:flex-row gap-5 items-start sm:items-center"
+        className="w-full rounded-2xl sm:rounded-3xl transition-all duration-300 relative z-10 p-4 sm:p-6 shadow-xl hover:shadow-2xl overflow-hidden flex flex-col sm:flex-row gap-4 items-start sm:items-center"
         style={{
           border: '1px solid var(--color-border)',
           background: 'var(--color-surface)',
-          transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
         }}
-        onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-border-accent)'; }}
+        onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-accent)'; }}
         onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; }}
       >
-        {/* Top Laser Sweep Highlight */}
+        {/* Top Laser Accent Line on Hover */}
         <div 
-          className="absolute inset-x-0 top-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-30" 
+          className="absolute inset-x-0 top-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30" 
           style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }}
         />
 
-        {/* LEFT SIDE: Brand Logo / Company Avatar Box */}
-        <div 
-          className="relative w-16 h-16 sm:w-22 sm:h-22 rounded-xl overflow-hidden flex-shrink-0 shadow-md flex items-center justify-center p-2"
-          style={{
-            background: 'var(--color-surface-3)',
-            border: '1px solid var(--color-border)',
-          }}
-        >
-          <img
-            src={logoPath}
-            alt={exp.organization}
-            className="w-full h-full object-cover rounded-lg group-hover:scale-110 transition-transform duration-500"
-          />
+        {/* LEFT COLUMN: Executive Company Avatar & Role Counter */}
+        <div className="flex items-center sm:flex-col justify-between sm:justify-center gap-3 w-full sm:w-auto flex-shrink-0">
+          <div 
+            className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl overflow-hidden shadow-lg flex items-center justify-center p-2 relative group-hover:scale-105 transition-transform duration-300"
+            style={{
+              background: 'var(--color-surface-2)',
+              border: '1px solid var(--color-border)',
+            }}
+          >
+            <img
+              src={logoPath}
+              alt={exp.organization}
+              className="w-full h-full object-cover rounded-xl"
+            />
+            <div className="absolute inset-0 rounded-2xl border border-accent/20 pointer-events-none" />
+          </div>
+
+          <span 
+            className="text-[9px] sm:text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider"
+            style={{
+              background: 'var(--color-surface-2)',
+              color: 'var(--color-accent)',
+              border: '1px solid var(--color-border)',
+            }}
+          >
+            ROLE 0{index + 1} / 0{total}
+          </span>
         </div>
 
-        {/* RIGHT SIDE: Experience Content Spec */}
+        {/* RIGHT COLUMN: Role Details & Achievements */}
         <div className="space-y-2.5 flex-1 w-full">
           <div className="flex flex-wrap items-center justify-between gap-2 pb-2" style={{ borderBottom: '1px solid var(--color-border)' }}>
             <div>
-              <h3 className="text-base sm:text-lg font-bold transition-colors leading-snug font-sans group-hover:text-accent" style={{ color: 'var(--color-text)' }}>
+              <h3 className="text-sm sm:text-lg font-bold transition-colors leading-snug font-sans group-hover:text-accent" style={{ color: 'var(--color-text)' }}>
                 {exp.role}
               </h3>
               <p className="text-xs sm:text-sm font-semibold font-sans pt-0.5" style={{ color: 'var(--color-text-muted)' }}>{exp.organization}</p>
             </div>
 
             <span 
-              className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold shadow-sm"
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] sm:text-xs font-mono font-bold shadow-sm"
               style={{
                 background: 'var(--color-surface-2)',
-                border: '1px solid var(--color-border-accent)',
+                border: '1px solid var(--color-border)',
                 color: 'var(--color-accent)',
               }}
             >
@@ -98,7 +96,7 @@ function StackableExperienceCard({ exp, index, total }) {
                 className="flex items-start gap-2.5 text-xs sm:text-sm leading-relaxed font-sans"
                 style={{ color: 'var(--color-text-muted)' }}
               >
-                <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: 'var(--color-accent)' }} />
+                <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 mt-0.5" style={{ color: 'var(--color-accent)' }} />
                 <span>{bullet}</span>
               </div>
             ))}
@@ -111,6 +109,14 @@ function StackableExperienceCard({ exp, index, total }) {
 
 export default function Experience({ experiences = [] }) {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const filteredExperiences = activeCategory === "All"
     ? experiences
@@ -132,9 +138,9 @@ export default function Experience({ experiences = [] }) {
         />
 
         {/* 2 SUBSECTION TABS FILTER BAR */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pb-1.5" style={{ borderBottom: '1px solid var(--color-border)' }}>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pb-1.5 w-full" style={{ borderBottom: '1px solid var(--color-border)' }}>
           <div 
-            className="flex items-center justify-center sm:justify-start gap-2 p-1 rounded-2xl"
+            className="flex items-center gap-1.5 p-1 rounded-2xl w-full sm:w-auto overflow-x-auto no-scrollbar max-w-full"
             style={{
               background: 'var(--color-surface-2)',
               border: '1px solid var(--color-border)',
@@ -155,7 +161,7 @@ export default function Experience({ experiences = [] }) {
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer select-none"
+                  className="px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer select-none flex-shrink-0"
                   style={{
                     background: isActive ? 'var(--color-accent)' : 'transparent',
                     color: isActive ? '#000' : 'var(--color-text-muted)',
@@ -164,7 +170,7 @@ export default function Experience({ experiences = [] }) {
                   <Icon className="w-3.5 h-3.5" />
                   <span>{cat}</span>
                   <span 
-                    className="text-[10px] px-1.5 rounded-full font-bold"
+                    className="text-[9px] sm:text-[10px] px-1.5 rounded-full font-bold"
                     style={{
                       background: isActive ? 'rgba(0,0,0,0.2)' : 'var(--color-surface)',
                       color: isActive ? '#000' : 'var(--color-accent)',
@@ -185,11 +191,11 @@ export default function Experience({ experiences = [] }) {
         </div>
 
         {/* ELEGANT 1.5 CARDS VISIBLE SCROLLSTACK CONTAINER */}
-        <div className="w-full h-[330px] sm:h-[360px] relative">
+        <div className="w-full h-[460px] sm:h-[400px] relative">
           <ScrollStack
-            itemDistance={24}
+            itemDistance={isMobile ? 18 : 24}
             itemScale={0.02}
-            itemStackDistance={22}
+            itemStackDistance={isMobile ? 12 : 22}
             stackPosition="3%"
             scaleEndPosition="2%"
             baseScale={0.95}

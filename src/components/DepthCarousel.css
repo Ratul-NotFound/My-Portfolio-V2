@@ -61,67 +61,6 @@
   opacity: 0;
   pointer-events: none;
   background: #05060a;
-}
-
-.depth-carousel__arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 3000;
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  border-radius: 999px;
-  background: rgba(18, 20, 26, 0.9);
-  backdrop-filter: blur(12px);
-  color: #38bdf8;
-  cursor: pointer;
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.depth-carousel__arrow:hover {
-  background: #38bdf8;
-  color: #000000;
-  border-color: #38bdf8;
-  box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
-}
-
-.depth-carousel__arrow:active {
-  transform: translateY(-50%) scale(0.94);
-}
-
-.depth-carousel__arrow--prev {
-  left: 16px;
-}
-
-.depth-carousel__arrow--next {
-  right: 16px;
-}
-
-.depth-carousel__dots {
-  position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 3000;
-  display: flex;
-  gap: 8px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: rgba(14, 16, 22, 0.9);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-}
-
-.depth-carousel__dot {
-  width: 8px;
-  height: 8px;
-  padding: 0;
   border: none;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.3);
@@ -144,5 +83,27 @@
   .depth-carousel__arrow,
   .depth-carousel__dot {
     transition: none;
+  }
+}
+
+/* ─── Mobile: larger tap targets, better positioning ─── */
+@media (max-width: 767px) {
+  .depth-carousel {
+    min-height: 300px;
+  }
+  .depth-carousel__arrow {
+    display: none !important;
+  }
+  .depth-carousel__dots {
+    bottom: -10px;
+    padding: 10px 16px;
+    gap: 14px;
+  }
+  .depth-carousel__dot {
+    width: 8px;
+    height: 8px;
+  }
+  .depth-carousel__dot.is-active {
+    width: 24px;
   }
 }

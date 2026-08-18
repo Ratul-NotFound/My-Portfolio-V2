@@ -33,7 +33,7 @@ export default function Footer({ personInfo = {} }) {
 
   return (
     <footer
-      className="py-12 relative z-10 text-xs font-mono"
+      className="pt-12 pb-28 md:pb-12 relative z-10 text-xs font-mono"
       style={{ borderTop: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface-3)' }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">

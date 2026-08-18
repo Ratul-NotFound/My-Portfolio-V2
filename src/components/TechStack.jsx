@@ -234,7 +234,7 @@ export default function TechStack({ categories = [], skills = [] }) {
 
         {/* SKILLS CONTAINER */}
         {activeViewMode === 'grid' ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 min-h-[300px] items-start">
+          <div className="flex flex-wrap sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 min-h-[300px] items-start">
             <AnimatePresence mode="popLayout">
               {filteredSkills.map((skill, index) => (
                 <EyePleasingCard

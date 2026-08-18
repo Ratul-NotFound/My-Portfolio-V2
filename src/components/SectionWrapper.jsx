@@ -112,13 +112,13 @@ export default function SectionWrapper({ children, className = '', id = '', vari
     <section 
       ref={containerRef}
       id={id}
-      className={`relative min-h-screen w-full flex flex-col justify-center items-center py-10 sm:py-12 lg:py-16 overflow-x-hidden ${className}`}
+      className={`relative w-full flex flex-col justify-center items-center py-16 md:py-24 overflow-x-hidden ${className}`}
       style={{ perspective: isMobile ? 'none' : 1200, transformStyle: isMobile ? 'flat' : 'preserve-3d' }}
     >
       {/* Creative 3D Scroll Appearing Transition Container */}
       <motion.div
         style={scrollTransforms}
-        className="w-full h-auto flex flex-col justify-center items-center max-w-7xl mx-auto transform-gpu relative z-10 px-3 sm:px-6 lg:px-8 overflow-x-hidden"
+        className="w-full min-h-[inherit] h-full flex flex-col justify-center items-center max-w-7xl mx-auto transform-gpu relative z-10 px-4 sm:px-6 lg:px-8 overflow-x-hidden"
       >
         {children}
       </motion.div>

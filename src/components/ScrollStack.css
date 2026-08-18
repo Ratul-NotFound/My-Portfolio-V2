@@ -4,7 +4,8 @@
   height: 100%;
   overflow-y: auto;
   overflow-x: visible;
-  overscroll-behavior: contain;
+  overscroll-behavior: auto;
+  overscroll-behavior-y: auto;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
   -webkit-transform: translateZ(0);
