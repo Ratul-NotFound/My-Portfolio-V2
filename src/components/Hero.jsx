@@ -61,7 +61,7 @@ export default function Hero({ personInfo = {} }) {
           initial="hidden"
           animate="visible"
           style={{ transformStyle: 'preserve-3d' }}
-          className="w-full space-y-6 sm:space-y-8 lg:space-y-10"
+          className="w-full space-y-4 sm:space-y-8 lg:space-y-10"
         >
           {/* Status Pill */}
           <motion.div variants={itemVariants} className="inline-block">
@@ -77,7 +77,7 @@ export default function Hero({ personInfo = {} }) {
           </motion.div>
 
           {/* Animated Name */}
-          <motion.div variants={itemVariants} className="w-full py-1 sm:py-2 flex justify-center">
+          <motion.div variants={itemVariants} className="w-full py-0.5 sm:py-2 flex justify-center">
             <StrokeText
               text={personInfo.name || 'Mahmud Hasan Ratul'}
               strokeColor="var(--color-accent)"
@@ -97,18 +97,18 @@ export default function Hero({ personInfo = {} }) {
           </motion.div>
 
           {/* Subtitle */}
-          <motion.div variants={itemVariants} className="pt-2">
+          <motion.div variants={itemVariants} className="pt-1 sm:pt-2">
             <p className="text-sm sm:text-base lg:text-lg max-w-2xl mx-auto leading-relaxed font-sans" style={{ color: 'var(--color-text-muted)' }}>
               {tagline}
             </p>
           </motion.div>
 
           {/* CTA Buttons */}
-          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2">
+          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-4 pt-1 sm:pt-2">
             <Magnetic>
               <a
                 href="#projects"
-                className="w-full sm:w-auto px-7 py-3.5 rounded-2xl font-mono font-bold text-sm flex items-center justify-center gap-2 group cursor-pointer transition-all"
+                className="w-full sm:w-auto px-7 py-3 rounded-2xl font-mono font-bold text-sm flex items-center justify-center gap-2 group cursor-pointer transition-all"
                 style={{ background: 'var(--color-accent)', color: '#000', boxShadow: '0 0 25px rgba(56,189,248,0.35)' }}
                 onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
                 onMouseLeave={e => e.currentTarget.style.opacity = '1'}
@@ -124,7 +124,7 @@ export default function Hero({ personInfo = {} }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 download
-                className="w-full sm:w-auto px-7 py-3.5 rounded-2xl glass-panel font-mono font-bold text-sm flex items-center justify-center gap-2 group cursor-pointer transition-all"
+                className="w-full sm:w-auto px-7 py-3 rounded-2xl glass-panel font-mono font-bold text-sm flex items-center justify-center gap-2 group cursor-pointer transition-all"
                 style={{ color: 'var(--color-text)' }}
               >
                 <Download className="w-4 h-4 group-hover:scale-110 transition-transform" style={{ color: 'var(--color-accent)' }} />
@@ -134,7 +134,7 @@ export default function Hero({ personInfo = {} }) {
           </motion.div>
 
           {/* Social Links */}
-          <motion.div variants={itemVariants} className="flex items-center justify-center gap-4 pt-4">
+          <motion.div variants={itemVariants} className="flex items-center justify-center gap-3 sm:gap-4 pt-2 sm:pt-4">
             {[
               { href: githubLink, icon: <GithubIcon className="w-5 h-5 fill-current" />, label: 'GitHub' },
               { href: linkedinLink, icon: <LinkedinIcon className="w-5 h-5 fill-current" />, label: 'LinkedIn' },

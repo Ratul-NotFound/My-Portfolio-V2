@@ -37,13 +37,13 @@ export default function Footer({ personInfo = {} }) {
 
   return (
     <footer
-      className="pt-12 pb-28 md:pb-12 relative z-10 text-xs font-mono"
+      className="pt-8 pb-24 md:py-12 relative z-10 text-xs font-mono"
       style={{ borderTop: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface-3)' }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
         {/* TOP: 3-column */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start pb-8" style={{ borderBottom: '1px solid var(--color-border)' }}>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start pb-6" style={{ borderBottom: '1px solid var(--color-border)' }}>
 
           {/* Brand & Tagline */}
           <div className="md:col-span-5 space-y-3">

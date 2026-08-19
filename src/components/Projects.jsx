@@ -277,8 +277,8 @@ export default function Projects({ projects = [], techSkills = [] }) {
   });
 
   return (
-    <SectionWrapper id="projects" variant="zoom-portal" className="py-12 sm:py-16">
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-5 lg:space-y-6 perspective-1200">
+    <SectionWrapper id="projects" variant="zoom-portal" className="py-6 sm:py-14">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-3.5 sm:space-y-6 perspective-1200">
         
         {/* Section Header */}
         <SectionHeader

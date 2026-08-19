@@ -8,7 +8,7 @@ export default function SectionHeader({ number = '01', category = '', title = ''
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      className="text-center max-w-3xl mx-auto space-y-2 mb-6"
+      className="text-center max-w-3xl mx-auto space-y-1 sm:space-y-2 mb-3.5 sm:mb-6"
     >
       {/* Category Pill */}
       <div

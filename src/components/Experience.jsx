@@ -131,7 +131,7 @@ export default function Experience({ experiences = [] }) {
         </div>
 
         {/* ⭕ HIGHLY POPPED CIRCULAR TIMELINE RAIL */}
-        <div className="relative py-4 sm:py-6 px-2 select-none font-mono">
+        <div className="relative py-2 sm:py-6 px-2 select-none font-mono">
           
           {/* Connecting Glowing Laser Rail */}
           <div 
@@ -142,7 +142,7 @@ export default function Experience({ experiences = [] }) {
           />
 
           {/* Milestone Popping Circle Nodes Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 relative z-10">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-6 relative z-10">
             {filteredExperiences.map((exp, idx) => {
               const isActive = exp.id === activeExp?.id;
               const isPresent = exp.period?.toLowerCase().includes("present");

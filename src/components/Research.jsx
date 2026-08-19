@@ -129,7 +129,7 @@ export default function Research({ researchPapers = [] }) {
     <SectionWrapper id="research" variant="slide-right" className="py-10 sm:py-14">
       <div 
         ref={sectionRef}
-        className="w-full max-w-4xl mx-auto px-4 sm:px-6 relative z-10 space-y-5 sm:space-y-6"
+        className="w-full max-w-4xl mx-auto px-4 sm:px-6 relative z-10 space-y-3.5 sm:space-y-6"
       >
         {/* Section Header */}
         <SectionHeader
@@ -146,7 +146,7 @@ export default function Research({ researchPapers = [] }) {
           <button
             onClick={handlePrev}
             aria-label="Previous Publication"
-            className="absolute left-0 sm:left-1 z-40 p-2.5 sm:p-3 rounded-2xl shadow-xl transition-all duration-300 cursor-pointer flex items-center justify-center hover:scale-110 active:scale-90"
+            className="absolute left-0 sm:left-1 z-40 p-2 sm:p-3 rounded-2xl shadow-xl transition-all duration-300 cursor-pointer flex items-center justify-center hover:scale-110 active:scale-90"
             style={{
               background: 'var(--color-surface-2)',
               border: '1px solid var(--color-border)',
@@ -159,7 +159,7 @@ export default function Research({ researchPapers = [] }) {
           </button>
 
           {/* Active Animated Slide Card */}
-          <div className="w-full max-w-2xl px-6 sm:px-10 z-20">
+          <div className="w-full max-w-2xl px-4 sm:px-10 z-20">
             <AnimatePresence custom={direction} mode="wait">
               {currentPaper && (
                 <motion.div
@@ -178,7 +178,7 @@ export default function Research({ researchPapers = [] }) {
                       else handleNext();
                     }
                   }}
-                  className="w-full p-5 sm:p-6 rounded-2xl sm:rounded-3xl relative overflow-hidden font-mono shadow-xl select-none group cursor-grab active:cursor-grabbing space-y-3.5"
+                  className="w-full p-4 sm:p-6 rounded-2xl sm:rounded-3xl relative overflow-hidden font-mono shadow-xl select-none group cursor-grab active:cursor-grabbing space-y-3 sm:space-y-3.5"
                   style={{
                     background: 'var(--color-surface)',
                     border: '1px solid var(--color-border)',

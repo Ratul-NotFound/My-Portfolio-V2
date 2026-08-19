@@ -351,8 +351,8 @@ export default function TechStack({ categories = [], skills = [], projects = [] 
   });
 
   return (
-    <SectionWrapper id="tech-stack" variant="deck-rise" className="py-10 sm:py-14">
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-4 sm:space-y-6">
+    <SectionWrapper id="tech-stack" variant="deck-rise" className="py-6 sm:py-14">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-3 sm:space-y-6">
         
         {/* Section Header */}
         <SectionHeader

@@ -62,20 +62,20 @@ export default function Contact({ personInfo = {} }) {
 
   return (
     <SectionWrapper id="contact" variant="glass-rise">
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4 sm:space-y-6">
         <SectionHeader number="08" category="Let's Work Together" title="Get In" highlight="Touch" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-5xl mx-auto w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 max-w-5xl mx-auto w-full">
 
           {/* LEFT: Contact Details */}
           <div className="lg:col-span-5">
-            <div className="p-6 space-y-4 group relative h-full" style={card}
+            <div className="p-4 sm:p-6 space-y-3 sm:space-y-4 group relative h-full rounded-3xl" style={card}
               onMouseEnter={hoverCardIn} onMouseLeave={hoverCardOut}>
               {/* laser line */}
               <div className="absolute inset-x-0 top-0 h-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }} />
 
-              <div className="flex items-center justify-between pb-3" style={{ borderBottom: '1px solid var(--color-border)' }}>
+              <div className="flex items-center justify-between pb-2.5" style={{ borderBottom: '1px solid var(--color-border)' }}>
                 <h3 className="text-base font-bold font-sans flex items-center gap-2" style={{ color: 'var(--color-text)' }}>
                   <MessageSquare className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
                   Contact Details
@@ -142,18 +142,18 @@ export default function Contact({ personInfo = {} }) {
 
           {/* RIGHT: Contact Form */}
           <div className="lg:col-span-7">
-            <div className="p-6 sm:p-7 group relative" style={card}
+            <div className="p-4 sm:p-7 group relative rounded-3xl" style={card}
               onMouseEnter={hoverCardIn} onMouseLeave={hoverCardOut}>
               <div className="absolute inset-x-0 top-0 h-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }} />
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   {[
                     { label: 'Your Name', key: 'name', type: 'text', placeholder: 'Jane Doe' },
                     { label: 'Email Address', key: 'email', type: 'email', placeholder: 'jane@example.com' },
                   ].map(({ label, key, type, placeholder }) => (
-                    <div key={key} className="space-y-1.5">
+                    <div key={key} className="space-y-1">
                       <label className="text-xs font-mono font-bold" style={{ color: 'var(--color-text-muted)' }}>{label}</label>
                       <input
                         type={type} required placeholder={placeholder}
@@ -166,7 +166,7 @@ export default function Contact({ personInfo = {} }) {
                   ))}
                 </div>
 
-                <div className="space-y-1.5">
+                <div className="space-y-1">
                   <label className="text-xs font-mono font-bold" style={{ color: 'var(--color-text-muted)' }}>Subject</label>
                   <input type="text" required placeholder="Project Inquiry / Job Opportunity"
                     value={formData.subject}
@@ -175,9 +175,9 @@ export default function Contact({ personInfo = {} }) {
                   />
                 </div>
 
-                <div className="space-y-1.5">
+                <div className="space-y-1">
                   <label className="text-xs font-mono font-bold" style={{ color: 'var(--color-text-muted)' }}>Message</label>
-                  <textarea required rows={4} placeholder="Tell me about your project or opportunity..."
+                  <textarea required rows={3} placeholder="Tell me about your project or opportunity..."
                     value={formData.message}
                     onChange={e => setFormData({ ...formData, message: e.target.value })}
                     style={{ ...inputStyle, resize: 'none' }}

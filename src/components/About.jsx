@@ -28,16 +28,16 @@ export default function About({ personInfo = {}, stats, education }) {
 
   return (
     <SectionWrapper id="about" variant="flip-left">
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4 sm:space-y-6">
         <SectionHeader number="02" category="About Mahmud" title="Background &" highlight="Engineering Roots" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-stretch">
 
           {/* Left: Profile Card */}
           <motion.div
             initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }} transition={{ duration: 0.5 }}
-            className="lg:col-span-5 flex flex-col justify-between items-center text-center space-y-5 group relative"
+            className="lg:col-span-5 flex flex-col justify-between items-center text-center space-y-3.5 sm:space-y-5 p-4 sm:p-6 group relative rounded-3xl"
             style={card}
             onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--color-border-accent)'}
             onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--color-border)'}
@@ -73,7 +73,7 @@ export default function About({ personInfo = {}, stats, education }) {
           <motion.div
             initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }}
-            className="lg:col-span-7 flex flex-col justify-between space-y-5 group relative"
+            className="lg:col-span-7 flex flex-col justify-between space-y-4 sm:space-y-5 p-4 sm:p-6 group relative rounded-3xl"
             style={card}
             onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--color-border-accent)'}
             onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--color-border)'}
