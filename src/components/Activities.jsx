@@ -296,7 +296,6 @@ export default function Activities({ activities = fallbackActivities }) {
     setDragMoved(false);
     setStartX(e.clientX);
     setScrollLeftState(railRef.current.scrollLeft);
-    railRef.current.setPointerCapture(e.pointerId);
   };
 
   const handlePointerMove = (e) => {
@@ -304,15 +303,12 @@ export default function Activities({ activities = fallbackActivities }) {
     const delta = e.clientX - startX;
     if (Math.abs(delta) > 5) {
       setDragMoved(true);
+      railRef.current.scrollLeft = scrollLeftState - delta * 1.5;
     }
-    railRef.current.scrollLeft = scrollLeftState - delta * 1.5;
   };
 
-  const handlePointerUp = (e) => {
+  const handlePointerUp = () => {
     setIsDragging(false);
-    if (railRef.current && railRef.current.hasPointerCapture(e.pointerId)) {
-      railRef.current.releasePointerCapture(e.pointerId);
-    }
   };
 
   const scrollRail = (dir) => {
@@ -665,8 +661,10 @@ export default function Activities({ activities = fallbackActivities }) {
               return (
                 <div
                   key={act.id || idx}
-                  onClick={() => {
-                    if (!dragMoved) handleSelectIndex(idx);
+                  onClick={() => handleSelectIndex(idx)}
+                  onMouseEnter={() => {
+                    handleSelectIndex(idx);
+                    setIsPlayingTour(false);
                   }}
                   className="w-52 sm:w-60 p-3 rounded-2xl text-left transition-all duration-300 flex-shrink-0 cursor-pointer shadow-sm relative flex flex-col justify-between group hover:-translate-y-1 select-none"
                   style={{

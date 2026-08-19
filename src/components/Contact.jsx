@@ -1,33 +1,12 @@
 'use client';
 import { useState } from 'react';
-import { Mail, MapPin, Clock, Send, Copy, Check, MessageSquare } from 'lucide-react';
+import { Mail, MapPin, Clock, Send, Copy, Check, MessageSquare, Loader2, Sparkles, ArrowUpRight } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from './SocialIcons';
 import SectionWrapper from './SectionWrapper';
 import SectionHeader from './SectionHeader';
 import Magnetic from './ux/Magnetic';
 import { submitContactMessage } from '@/lib/supabase';
-
-const card = {
-  borderRadius: '1.5rem',
-  border: '1px solid var(--color-border)',
-  background: 'var(--glass-bg)',
-  backdropFilter: 'blur(14px)',
-  WebkitBackdropFilter: 'blur(14px)',
-  transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
-};
-
-const inputStyle = {
-  width: '100%',
-  padding: '0.75rem 1rem',
-  borderRadius: '0.875rem',
-  border: '1px solid var(--color-border)',
-  background: 'var(--color-surface-3)',
-  color: 'var(--color-text)',
-  fontSize: '0.75rem',
-  fontFamily: 'JetBrains Mono, monospace',
-  outline: 'none',
-  transition: 'border-color 0.25s ease',
-};
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Contact({ personInfo = {} }) {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
@@ -48,159 +27,373 @@ export default function Contact({ personInfo = {} }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSending || submitted) return;
     setIsSending(true);
-    await submitContactMessage(formData);
-    setIsSending(false);
-    setSubmitted(true);
-    setTimeout(() => { setSubmitted(false); setFormData({ name:'', email:'', subject:'', message:'' }); }, 4000);
+    try {
+      await submitContactMessage(formData);
+      setIsSending(false);
+      setSubmitted(true);
+      setTimeout(() => {
+        setSubmitted(false);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      }, 4500);
+    } catch (err) {
+      console.error('Submission failed:', err);
+      setIsSending(false);
+    }
   };
 
-  const focusStyle  = e => e.currentTarget.style.borderColor = 'var(--color-accent)';
-  const blurStyle   = e => e.currentTarget.style.borderColor = 'var(--color-border)';
-  const hoverCardIn = e => { e.currentTarget.style.borderColor = 'var(--color-border-accent)'; };
-  const hoverCardOut= e => { e.currentTarget.style.borderColor = 'var(--color-border)'; };
-
   return (
-    <SectionWrapper id="contact" variant="glass-rise">
+    <SectionWrapper id="contact" variant="glass-rise" className="py-6 sm:py-14">
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4 sm:space-y-6">
         <SectionHeader number="08" category="Let's Work Together" title="Get In" highlight="Touch" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 max-w-5xl mx-auto w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 max-w-5xl mx-auto w-full items-stretch">
 
-          {/* LEFT: Contact Details */}
-          <div className="lg:col-span-5">
-            <div className="p-4 sm:p-6 space-y-3 sm:space-y-4 group relative h-full rounded-3xl" style={card}
-              onMouseEnter={hoverCardIn} onMouseLeave={hoverCardOut}>
-              {/* laser line */}
-              <div className="absolute inset-x-0 top-0 h-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }} />
+          {/* LEFT: Contact Details Spec Card */}
+          <div className="lg:col-span-5 flex flex-col">
+            <div 
+              className="p-5 sm:p-7 flex flex-col justify-between h-full rounded-3xl relative overflow-hidden group transition-all duration-300 font-mono shadow-xl"
+              style={{
+                background: 'var(--glass-bg)',
+                border: '1px solid var(--color-border)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+              }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--color-border-accent)'}
+              onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--color-border)'}
+            >
+              {/* Top Laser Accent Line */}
+              <div 
+                className="absolute inset-x-0 top-0 h-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }} 
+              />
 
-              <div className="flex items-center justify-between pb-2.5" style={{ borderBottom: '1px solid var(--color-border)' }}>
-                <h3 className="text-base font-bold font-sans flex items-center gap-2" style={{ color: 'var(--color-text)' }}>
-                  <MessageSquare className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
-                  Contact Details
-                </h3>
-                <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full font-mono"
-                  style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border-accent)', color: 'var(--color-accent)' }}>
-                  Open for Roles
-                </span>
-              </div>
+              {/* Ambient Glow */}
+              <div 
+                className="absolute -right-16 -bottom-16 w-36 h-36 rounded-full blur-[70px] pointer-events-none opacity-20 group-hover:opacity-35 transition-opacity"
+                style={{ background: 'var(--color-accent)' }}
+              />
 
-              {[
-                { icon: <Mail className="w-4 h-4" />, label: 'DIRECT EMAIL', value: email, href: `mailto:${email}` },
-                { icon: <MapPin className="w-4 h-4" />, label: 'LOCATION', value: location },
-                { icon: <Clock className="w-4 h-4" />, label: 'RESPONSE TIME', value: '< 2 Hours' },
-              ].map(({ icon, label, value, href }) => (
-                <div key={label} className="flex items-start gap-3">
-                  <div className="p-2 rounded-xl flex-shrink-0"
-                    style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)', color: 'var(--color-accent)' }}>
-                    {icon}
+              {/* Card Header */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between pb-3" style={{ borderBottom: '1px solid var(--color-border)' }}>
+                  <h3 className="text-base font-bold font-sans flex items-center gap-2" style={{ color: 'var(--color-text)' }}>
+                    <MessageSquare className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
+                    <span>Direct Channels</span>
+                  </h3>
+                  <span 
+                    className="text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 shadow-sm"
+                    style={{ 
+                      background: 'rgba(34, 197, 94, 0.12)', 
+                      border: '1px solid rgba(34, 197, 94, 0.25)', 
+                      color: '#22c55e' 
+                    }}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                    <span>Available for Roles</span>
+                  </span>
+                </div>
+
+                {/* Contact Items List */}
+                <div className="space-y-2.5">
+                  {/* Direct Email */}
+                  <a
+                    href={`mailto:${email}`}
+                    className="p-3 rounded-2xl flex items-center gap-3 transition-all cursor-pointer group/item border"
+                    style={{
+                      background: 'var(--color-surface-2)',
+                      borderColor: 'var(--color-border)',
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.borderColor = 'var(--color-accent)';
+                      e.currentTarget.style.background = 'var(--color-surface)';
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.borderColor = 'var(--color-border)';
+                      e.currentTarget.style.background = 'var(--color-surface-2)';
+                    }}
+                  >
+                    <div 
+                      className="p-2 rounded-xl flex-shrink-0 transition-transform group-hover/item:scale-110"
+                      style={{ background: 'var(--color-surface-3)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}
+                    >
+                      <Mail className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <span className="text-[10px] font-bold block opacity-75" style={{ color: 'var(--color-text-muted)' }}>DIRECT EMAIL</span>
+                      <span className="text-xs font-bold truncate block transition-colors group-hover/item:text-accent" style={{ color: 'var(--color-text)' }}>
+                        {email}
+                      </span>
+                    </div>
+                    <ArrowUpRight className="w-3.5 h-3.5 opacity-40 group-hover/item:opacity-100 group-hover/item:translate-x-0.5 group-hover/item:-translate-y-0.5 transition-all" style={{ color: 'var(--color-accent)' }} />
+                  </a>
+
+                  {/* Location */}
+                  <div 
+                    className="p-3 rounded-2xl flex items-center gap-3 border"
+                    style={{
+                      background: 'var(--color-surface-2)',
+                      borderColor: 'var(--color-border)',
+                    }}
+                  >
+                    <div 
+                      className="p-2 rounded-xl flex-shrink-0"
+                      style={{ background: 'var(--color-surface-3)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}
+                    >
+                      <MapPin className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <span className="text-[10px] font-bold block opacity-75" style={{ color: 'var(--color-text-muted)' }}>LOCATION</span>
+                      <span className="text-xs font-bold truncate block" style={{ color: 'var(--color-text)' }}>
+                        {location}
+                      </span>
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-[10px] font-bold block font-mono" style={{ color: 'var(--color-text-muted)' }}>{label}</span>
-                    {href
-                      ? <a href={href} className="text-xs font-bold" style={{ color: 'var(--color-text)' }}>{value}</a>
-                      : <span className="text-xs font-bold" style={{ color: label === 'RESPONSE TIME' ? 'var(--color-accent)' : 'var(--color-text)' }}>{value}</span>
-                    }
+
+                  {/* Response Time */}
+                  <div 
+                    className="p-3 rounded-2xl flex items-center gap-3 border"
+                    style={{
+                      background: 'var(--color-surface-2)',
+                      borderColor: 'var(--color-border)',
+                    }}
+                  >
+                    <div 
+                      className="p-2 rounded-xl flex-shrink-0"
+                      style={{ background: 'var(--color-surface-3)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}
+                    >
+                      <Clock className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <span className="text-[10px] font-bold block opacity-75" style={{ color: 'var(--color-text-muted)' }}>TYPICAL RESPONSE</span>
+                      <span className="text-xs font-bold" style={{ color: 'var(--color-accent)' }}>
+                        ⚡ Within 2 Hours
+                      </span>
+                    </div>
                   </div>
                 </div>
-              ))}
-
-              {/* Copy Email */}
-              <div className="pt-3" style={{ borderTop: '1px solid var(--color-border)' }}>
-                <button onClick={copyEmail}
-                  className="w-full p-3 rounded-2xl flex items-center justify-between text-xs font-mono font-bold cursor-pointer transition-all"
-                  style={{ background: 'var(--color-surface-3)', border: '1px solid var(--color-border)', color: 'var(--color-text)' }}>
-                  <span className="truncate">{email}</span>
-                  {copied
-                    ? <span className="flex items-center gap-1" style={{ color: 'var(--color-accent)' }}><Check className="w-4 h-4" /> Copied!</span>
-                    : <span className="flex items-center gap-1" style={{ color: 'var(--color-accent)' }}><Copy className="w-4 h-4" /> Copy</span>
-                  }
-                </button>
               </div>
 
-              {/* Socials */}
-              <div className="flex items-center justify-center gap-3 pt-1">
-                {[
-                  { href: github, icon: <GithubIcon className="w-4 h-4" /> },
-                  { href: linkedin, icon: <LinkedinIcon className="w-4 h-4" /> },
-                  { href: `mailto:${email}`, icon: <Mail className="w-4 h-4" /> },
-                ].map(({ href, icon }, i) => (
-                  <a key={i} href={href} target={href.startsWith('http') ? '_blank' : undefined}
-                    rel="noopener noreferrer"
-                    className="p-3 rounded-2xl transition-colors"
-                    style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)', color: 'var(--color-text-muted)' }}
-                    onMouseEnter={e => { e.currentTarget.style.color = 'var(--color-accent)'; e.currentTarget.style.borderColor = 'var(--color-border-accent)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.color = 'var(--color-text-muted)'; e.currentTarget.style.borderColor = 'var(--color-border)'; }}
-                  >
-                    {icon}
-                  </a>
-                ))}
+              {/* Bottom Actions: Copy Button & Social Row */}
+              <div className="space-y-3 pt-4" style={{ borderTop: '1px solid var(--color-border)' }}>
+                {/* One-Click Copy Email Button */}
+                <button 
+                  type="button"
+                  onClick={copyEmail}
+                  className="w-full p-2.5 rounded-xl flex items-center justify-between text-xs font-mono font-bold cursor-pointer transition-all border active:scale-98 shadow-sm"
+                  style={{ 
+                    background: copied ? 'rgba(56, 189, 248, 0.15)' : 'var(--color-surface-3)', 
+                    borderColor: copied ? 'var(--color-accent)' : 'var(--color-border)', 
+                    color: copied ? 'var(--color-accent)' : 'var(--color-text)' 
+                  }}
+                  onMouseEnter={e => { if (!copied) e.currentTarget.style.borderColor = 'var(--color-border-accent)'; }}
+                  onMouseLeave={e => { if (!copied) e.currentTarget.style.borderColor = 'var(--color-border)'; }}
+                >
+                  <span className="truncate text-[11px]">{email}</span>
+                  {copied ? (
+                    <span className="flex items-center gap-1.5 text-xs text-accent font-bold" style={{ color: 'var(--color-accent)' }}>
+                      <Check className="w-3.5 h-3.5 text-green-400" /> Copied!
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1.5 text-xs text-accent opacity-85 hover:opacity-100" style={{ color: 'var(--color-accent)' }}>
+                      <Copy className="w-3.5 h-3.5" /> Copy
+                    </span>
+                  )}
+                </button>
+
+                {/* Social Connect Icons Row */}
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { href: github, icon: <GithubIcon className="w-4 h-4 fill-current" />, label: 'GitHub' },
+                    { href: linkedin, icon: <LinkedinIcon className="w-4 h-4 fill-current" />, label: 'LinkedIn' },
+                    { href: `mailto:${email}`, icon: <Mail className="w-4 h-4" />, label: 'Mail' },
+                  ].map(({ href, icon, label }, i) => (
+                    <a 
+                      key={i} 
+                      href={href} 
+                      target={href.startsWith('http') ? '_blank' : undefined}
+                      rel="noopener noreferrer"
+                      className="py-2 px-2 rounded-xl flex items-center justify-center gap-1.5 text-xs font-mono font-semibold transition-all border group/soc cursor-pointer hover:scale-103 active:scale-95 shadow-sm"
+                      style={{ 
+                        background: 'var(--color-surface-2)', 
+                        borderColor: 'var(--color-border)', 
+                        color: 'var(--color-text-muted)' 
+                      }}
+                      onMouseEnter={e => { 
+                        e.currentTarget.style.color = 'var(--color-accent)'; 
+                        e.currentTarget.style.borderColor = 'var(--color-accent)';
+                        e.currentTarget.style.background = 'var(--color-surface)';
+                      }}
+                      onMouseLeave={e => { 
+                        e.currentTarget.style.color = 'var(--color-text-muted)'; 
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.background = 'var(--color-surface-2)';
+                      }}
+                    >
+                      {icon}
+                      <span className="text-[11px]">{label}</span>
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
 
-          {/* RIGHT: Contact Form */}
-          <div className="lg:col-span-7">
-            <div className="p-4 sm:p-7 group relative rounded-3xl" style={card}
-              onMouseEnter={hoverCardIn} onMouseLeave={hoverCardOut}>
-              <div className="absolute inset-x-0 top-0 h-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }} />
+          {/* RIGHT: High-Performance Contact Message Form */}
+          <div className="lg:col-span-7 flex flex-col">
+            <div 
+              className="p-5 sm:p-7 flex flex-col justify-between h-full rounded-3xl relative overflow-hidden group transition-all duration-300 font-mono shadow-xl"
+              style={{
+                background: 'var(--glass-bg)',
+                border: '1px solid var(--color-border)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+              }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--color-border-accent)'}
+              onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--color-border)'}
+            >
+              {/* Top Laser Accent Line */}
+              <div 
+                className="absolute inset-x-0 top-0 h-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }} 
+              />
 
-              <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  {[
-                    { label: 'Your Name', key: 'name', type: 'text', placeholder: 'Jane Doe' },
-                    { label: 'Email Address', key: 'email', type: 'email', placeholder: 'jane@example.com' },
-                  ].map(({ label, key, type, placeholder }) => (
-                    <div key={key} className="space-y-1">
-                      <label className="text-xs font-mono font-bold" style={{ color: 'var(--color-text-muted)' }}>{label}</label>
+              <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4 flex flex-col justify-between h-full">
+                <div className="space-y-3 sm:space-y-3.5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    {/* Name Input */}
+                    <div className="space-y-1">
+                      <label className="text-xs font-mono font-bold flex items-center justify-between" style={{ color: 'var(--color-text-muted)' }}>
+                        <span>Your Name</span>
+                        <span className="text-[10px] opacity-50 font-normal">Required</span>
+                      </label>
                       <input
-                        type={type} required placeholder={placeholder}
-                        value={formData[key]}
-                        onChange={e => setFormData({ ...formData, [key]: e.target.value })}
-                        style={inputStyle}
-                        onFocus={focusStyle} onBlur={blurStyle}
+                        type="text" 
+                        required 
+                        placeholder="Mahmud Hasan"
+                        value={formData.name}
+                        onChange={e => setFormData({ ...formData, name: e.target.value })}
+                        className="w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono outline-none transition-all duration-200 placeholder:text-zinc-500 focus:ring-2 focus:ring-accent/30"
+                        style={{
+                          background: 'var(--color-surface-2)',
+                          borderColor: 'var(--color-border)',
+                          color: 'var(--color-text)',
+                        }}
+                        onFocus={e => e.currentTarget.style.borderColor = 'var(--color-accent)'}
+                        onBlur={e => e.currentTarget.style.borderColor = 'var(--color-border)'}
                       />
                     </div>
-                  ))}
+
+                    {/* Email Input */}
+                    <div className="space-y-1">
+                      <label className="text-xs font-mono font-bold flex items-center justify-between" style={{ color: 'var(--color-text-muted)' }}>
+                        <span>Email Address</span>
+                        <span className="text-[10px] opacity-50 font-normal">Required</span>
+                      </label>
+                      <input
+                        type="email" 
+                        required 
+                        placeholder="you@company.com"
+                        value={formData.email}
+                        onChange={e => setFormData({ ...formData, email: e.target.value })}
+                        className="w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono outline-none transition-all duration-200 placeholder:text-zinc-500 focus:ring-2 focus:ring-accent/30"
+                        style={{
+                          background: 'var(--color-surface-2)',
+                          borderColor: 'var(--color-border)',
+                          color: 'var(--color-text)',
+                        }}
+                        onFocus={e => e.currentTarget.style.borderColor = 'var(--color-accent)'}
+                        onBlur={e => e.currentTarget.style.borderColor = 'var(--color-border)'}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Subject Input */}
+                  <div className="space-y-1">
+                    <label className="text-xs font-mono font-bold flex items-center justify-between" style={{ color: 'var(--color-text-muted)' }}>
+                      <span>Subject</span>
+                      <span className="text-[10px] opacity-50 font-normal">Inquiry Type</span>
+                    </label>
+                    <input 
+                      type="text" 
+                      required 
+                      placeholder="Project Collaboration / Full-Time Engineering Role"
+                      value={formData.subject}
+                      onChange={e => setFormData({ ...formData, subject: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono outline-none transition-all duration-200 placeholder:text-zinc-500 focus:ring-2 focus:ring-accent/30"
+                      style={{
+                        background: 'var(--color-surface-2)',
+                        borderColor: 'var(--color-border)',
+                        color: 'var(--color-text)',
+                      }}
+                      onFocus={e => e.currentTarget.style.borderColor = 'var(--color-accent)'}
+                      onBlur={e => e.currentTarget.style.borderColor = 'var(--color-border)'}
+                    />
+                  </div>
+
+                  {/* Message Body */}
+                  <div className="space-y-1">
+                    <label className="text-xs font-mono font-bold flex items-center justify-between" style={{ color: 'var(--color-text-muted)' }}>
+                      <span>Message</span>
+                      <span className="text-[10px] opacity-50 font-normal">Details</span>
+                    </label>
+                    <textarea 
+                      required 
+                      rows={3} 
+                      placeholder="Hi Mahmud, I came across your portfolio and would like to discuss..."
+                      value={formData.message}
+                      onChange={e => setFormData({ ...formData, message: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono outline-none transition-all duration-200 placeholder:text-zinc-500 focus:ring-2 focus:ring-accent/30 resize-none"
+                      style={{
+                        background: 'var(--color-surface-2)',
+                        borderColor: 'var(--color-border)',
+                        color: 'var(--color-text)',
+                      }}
+                      onFocus={e => e.currentTarget.style.borderColor = 'var(--color-accent)'}
+                      onBlur={e => e.currentTarget.style.borderColor = 'var(--color-border)'}
+                    />
+                  </div>
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-xs font-mono font-bold" style={{ color: 'var(--color-text-muted)' }}>Subject</label>
-                  <input type="text" required placeholder="Project Inquiry / Job Opportunity"
-                    value={formData.subject}
-                    onChange={e => setFormData({ ...formData, subject: e.target.value })}
-                    style={inputStyle} onFocus={focusStyle} onBlur={blurStyle}
-                  />
+                {/* Submit Action Button */}
+                <div className="pt-2">
+                  <Magnetic>
+                    <button 
+                      type="submit" 
+                      disabled={submitted || isSending}
+                      className="w-full py-3.5 rounded-2xl font-mono font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg active:scale-98 disabled:opacity-80"
+                      style={{ 
+                        background: submitted ? 'rgba(34, 197, 94, 0.9)' : 'var(--color-accent)', 
+                        color: submitted ? '#fff' : '#000',
+                        boxShadow: submitted ? '0 0 20px rgba(34, 197, 94, 0.4)' : '0 0 25px rgba(56, 189, 248, 0.35)'
+                      }}
+                      onMouseEnter={e => { if (!submitted && !isSending) e.currentTarget.style.opacity = '0.88'; }}
+                      onMouseLeave={e => { if (!submitted && !isSending) e.currentTarget.style.opacity = '1'; }}
+                    >
+                      {isSending ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin text-black" />
+                          <span>Dispatching Message...</span>
+                        </>
+                      ) : submitted ? (
+                        <>
+                          <Check className="w-4 h-4 text-white animate-bounce" />
+                          <span>Message Dispatched Successfully!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                          <span>Send Message</span>
+                        </>
+                      )}
+                    </button>
+                  </Magnetic>
                 </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-mono font-bold" style={{ color: 'var(--color-text-muted)' }}>Message</label>
-                  <textarea required rows={3} placeholder="Tell me about your project or opportunity..."
-                    value={formData.message}
-                    onChange={e => setFormData({ ...formData, message: e.target.value })}
-                    style={{ ...inputStyle, resize: 'none' }}
-                    onFocus={focusStyle} onBlur={blurStyle}
-                  />
-                </div>
-
-                <Magnetic>
-                  <button type="submit" disabled={submitted}
-                    className="w-full py-3.5 rounded-2xl font-mono font-bold text-xs flex items-center justify-center gap-2 transition-opacity cursor-pointer disabled:opacity-70"
-                    style={{ background: 'var(--color-accent)', color: '#000' }}
-                    onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
-                    onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-                  >
-                    {submitted
-                      ? <><Check className="w-4 h-4" /> Message Sent Successfully!</>
-                      : <><Send className="w-4 h-4" /> Send Message</>
-                    }
-                  </button>
-                </Magnetic>
               </form>
             </div>
           </div>
+
         </div>
       </div>
     </SectionWrapper>
