@@ -319,10 +319,10 @@ const ScrollStack = ({
     const scroller = scrollerRef.current;
     if (!scroller || useWindowScroll) return;
 
-    let touchStartY = 0;
+    let lastTouchY = 0;
 
     const handleWheelPassThrough = (e) => {
-      const atBottom = scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 8;
+      const atBottom = scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 6;
       const atTop = scroller.scrollTop <= 4;
 
       if ((atBottom && e.deltaY > 0) || (atTop && e.deltaY < 0)) {
@@ -332,19 +332,21 @@ const ScrollStack = ({
 
     const handleTouchStart = (e) => {
       if (e.touches && e.touches[0]) {
-        touchStartY = e.touches[0].clientY;
+        lastTouchY = e.touches[0].clientY;
       }
     };
 
     const handleTouchMovePassThrough = (e) => {
       if (!e.touches || !e.touches[0]) return;
       const touchCurrentY = e.touches[0].clientY;
-      const deltaY = touchStartY - touchCurrentY;
-      const atBottom = scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 8;
+      const deltaY = lastTouchY - touchCurrentY;
+      lastTouchY = touchCurrentY;
+
+      const atBottom = scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 6;
       const atTop = scroller.scrollTop <= 4;
 
       if ((atBottom && deltaY > 0) || (atTop && deltaY < 0)) {
-        window.scrollBy({ top: deltaY * 1.2, behavior: 'auto' });
+        window.scrollBy({ top: deltaY, behavior: 'auto' });
       }
     };
 

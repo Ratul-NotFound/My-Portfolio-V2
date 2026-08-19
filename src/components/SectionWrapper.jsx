@@ -109,7 +109,7 @@ export default function SectionWrapper({ children, className = '', id = '', vari
     <section 
       ref={containerRef}
       id={id}
-      className={`relative w-full flex flex-col justify-center items-center ${id === 'hero' ? 'pt-20 pb-4 sm:pt-24 sm:pb-8' : id === 'about' ? 'pt-8 pb-12 sm:py-16' : 'py-12 sm:py-16'} overflow-x-hidden ${className}`}
+      className={`relative w-full flex flex-col justify-center items-center ${id === 'hero' ? 'pt-16 pb-2 sm:pt-24 sm:pb-8' : id === 'about' ? 'pt-4 pb-6 sm:py-14' : 'py-6 sm:py-12 lg:py-16'} overflow-x-hidden ${className}`}
       style={{ perspective: isMobile ? 'none' : 1200, transformStyle: isMobile ? 'flat' : 'preserve-3d', willChange: 'transform' }}
     >
       {/* Creative 3D Scroll Appearing Transition Container */}

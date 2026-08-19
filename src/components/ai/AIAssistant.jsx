@@ -15,7 +15,7 @@ export default function AIAssistant({ data = {} }) {
     }
   ]);
   const [isTyping, setIsTyping] = useState(false);
-  const chatEndRef = useRef(null);
+  const chatBodyRef = useRef(null);
 
   const person = data.personInfo || {};
   const projectsList = data.projects || [];
@@ -23,8 +23,8 @@ export default function AIAssistant({ data = {} }) {
   const researchList = data.researchPapers || [];
 
   useEffect(() => {
-    if (isOpen) {
-      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (isOpen && chatBodyRef.current) {
+      chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
     }
   }, [messages, isOpen]);
 
@@ -251,7 +251,7 @@ export default function AIAssistant({ data = {} }) {
             </div>
 
             {/* Messages Body */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-3 custom-scrollbar text-xs font-sans">
+            <div ref={chatBodyRef} className="flex-1 p-4 overflow-y-auto space-y-3 custom-scrollbar text-xs font-sans">
               {messages.map((m, idx) => (
                 <div 
                   key={idx} 
