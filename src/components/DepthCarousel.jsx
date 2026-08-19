@@ -176,7 +176,7 @@ const DepthCarousel = ({
     [setFocus]
   );
 
-  // ─── Touch / Pointer handling (registered with passive:false for mobile) ────
+  // ─── Touch / Pointer handling (registered safely for mobile scrolling) ────
   const touchStartRef2 = useRef(null);
 
   useEffect(() => {
@@ -193,8 +193,8 @@ const DepthCarousel = ({
       const t = e.touches[0];
       const dx = Math.abs(t.clientX - touchStartRef2.current.x);
       const dy = Math.abs(t.clientY - touchStartRef2.current.y);
-      // Claim the gesture if horizontal movement is dominant
-      if (dx > dy && dx > 8) {
+      // Only claim gesture if horizontal movement is overwhelmingly dominant
+      if (dx > dy * 2 && dx > 25 && e.cancelable) {
         e.preventDefault();
       }
     };
@@ -207,7 +207,7 @@ const DepthCarousel = ({
       const dt = Date.now() - touchStartRef2.current.time;
       touchStartRef2.current = null;
 
-      if (Math.abs(dx) > 20 && Math.abs(dx) > Math.abs(dy) * 1.2 && dt < 600) {
+      if (Math.abs(dx) > 30 && Math.abs(dx) > Math.abs(dy) * 1.5 && dt < 600) {
         if (dx < 0) navigateBy(1);
         else navigateBy(-1);
       }

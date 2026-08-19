@@ -7,6 +7,7 @@
   overscroll-behavior: auto;
   overscroll-behavior-y: auto;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
   scroll-behavior: smooth;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);

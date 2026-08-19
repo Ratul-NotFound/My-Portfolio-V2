@@ -275,9 +275,11 @@ export default function Activities({ activities = fallbackActivities }) {
 
     const handleWheelNative = (e) => {
       if (rail.scrollWidth > rail.clientWidth) {
-        e.preventDefault();
-        const delta = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
-        rail.scrollLeft += delta * 1.5;
+        // Only scroll the horizontal rail if horizontal scrolling is dominant or Shift key is pressed
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY) || e.shiftKey) {
+          e.preventDefault();
+          rail.scrollLeft += (e.deltaX || e.deltaY) * 1.2;
+        }
       }
     };
 

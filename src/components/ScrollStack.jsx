@@ -234,8 +234,7 @@ const ScrollStack = ({
         wheelMultiplier: wheelMultiplier,
         touchInertiaMultiplier: 50,
         lerp: 0.15,
-        syncTouch: true,
-        syncTouchLerp: 0.15,
+        syncTouch: false,
         touchInertia: 0.8
       });
 

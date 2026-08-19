@@ -40,8 +40,13 @@ export default function IntroLoader({ onDone }) {
       stagger: 0.04
     });
 
+    const safetyTimer = setTimeout(() => {
+      document.body.style.overflow = '';
+    }, 1000);
+
     return () => {
       tl.kill();
+      clearTimeout(safetyTimer);
       document.body.style.overflow = '';
     };
   }, [onDone]);

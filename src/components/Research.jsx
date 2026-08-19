@@ -63,47 +63,7 @@ export default function Research({ researchPapers = [] }) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleNext, handlePrev, total]);
 
-  // 🖱️ Smooth Mouse Wheel Scroll with deliberate debounce
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el || total <= 1) return;
 
-    const onWheel = (e) => {
-      const now = Date.now();
-      const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
-      if (Math.abs(delta) < 15) return;
-
-      const idx = currentIndexRef.current;
-
-      // Scrolling Down
-      if (delta > 0) {
-        if (idx < total - 1) {
-          e.preventDefault();
-          if (now - lastScrollTime.current > 400) {
-            lastScrollTime.current = now;
-            setDirection(1);
-            setCurrentIndex(idx + 1);
-          }
-        }
-      } 
-      // Scrolling Up
-      else if (delta < 0) {
-        if (idx > 0) {
-          e.preventDefault();
-          if (now - lastScrollTime.current > 400) {
-            lastScrollTime.current = now;
-            setDirection(-1);
-            setCurrentIndex(idx - 1);
-          }
-        }
-      }
-    };
-
-    el.addEventListener('wheel', onWheel, { passive: false });
-    return () => {
-      el.removeEventListener('wheel', onWheel);
-    };
-  }, [total]);
 
   const generateCitation = (paper) => {
     const doiNumber = paper?.doi || `10.1109/IEEE.2024.1042`;
