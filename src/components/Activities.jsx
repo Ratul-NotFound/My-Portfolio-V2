@@ -245,27 +245,12 @@ export default function Activities({ activities = fallbackActivities }) {
     setCurrentIndex(idx);
   };
 
-  // Auto-center active card on expedition rail horizontally only (Never jump the window viewport)
-  const isFirstMount = useRef(true);
-  useEffect(() => {
-    if (isFirstMount.current) {
-      isFirstMount.current = false;
-      return;
-    }
-    if (railRef.current && railRef.current.children && railRef.current.children[currentIndex]) {
-      const rail = railRef.current;
-      const selectedElem = rail.children[currentIndex];
-      const targetScroll = selectedElem.offsetLeft - (rail.clientWidth / 2) + (selectedElem.clientWidth / 2);
-      rail.scrollTo({
-        left: Math.max(0, targetScroll),
-        behavior: 'smooth'
-      });
-    }
-  }, [currentIndex]);
-
-  // Reset index when category filter changes
+  // Reset index and rail position when category filter changes
   useEffect(() => {
     setCurrentIndex(0);
+    if (railRef.current) {
+      railRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+    }
   }, [activeCategory]);
 
   // Native non-passive Wheel listener to guarantee horizontal scroll with any mouse
@@ -638,22 +623,58 @@ export default function Activities({ activities = fallbackActivities }) {
             </div>
           </div>
 
-          {/* Horizontal Event Cards Rail */}
-          <div 
-            ref={railRef}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerCancel={handlePointerUp}
-            className="flex items-stretch gap-3.5 overflow-x-auto pb-2.5 pt-1 px-1 custom-scrollbar"
-            style={{ 
-              cursor: isDragging ? 'grabbing' : 'grab',
-              scrollbarWidth: 'none', 
-              msOverflowStyle: 'none',
-              touchAction: 'pan-y',
-              userSelect: 'none'
-            }}
-          >
+          {/* Horizontal Event Cards Stream Container with Left/Right Nav Arrows */}
+          <div className="relative w-full group/rail">
+            {/* Left Nav Arrow Button */}
+            <button
+              type="button"
+              onClick={() => scrollRail(-1)}
+              aria-label="Scroll stream left"
+              className="absolute left-0 sm:left-1 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-2.5 rounded-2xl shadow-xl transition-all duration-300 cursor-pointer flex items-center justify-center hover:scale-110 active:scale-95 border backdrop-blur-md opacity-90 hover:opacity-100"
+              style={{
+                background: 'rgba(18, 19, 26, 0.9)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-accent)',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-accent)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; }}
+            >
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+
+            {/* Right Nav Arrow Button */}
+            <button
+              type="button"
+              onClick={() => scrollRail(1)}
+              aria-label="Scroll stream right"
+              className="absolute right-0 sm:right-1 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-2.5 rounded-2xl shadow-xl transition-all duration-300 cursor-pointer flex items-center justify-center hover:scale-110 active:scale-95 border backdrop-blur-md opacity-90 hover:opacity-100"
+              style={{
+                background: 'rgba(18, 19, 26, 0.9)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-accent)',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-accent)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; }}
+            >
+              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+
+            {/* Horizontal Event Cards Rail */}
+            <div 
+              ref={railRef}
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerCancel={handlePointerUp}
+              className="flex items-stretch gap-3.5 overflow-x-auto pb-2.5 pt-1 px-8 sm:px-10 custom-scrollbar"
+              style={{ 
+                cursor: isDragging ? 'grabbing' : 'grab',
+                scrollbarWidth: 'none', 
+                msOverflowStyle: 'none',
+                touchAction: 'pan-y',
+                userSelect: 'none'
+              }}
+            >
             {filteredActivities.map((act, idx) => {
               const isSelected = idx === currentIndex;
               const Icon = categoryIcons[act.category] || Award;
@@ -749,6 +770,7 @@ export default function Activities({ activities = fallbackActivities }) {
                 </div>
               );
             })}
+            </div>
           </div>
 
           {/* 🎚️ Interactive Laser Progress Scrub Bar (Click to Scrub) */}

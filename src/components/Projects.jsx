@@ -83,7 +83,16 @@ function StackableDeckCard({ project, index, total, onInspect }) {
         <div className="grid grid-cols-12 gap-2.5 sm:gap-6 items-center my-1 sm:my-3">
           
           {/* LEFT COLUMN: Project Screenshot */}
-          <div className="col-span-6 md:col-span-6 relative rounded-lg sm:rounded-2xl overflow-hidden bg-black/40 h-28 sm:h-60 group/img shadow-inner" style={{ border: '1px solid var(--color-border)' }}>
+          <div 
+            className="col-span-6 md:col-span-6 relative rounded-lg sm:rounded-2xl overflow-hidden bg-black/40 h-28 sm:h-60 group/img shadow-inner cursor-pointer" 
+            style={{ border: '1px solid var(--color-border)' }}
+            onClick={() => onInspect(project)}
+            onMouseEnter={() => {
+              if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+                onInspect(project);
+              }
+            }}
+          >
             <img
               src={mainImage}
               alt={project.title}
@@ -94,20 +103,19 @@ function StackableDeckCard({ project, index, total, onInspect }) {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
             
-            <div className="absolute top-1 left-1 sm:top-3 sm:left-3 opacity-90 backdrop-blur-md px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-md text-[8px] sm:text-[10px] font-bold font-mono tracking-wider text-white bg-black/50 border border-white/10">
+            <div className="absolute top-1 left-1 sm:top-3 sm:left-3 opacity-90 backdrop-blur-md px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-md text-[8px] sm:text-[10px] font-bold font-mono tracking-wider text-white bg-black/50 border border-white/10 pointer-events-none">
               {projectTechTags[0] || 'Web'}
             </div>
 
-            <button
-              onClick={() => onInspect(project)}
-              className="absolute inset-0 flex flex-col items-center justify-center bg-black/65 opacity-0 group-hover/img:opacity-100 transition-all duration-300 font-mono text-xs font-bold gap-2 cursor-pointer backdrop-blur-xs"
+            <div
+              className="absolute inset-0 flex flex-col items-center justify-center bg-black/65 opacity-0 group-hover/img:opacity-100 transition-all duration-300 font-mono text-xs font-bold gap-2 cursor-pointer backdrop-blur-xs pointer-events-none"
               style={{ color: 'var(--color-accent)' }}
             >
               <span className="p-1.5 sm:p-2 rounded-full bg-white/10 border border-white/20 transform group-hover/img:scale-110 transition-transform">
                 <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color: 'var(--color-accent)' }} />
               </span>
               <span className="tracking-wide uppercase text-[9px] sm:text-[10px]">Inspect Spec</span>
-            </button>
+            </div>
           </div>
 
           {/* RIGHT COLUMN: Project Content & Specs */}
