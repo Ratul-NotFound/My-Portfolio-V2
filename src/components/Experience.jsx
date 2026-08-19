@@ -199,6 +199,8 @@ export default function Experience({ experiences = [] }) {
                       <img
                         src={logoPath}
                         alt={exp.organization}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover rounded-full"
                       />
                     </div>
@@ -282,6 +284,8 @@ export default function Experience({ experiences = [] }) {
                       <img
                         src={activeExp.logo || '/cpc1.jpg'}
                         alt={activeExp.organization}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover rounded-xl"
                       />
                     </div>

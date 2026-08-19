@@ -87,6 +87,8 @@ function StackableDeckCard({ project, index, total, onInspect }) {
             <img
               src={mainImage}
               alt={project.title}
+              loading="lazy"
+              decoding="async"
               onError={(e) => { e.currentTarget.src = '/tech2.JPG'; }}
               className="w-full h-full object-cover group-hover/img:scale-108 transition-transform duration-700 ease-out"
             />
@@ -487,7 +489,7 @@ function ProjectInspectModal({ inspectedProject, onClose }) {
 
         {/* Main Image Display */}
         <div className="relative w-full h-60 sm:h-72 rounded-2xl overflow-hidden bg-black/40 shadow-inner" style={{ border: '1px solid var(--color-border)' }}>
-          <img src={activeImg} alt={inspectedProject.title} className="w-full h-full object-cover transition-all duration-300" />
+          <img src={activeImg} alt={inspectedProject.title} loading="lazy" decoding="async" className="w-full h-full object-cover transition-all duration-300" />
         </div>
 
         {/* Gallery Thumbnails */}
@@ -503,7 +505,7 @@ function ProjectInspectModal({ inspectedProject, onClose }) {
                   opacity: activeImg === imgUrl ? 1 : 0.6,
                 }}
               >
-                <img src={imgUrl} alt={`Gallery ${i}`} className="w-full h-full object-cover" />
+                <img src={imgUrl} alt={`Gallery ${i}`} loading="lazy" decoding="async" className="w-full h-full object-cover" />
               </button>
             ))}
           </div>

@@ -1,10 +1,10 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import { getPortfolioData } from '@/lib/supabase';
 import ScrollProgress from '@/components/ScrollProgress';
 import IntroLoader from '@/components/IntroLoader';
-import FloatingSideControls from '@/components/FloatingSideControls';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
@@ -15,7 +15,10 @@ import Experience from '@/components/Experience';
 import Activities from '@/components/Activities';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
-import AIAssistant from '@/components/ai/AIAssistant';
+
+// Defer non-critical floating widgets to reduce initial payload and CPU workload
+const FloatingSideControls = dynamic(() => import('@/components/FloatingSideControls'), { ssr: false });
+const AIAssistant = dynamic(() => import('@/components/ai/AIAssistant'), { ssr: false });
 
 export default function PortfolioApp({ initialData }) {
   const [data, setData] = useState(initialData || {});

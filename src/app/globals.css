@@ -99,6 +99,9 @@ body::before {
     radial-gradient(ellipse at 85% 20%, rgba(56,189,248,0.04) 0%, transparent 45%);
   pointer-events: none;
   z-index: -1;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
   transition: opacity 0.35s ease;
 }
 

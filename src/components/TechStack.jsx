@@ -263,6 +263,8 @@ const EyePleasingCard = forwardRef(function EyePleasingCard({ skill, index, proj
                         <img 
                           src={p.image || '/tech1.jpg'} 
                           alt={p.title} 
+                          loading="lazy"
+                          decoding="async"
                           className="w-7 h-7 rounded-lg object-cover border border-white/10 flex-shrink-0" 
                         />
                         <div className="min-w-0">

@@ -1,11 +1,10 @@
 'use client';
-import { useRef, useMemo, useEffect } from 'react';
+import { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-function ParticleNetwork() {
+function ParticleNetwork({ count = 85 }) {
   const pointsRef = useRef();
-  const count = 100;
 
   const [positions, colors] = useMemo(() => {
     const pos = new Float32Array(count * 3);
@@ -29,23 +28,38 @@ function ParticleNetwork() {
   }, [count]);
 
   const mouse = useRef({ x: 0, y: 0 });
+  const isVisible = useRef(true);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
       mouse.current.x = (e.clientX / window.innerWidth - 0.5) * 2;
       mouse.current.y = -(e.clientY / window.innerHeight - 0.5) * 2;
     };
+
+    const handleScroll = () => {
+      // Pause 3D frame rendering when scrolled past hero viewport to save 100% GPU
+      isVisible.current = window.scrollY < (window.innerHeight || 800);
+    };
+
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   useFrame((state, delta) => {
-    if (pointsRef.current) {
-      pointsRef.current.rotation.y += delta * 0.04;
-      pointsRef.current.rotation.x += delta * 0.015;
+    // Only execute if Hero section is currently in viewport
+    if (!isVisible.current) return;
 
-      pointsRef.current.position.x += (mouse.current.x * 0.4 - pointsRef.current.position.x) * 0.05;
-      pointsRef.current.position.y += (mouse.current.y * 0.4 - pointsRef.current.position.y) * 0.05;
+    if (pointsRef.current) {
+      pointsRef.current.rotation.y += delta * 0.035;
+      pointsRef.current.rotation.x += delta * 0.012;
+
+      pointsRef.current.position.x += (mouse.current.x * 0.35 - pointsRef.current.position.x) * 0.04;
+      pointsRef.current.position.y += (mouse.current.y * 0.35 - pointsRef.current.position.y) * 0.04;
     }
   });
 
@@ -66,7 +80,7 @@ function ParticleNetwork() {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.07}
+        size={0.065}
         vertexColors
         transparent
         opacity={0.5}
@@ -77,14 +91,29 @@ function ParticleNetwork() {
 }
 
 export default function HeroCanvas() {
+  const [particleCount, setParticleCount] = useState(70);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setParticleCount(window.innerWidth < 768 ? 40 : 80);
+    }
+  }, []);
+
   return (
     <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-50">
       <Canvas
         camera={{ position: [0, 0, 8], fov: 60 }}
-        gl={{ antialias: true, alpha: true }}
+        dpr={[1, 1.5]}
+        gl={{
+          antialias: false,
+          alpha: true,
+          powerPreference: 'high-performance',
+          stencil: false,
+          depth: false
+        }}
       >
         <ambientLight intensity={0.5} />
-        <ParticleNetwork />
+        <ParticleNetwork count={particleCount} />
       </Canvas>
     </div>
   );

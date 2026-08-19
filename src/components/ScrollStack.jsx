@@ -250,7 +250,7 @@ const ScrollStack = ({
       lenisRef.current = lenis;
       return lenis;
     }
-  }, [handleScroll, useWindowScroll]);
+  }, [handleScroll, useWindowScroll, duration, touchMultiplier, wheelMultiplier]);
 
   useEffect(() => {
     const scroller = scrollerRef.current;

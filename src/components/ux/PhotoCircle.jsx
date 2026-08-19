@@ -10,6 +10,8 @@ export default function PhotoCircle({ src = "/images/profile/Profile Pic Without
         <img
           src={imagePath}
           alt={alt}
+          loading="eager"
+          decoding="async"
           className="w-full h-full object-contain object-center scale-105 group-hover:scale-110 transition-transform duration-500"
         />
       </div>

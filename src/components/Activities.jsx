@@ -480,6 +480,8 @@ export default function Activities({ activities = fallbackActivities }) {
                   <img
                     src={activeAct.img || '/tech2.JPG'}
                     alt={activeAct.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover group-hover/banner:scale-106 transition-transform duration-700 ease-out"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-surface)] via-black/35 to-transparent pointer-events-none" />
@@ -686,6 +688,8 @@ export default function Activities({ activities = fallbackActivities }) {
                     <img
                       src={act.img || '/tech2.JPG'}
                       alt={act.title}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
@@ -820,6 +824,8 @@ export default function Activities({ activities = fallbackActivities }) {
                     <img 
                       src={activePhoto} 
                       alt={`${inspectedAct.title} photo ${modalPhotoIdx + 1}`} 
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover transition-all duration-300" 
                     />
 
@@ -879,7 +885,7 @@ export default function Activities({ activities = fallbackActivities }) {
                               boxShadow: isCurrentPhoto ? '0 0 10px var(--color-accent)' : 'none'
                             }}
                           >
-                            <img src={imgUrl} alt={`Thumbnail ${i + 1}`} className="w-full h-full object-cover" />
+                            <img src={imgUrl} alt={`Thumbnail ${i + 1}`} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                           </button>
                         );
                       })}

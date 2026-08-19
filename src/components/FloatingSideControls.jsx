@@ -158,18 +158,26 @@ export default function FloatingSideControls({ personInfo }) {
   const [hoveredId, setHoveredId] = useState(null);
 
   useEffect(() => {
+    let rafId = null;
     const onScroll = () => {
-      const mid = window.scrollY + window.innerHeight * 0.4;
-      let cur = 0;
-      SECTIONS.forEach((sec, idx) => {
-        const el = document.getElementById(sec.id);
-        if (el && mid >= el.offsetTop) cur = idx;
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        const mid = window.scrollY + window.innerHeight * 0.4;
+        let cur = 0;
+        SECTIONS.forEach((sec, idx) => {
+          const el = document.getElementById(sec.id);
+          if (el && mid >= el.offsetTop) cur = idx;
+        });
+        setActive(cur);
+        rafId = null;
       });
-      setActive(cur);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   const scrollTo = id => {

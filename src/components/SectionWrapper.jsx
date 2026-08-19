@@ -10,7 +10,7 @@ export default function SectionWrapper({ children, className = '', id = '', vari
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
-    window.addEventListener('resize', checkMobile);
+    window.addEventListener('resize', checkMobile, { passive: true });
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
@@ -20,67 +20,64 @@ export default function SectionWrapper({ children, className = '', id = '', vari
     offset: ["start end", "end start"]
   });
 
-  // Smooth scroll progress spring for silky, fluid 3D motion during scroll
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 22, restDelta: 0.001 });
+  // Smooth scroll progress spring (optimized damping on mobile/desktop for 60fps)
+  const springProgress = useSpring(scrollYProgress, { stiffness: 120, damping: 24, restDelta: 0.005 });
+  const activeProgress = isMobile ? scrollYProgress : springProgress;
 
   // HIGH-IMPACT 3D APPEARING SCROLL TRANSITION LIFECYCLES:
-  // [0.00 -> 0.32]: Creative 3D Unfold & Revealing Entrance
-  // [0.32 -> 0.68]: Active Content Reading Zone (100% flat, clear, stable)
-  // [0.68 -> 1.00]: Creative 3D Receding Exit
-
   // --- Variant 1: 'recede' (Hero Section 3D Cyber Dissolve) ---
-  const heroOpacity = useTransform(smoothProgress, [0.0, 0.4, 0.75, 1.0], [1, 1, 0.9, 0.2]);
-  const heroY = useTransform(smoothProgress, [0.0, 0.4, 0.75, 1.0], [0, 0, -40, -80]);
-  const heroZ = useTransform(smoothProgress, [0.0, 0.4, 0.75, 1.0], [0, 0, -80, -150]);
-  const heroScale = useTransform(smoothProgress, [0.0, 0.4, 0.75, 1.0], [1, 1, 0.96, 0.92]);
-  const heroRotateX = useTransform(smoothProgress, [0.0, 0.4, 0.75, 1.0], [0, 0, -4, -8]);
+  const heroOpacity = useTransform(activeProgress, [0.0, 0.4, 0.75, 1.0], [1, 1, 0.9, 0.2]);
+  const heroY = useTransform(activeProgress, [0.0, 0.4, 0.75, 1.0], [0, 0, -40, -80]);
+  const heroZ = useTransform(activeProgress, [0.0, 0.4, 0.75, 1.0], [0, 0, -80, -150]);
+  const heroScale = useTransform(activeProgress, [0.0, 0.4, 0.75, 1.0], [1, 1, 0.96, 0.92]);
+  const heroRotateX = useTransform(activeProgress, [0.0, 0.4, 0.75, 1.0], [0, 0, -4, -8]);
 
   // --- Variant 2: 'flip-left' (3D Origami Unfold - About Me) ---
-  const flipOpacity = useTransform(smoothProgress, [0.0, 0.18, 0.82, 1.0], [0.3, 1, 1, 0.3]);
-  const flipY = useTransform(smoothProgress, [0.0, 0.18, 0.82, 1.0], [40, 0, 0, -40]);
-  const flipZ = useTransform(smoothProgress, [0.0, 0.18, 0.82, 1.0], [-60, 0, 0, -60]);
-  const flipScale = useTransform(smoothProgress, [0.0, 0.18, 0.82, 1.0], [0.96, 1, 1, 0.96]);
-  const flipRotateY = useTransform(smoothProgress, [0.0, 0.18, 0.82, 1.0], [-8, 0, 0, 8]);
-  const flipRotateX = useTransform(smoothProgress, [0.0, 0.18, 0.82, 1.0], [4, 0, 0, -4]);
+  const flipOpacity = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [0.3, 1, 1, 0.3]);
+  const flipY = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [40, 0, 0, -40]);
+  const flipZ = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [-60, 0, 0, -60]);
+  const flipScale = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [0.96, 1, 1, 0.96]);
+  const flipRotateY = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [-8, 0, 0, 8]);
+  const flipRotateX = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [4, 0, 0, -4]);
 
   // --- Variant 3: 'deck-rise' / 'cyber-shutter' (3D Deck Elevator Lift - Tech Stack) ---
-  const deckOpacity = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [0, 1, 1, 0]);
-  const deckY = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [80, 0, 0, -80]);
-  const deckZ = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [-120, 0, 0, -120]);
-  const deckScale = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [0.92, 1, 1, 0.92]);
-  const deckRotateX = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [12, 0, 0, -12]);
+  const deckOpacity = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0, 1, 1, 0]);
+  const deckY = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [80, 0, 0, -80]);
+  const deckZ = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [-120, 0, 0, -120]);
+  const deckScale = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0.92, 1, 1, 0.92]);
+  const deckRotateX = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [12, 0, 0, -12]);
 
   // --- Variant 4: 'zoom-portal' (3D Hyper Portal Unfold - Projects) ---
-  const portalOpacity = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [0, 1, 1, 0]);
-  const portalY = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [80, 0, 0, -80]);
-  const portalZ = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [-120, 0, 0, -120]);
-  const portalScale = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [0.92, 1, 1, 0.92]);
-  const portalRotateX = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [10, 0, 0, -10]);
+  const portalOpacity = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0, 1, 1, 0]);
+  const portalY = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [80, 0, 0, -80]);
+  const portalZ = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [-120, 0, 0, -120]);
+  const portalScale = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0.92, 1, 1, 0.92]);
+  const portalRotateX = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [10, 0, 0, -10]);
 
   // --- Variant 5: 'slide-right' (3D Curved Stage Slide - Research) ---
-  const slideOpacity = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [0, 1, 1, 0]);
-  const slideX = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [-40, 0, 0, 40]);
-  const slideY = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [60, 0, 0, -60]);
-  const slideZ = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [-120, 0, 0, -120]);
-  const slideRotateY = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [10, 0, 0, -10]);
+  const slideOpacity = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0, 1, 1, 0]);
+  const slideX = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [-40, 0, 0, 40]);
+  const slideY = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [60, 0, 0, -60]);
+  const slideZ = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [-120, 0, 0, -120]);
+  const slideRotateY = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [10, 0, 0, -10]);
 
   // --- Variant 6: 'spiral-drop' (3D Helix Cascade - Experience) ---
-  const spiralOpacity = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [0, 1, 1, 0]);
-  const spiralY = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [80, 0, 0, -80]);
-  const spiralZ = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [-120, 0, 0, -120]);
-  const spiralScale = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [0.92, 1, 1, 0.92]);
+  const spiralOpacity = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0, 1, 1, 0]);
+  const spiralY = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [80, 0, 0, -80]);
+  const spiralZ = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [-120, 0, 0, -120]);
+  const spiralScale = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0.92, 1, 1, 0.92]);
 
   // --- Variant 7: 'elastic-pop' (3D Cubic Matrix Pop - Activities) ---
-  const popOpacity = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [0, 1, 1, 0]);
-  const popY = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [80, 0, 0, -80]);
-  const popZ = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [-120, 0, 0, -120]);
-  const popScale = useTransform(smoothProgress, [0.05, 0.25, 0.75, 0.95], [0.92, 1, 1, 0.92]);
+  const popOpacity = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0, 1, 1, 0]);
+  const popY = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [80, 0, 0, -80]);
+  const popZ = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [-120, 0, 0, -120]);
+  const popScale = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0.92, 1, 1, 0.92]);
 
   // --- Variant 8: 'glass-rise' (3D Vault Elevator - Contact) ---
-  const glassOpacity = useTransform(smoothProgress, [0.05, 0.25, 0.88, 1.0], [0, 1, 1, 1]);
-  const glassY = useTransform(smoothProgress, [0.05, 0.25, 0.88, 1.0], [80, 0, 0, 0]);
-  const glassZ = useTransform(smoothProgress, [0.05, 0.25, 0.88, 1.0], [-120, 0, 0, 0]);
-  const glassScale = useTransform(smoothProgress, [0.05, 0.25, 0.88, 1.0], [0.92, 1, 1, 1]);
+  const glassOpacity = useTransform(activeProgress, [0.05, 0.25, 0.88, 1.0], [0, 1, 1, 1]);
+  const glassY = useTransform(activeProgress, [0.05, 0.25, 0.88, 1.0], [80, 0, 0, 0]);
+  const glassZ = useTransform(activeProgress, [0.05, 0.25, 0.88, 1.0], [-120, 0, 0, 0]);
+  const glassScale = useTransform(activeProgress, [0.05, 0.25, 0.88, 1.0], [0.92, 1, 1, 1]);
 
   // Select current scroll-based transform configuration
   let scrollTransforms = { opacity: deckOpacity, y: deckY, z: deckZ, scale: deckScale, rotateX: deckRotateX };
@@ -113,7 +110,7 @@ export default function SectionWrapper({ children, className = '', id = '', vari
       ref={containerRef}
       id={id}
       className={`relative w-full flex flex-col justify-center items-center ${id === 'hero' ? 'pt-20 pb-4 sm:pt-24 sm:pb-8' : id === 'about' ? 'pt-8 pb-12 sm:py-16' : 'py-12 sm:py-16'} overflow-x-hidden ${className}`}
-      style={{ perspective: isMobile ? 'none' : 1200, transformStyle: isMobile ? 'flat' : 'preserve-3d' }}
+      style={{ perspective: isMobile ? 'none' : 1200, transformStyle: isMobile ? 'flat' : 'preserve-3d', willChange: 'transform' }}
     >
       {/* Creative 3D Scroll Appearing Transition Container */}
       <motion.div
