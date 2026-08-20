@@ -50,7 +50,7 @@ export default function Navbar({ personInfo = {} }) {
         borderBottom:  scrolled ? '1px solid var(--color-border)' : 'none',
       }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-2">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-2" style={{ maxWidth: 'var(--container-max)' }}>
 
         {/* Brand */}
         <a href="#" className="flex items-center gap-2.5 group shrink-0">

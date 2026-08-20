@@ -126,10 +126,11 @@ export default function Research({ researchPapers = [] }) {
   const shortVenue = getCleanVenue(currentPaper?.venue);
 
   return (
-    <SectionWrapper id="research" variant="slide-right" className="py-10 sm:py-14">
+    <SectionWrapper id="research" variant="slide-right">
       <div 
         ref={sectionRef}
-        className="w-full max-w-4xl mx-auto px-4 sm:px-6 relative z-10 space-y-3.5 sm:space-y-6"
+        className="w-full relative z-10"
+        style={{ maxWidth: 'var(--container-inner)', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'var(--gap-md)' }}
       >
         {/* Section Header */}
         <SectionHeader
@@ -155,11 +156,11 @@ export default function Research({ researchPapers = [] }) {
             onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-accent)'; }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; }}
           >
-            <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: 'var(--color-accent)' }} />
           </button>
 
           {/* Active Animated Slide Card */}
-          <div className="w-full max-w-2xl px-4 sm:px-10 z-20">
+          <div className="w-full z-20" style={{ maxWidth: 'clamp(28rem, 60vw, 56rem)', paddingLeft: 'clamp(1rem, 3vw, 2.5rem)', paddingRight: 'clamp(1rem, 3vw, 2.5rem)' }}>
             <AnimatePresence custom={direction} mode="wait">
               {currentPaper && (
                 <motion.div
@@ -173,17 +174,16 @@ export default function Research({ researchPapers = [] }) {
                   dragConstraints={{ left: 0, right: 0 }}
                   dragElastic={0.6}
                   onDragEnd={(e, info) => {
-                    if (Math.abs(info.offset.x) > 60) {
-                      if (info.offset.x > 0) handlePrev();
-                      else handleNext();
-                    }
+                    const swipeThreshold = 50;
+                    if (info.offset.x < -swipeThreshold) handleNext();
+                    else if (info.offset.x > swipeThreshold) handlePrev();
                   }}
-                  className="w-full p-4 sm:p-6 rounded-2xl sm:rounded-3xl relative overflow-hidden font-mono shadow-xl select-none group cursor-grab active:cursor-grabbing space-y-3 sm:space-y-3.5"
+                  className="w-full p-4 sm:p-5 md:p-6 lg:p-7 xl:p-8 rounded-2xl sm:rounded-3xl relative overflow-hidden font-mono shadow-xl select-none group cursor-grab active:cursor-grabbing space-y-3 sm:space-y-4"
                   style={{
                     background: 'var(--color-surface)',
                     border: '1px solid var(--color-border)',
                   }}
-                >
+              >
                   {/* Top Subtle Border Highlight on Hover */}
                   <div 
                     className="absolute inset-x-0 top-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30" 
@@ -191,42 +191,42 @@ export default function Research({ researchPapers = [] }) {
                   />
 
                   {/* 1. Unified Single-Row Header Bar */}
-                  <div className="flex items-center justify-between gap-2 pb-2.5" style={{ borderBottom: '1px solid var(--color-border)' }}>
+                  <div className="flex items-center justify-between gap-2 pb-2 sm:pb-3" style={{ borderBottom: '1px solid var(--color-border)' }}>
                     <div className="flex items-center gap-2 flex-wrap min-w-0">
                       <span 
-                        className="text-[11px] sm:text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5 shadow-sm truncate max-w-[220px] sm:max-w-xs"
+                        className="text-[10px] sm:text-xs md:text-sm font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5 shadow-sm truncate max-w-[200px] sm:max-w-xs"
                         style={{
                           background: 'var(--color-surface-2)',
                           color: 'var(--color-accent)',
                           border: '1px solid var(--color-border)',
                         }}
                       >
-                        <BookOpen className="w-3.5 h-3.5 flex-shrink-0" />
+                        <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
                         <span className="truncate">{shortVenue}</span>
                       </span>
 
                       <span 
-                        className="text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full font-bold inline-flex items-center gap-1 shadow-sm flex-shrink-0"
+                        className="text-[9px] sm:text-[11px] md:text-xs px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full font-bold inline-flex items-center gap-1 shadow-sm flex-shrink-0"
                         style={{ background: 'rgba(34, 197, 94, 0.12)', color: '#22c55e', border: '1px solid rgba(34, 197, 94, 0.25)' }}
                       >
-                        <ShieldCheck className="w-3 h-3 text-green-400" />
+                        <ShieldCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-green-400" />
                         <span>Peer-Reviewed</span>
                       </span>
                     </div>
 
-                    <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 flex-shrink-0" style={{ background: 'var(--color-surface-2)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}>
-                      <Radio className="w-3 h-3 text-accent animate-pulse" />
+                    <span className="text-[11px] sm:text-xs md:text-sm font-mono font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full flex items-center gap-1.5 flex-shrink-0" style={{ background: 'var(--color-surface-2)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}>
+                      <Radio className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-accent animate-pulse" />
                       <span>0{currentIndex + 1} / 0{total}</span>
                     </span>
                   </div>
 
                   {/* 2. Paper Title & Metadata */}
-                  <div className="space-y-1.5">
-                    <h3 className="text-base sm:text-xl font-bold font-sans leading-snug tracking-tight group-hover:text-accent transition-colors" style={{ color: 'var(--color-text)' }}>
+                  <div className="space-y-1 sm:space-y-1.5">
+                    <h3 className="text-sm sm:text-lg md:text-xl lg:text-2xl font-bold font-sans leading-snug tracking-tight group-hover:text-accent transition-colors line-clamp-2" style={{ color: 'var(--color-text)' }}>
                       {currentPaper.title}
                     </h3>
 
-                    <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] sm:text-xs md:text-sm" style={{ color: 'var(--color-text-muted)' }}>
                       <span className="font-semibold text-text">Mahmud Hasan Ratul et al.</span>
                       <span>•</span>
                       <span style={{ color: 'var(--color-accent)' }}>{currentPaper.year || '2024'}</span>
@@ -239,13 +239,13 @@ export default function Research({ researchPapers = [] }) {
                     </div>
 
                     {/* Domain & ML Tech Badges */}
-                    <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                      <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-lg flex items-center gap-1 shadow-sm" style={{ background: 'var(--color-surface-2)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}>
+                    <div className="flex flex-wrap items-center gap-1 pt-0.5">
+                      <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-lg flex items-center gap-1 shadow-sm" style={{ background: 'var(--color-surface-2)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}>
                         <BookOpen className="w-3 h-3" />
                         <span>{currentPaper.domain}</span>
                       </span>
 
-                      <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-lg flex items-center gap-1 shadow-sm" style={{ background: 'var(--color-surface-2)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}>
+                      <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-lg flex items-center gap-1 shadow-sm" style={{ background: 'var(--color-surface-2)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}>
                         <Cpu className="w-3 h-3" />
                         <span>{currentPaper.mlTech}</span>
                       </span>
@@ -254,7 +254,7 @@ export default function Research({ researchPapers = [] }) {
 
                   {/* 3. Abstract Excerpt Box */}
                   <div 
-                    className="p-3 rounded-xl space-y-1"
+                    className="p-2 sm:p-2.5 rounded-xl space-y-0.5"
                     style={{
                       background: 'var(--color-surface-2)',
                       borderLeft: '3px solid var(--color-accent)',
@@ -264,7 +264,7 @@ export default function Research({ researchPapers = [] }) {
                     <span className="text-[9px] font-bold uppercase tracking-widest block" style={{ color: 'var(--color-accent)' }}>
                       [ABSTRACT]
                     </span>
-                    <p className="text-xs sm:text-[13px] leading-relaxed font-sans line-clamp-2 sm:line-clamp-3" style={{ color: 'var(--color-text-muted)' }}>
+                    <p className="text-[11px] sm:text-xs leading-relaxed font-sans line-clamp-2" style={{ color: 'var(--color-text-muted)' }}>
                       {currentPaper.abstract}
                     </p>
                   </div>

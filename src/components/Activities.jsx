@@ -339,8 +339,8 @@ export default function Activities({ activities = fallbackActivities }) {
   };
 
   return (
-    <SectionWrapper id="activities" variant="flip-left" className="py-10 sm:py-14">
-      <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-5 sm:space-y-6">
+    <SectionWrapper id="activities" variant="flip-left">
+      <div className="w-full relative z-10" style={{ maxWidth: 'var(--container-inner)', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'var(--gap-md)' }}>
         
         {/* Section Header */}
         <SectionHeader
@@ -351,12 +351,12 @@ export default function Activities({ activities = fallbackActivities }) {
         />
 
         {/* 🎛️ SPACE-OPTIMIZED CATEGORY FILTER PILLS & INLINE CONTROLS */}
-        <div className="flex flex-wrap items-center justify-between gap-2.5 pb-2.5 w-full" style={{ borderBottom: '1px solid var(--color-border)' }}>
+        <div className="flex flex-wrap items-center justify-between gap-2 pb-2 w-full" style={{ borderBottom: '1px solid var(--color-border)' }}>
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             {categories.map((cat) => {
-              const count = cat.id === "All"
+              const count = cat.id === 'all'
                 ? activities.length
-                : activities.filter(a => (a.category || "").toLowerCase().includes(cat.id.toLowerCase().replace(" events", ""))).length;
+                : activities.filter(a => a.category?.toLowerCase() === cat.id).length;
 
               const Icon = cat.icon;
               const isActive = activeCategory === cat.id;
@@ -365,7 +365,7 @@ export default function Activities({ activities = fallbackActivities }) {
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
-                  className="px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all duration-200 flex items-center gap-1.5 cursor-pointer select-none shadow-sm hover:scale-105 active:scale-95 whitespace-nowrap"
+                  className="px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-xl text-xs md:text-sm font-mono font-bold transition-all duration-200 flex items-center gap-1.5 cursor-pointer select-none shadow-sm hover:scale-105 active:scale-95 whitespace-nowrap"
                   style={{
                     background: isActive ? 'var(--color-accent)' : 'var(--color-surface-2)',
                     color: isActive ? '#000' : 'var(--color-text-muted)',
@@ -373,10 +373,10 @@ export default function Activities({ activities = fallbackActivities }) {
                     boxShadow: isActive ? '0 0 15px rgba(56, 189, 248, 0.35)' : 'none',
                   }}
                 >
-                  <Icon className="w-3.5 h-3.5" />
+                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <span>{cat.label}</span>
                   <span 
-                    className="text-[10px] px-1.5 py-0.2 rounded-full font-bold"
+                    className="text-[10px] sm:text-xs px-1.5 py-0.2 rounded-full font-bold"
                     style={{
                       background: isActive ? 'rgba(0,0,0,0.2)' : 'var(--color-surface)',
                       color: isActive ? '#000' : 'var(--color-accent)',
@@ -394,7 +394,7 @@ export default function Activities({ activities = fallbackActivities }) {
           <div className="flex items-center gap-1.5 font-mono flex-shrink-0">
             <button
               onClick={() => setIsPlayingTour(!isPlayingTour)}
-              className="px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm hover:scale-105 active:scale-95 whitespace-nowrap"
+              className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-xs md:text-sm font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm hover:scale-105 active:scale-95 whitespace-nowrap"
               style={{
                 background: isPlayingTour ? 'var(--color-accent)' : 'var(--color-surface-2)',
                 color: isPlayingTour ? '#000' : 'var(--color-text-muted)',
@@ -408,29 +408,25 @@ export default function Activities({ activities = fallbackActivities }) {
             <button
               onClick={handlePrev}
               aria-label="Previous Event"
-              className="p-1.5 rounded-xl transition-all shadow-sm hover:scale-110 active:scale-90 cursor-pointer"
+              className="p-1.5 sm:p-2 rounded-xl transition-all shadow-sm hover:scale-110 active:scale-90 cursor-pointer"
               style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)', color: 'var(--color-text)' }}
             >
-              <ChevronLeft className="w-3.5 h-3.5" />
+              <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
-
-            <span className="px-2 py-1 rounded-xl text-xs font-bold whitespace-nowrap" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)', color: 'var(--color-accent)' }}>
-              0{currentIndex + 1} / 0{total}
-            </span>
 
             <button
               onClick={handleNext}
               aria-label="Next Event"
-              className="p-1.5 rounded-xl transition-all shadow-sm hover:scale-110 active:scale-90 cursor-pointer"
+              className="p-1.5 sm:p-2 rounded-xl transition-all shadow-sm hover:scale-110 active:scale-90 cursor-pointer"
               style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)', color: 'var(--color-text)' }}
             >
-              <ChevronRight className="w-3.5 h-3.5" />
+              <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
           </div>
         </div>
 
         {/* 🌟 3D HOLOGRAPHIC SPOTLIGHT STAGE */}
-        <div className="w-full perspective-[1200px] font-mono overflow-hidden py-1">
+        <div className="w-full perspective-[1200px] font-mono overflow-hidden py-0.5">
           <AnimatePresence custom={direction} mode="wait">
             {activeAct && (
               <motion.div
@@ -459,7 +455,7 @@ export default function Activities({ activities = fallbackActivities }) {
                 />
 
                 {/* 1. Widescreen Banner with Ambient Overlay */}
-                <div className="relative w-full h-40 sm:h-56 overflow-hidden bg-black/50 shadow-inner group/banner">
+                <div className="relative w-full h-36 sm:h-44 md:h-52 lg:h-60 xl:h-64 overflow-hidden bg-black/50 shadow-inner group/banner">
                   <img
                     src={activeAct.img || '/tech2.JPG'}
                     alt={activeAct.title}
@@ -470,43 +466,43 @@ export default function Activities({ activities = fallbackActivities }) {
                   <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-surface)] via-black/35 to-transparent pointer-events-none" />
 
                   {/* Top Badges inside Banner */}
-                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-20">
+                  <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between z-20">
                     <span 
-                      className="text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5 shadow-lg backdrop-blur-md"
+                      className="text-[11px] sm:text-xs font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1.5 shadow-lg backdrop-blur-md"
                       style={{
                         background: 'rgba(0,0,0,0.65)',
                         color: 'var(--color-accent)',
                         border: '1px solid rgba(255,255,255,0.15)',
                       }}
                     >
-                      <ActiveIcon className="w-3.5 h-3.5" />
+                      <ActiveIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                       <span>{activeAct.category || "Event"}</span>
                     </span>
 
                     <div className="flex items-center gap-2">
                       {getActImages(activeAct).length > 1 && (
                         <span 
-                          className="text-xs font-mono font-bold px-2.5 py-1 rounded-full shadow-lg backdrop-blur-md flex items-center gap-1.5"
+                          className="text-[10px] sm:text-xs font-mono font-bold px-2 py-0.5 rounded-full shadow-lg backdrop-blur-md flex items-center gap-1.5"
                           style={{
                             background: 'rgba(0,0,0,0.65)',
                             color: 'var(--color-accent)',
                             border: '1px solid rgba(255,255,255,0.15)',
                           }}
                         >
-                          <Images className="w-3.5 h-3.5" />
+                          <Images className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                           <span>{getActImages(activeAct).length} Photos</span>
                         </span>
                       )}
 
                       <span 
-                        className="text-xs font-mono font-bold px-3 py-1 rounded-full shadow-lg backdrop-blur-md flex items-center gap-1.5"
+                        className="text-[10px] sm:text-xs font-mono font-bold px-2.5 py-0.5 rounded-full shadow-lg backdrop-blur-md flex items-center gap-1.5"
                         style={{
                           background: 'rgba(0,0,0,0.65)',
                           color: '#fff',
                           border: '1px solid rgba(255,255,255,0.15)',
                         }}
                       >
-                        <Calendar className="w-3.5 h-3.5 text-accent" />
+                        <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-accent" />
                         <span>{activeAct.year || "2023 - Present"}</span>
                       </span>
                     </div>
@@ -514,28 +510,28 @@ export default function Activities({ activities = fallbackActivities }) {
                 </div>
 
                 {/* 2. Spotlight Body Content */}
-                <div className="p-4 sm:p-6 space-y-3.5 relative z-20 -mt-5 sm:-mt-6">
+                <div className="p-3 sm:p-4 space-y-2 sm:space-y-2.5 relative z-20 -mt-3 sm:-mt-4">
                   
                   {/* Title & Leadership Role */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5" style={{ borderBottom: '1px solid var(--color-border)' }}>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 pb-1.5" style={{ borderBottom: '1px solid var(--color-border)' }}>
                     <div>
-                      <h3 className="text-base sm:text-xl font-bold font-sans leading-snug tracking-tight" style={{ color: 'var(--color-text)' }}>
+                      <h3 className="text-sm sm:text-lg md:text-xl font-bold font-sans leading-snug tracking-tight" style={{ color: 'var(--color-text)' }}>
                         {activeAct.title}
                       </h3>
-                      <p className="text-xs sm:text-sm font-semibold font-sans pt-0.5" style={{ color: 'var(--color-accent)' }}>
+                      <p className="text-xs sm:text-[13px] font-semibold font-sans pt-0.5" style={{ color: 'var(--color-accent)' }}>
                         {activeAct.role}
                       </p>
                     </div>
 
                     <div className="flex items-center gap-2 flex-wrap self-start sm:self-auto">
                       {activeAct.tag && (
-                        <span className="text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider" style={{ background: 'var(--color-surface-2)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}>
+                        <span className="text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider" style={{ background: 'var(--color-surface-2)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}>
                           {activeAct.tag}
                         </span>
                       )}
 
                       <span 
-                        className="text-[10px] px-2.5 py-0.5 rounded-full font-bold inline-flex items-center gap-1 shadow-sm"
+                        className="text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-bold inline-flex items-center gap-1 shadow-sm"
                         style={{ background: 'rgba(34, 197, 94, 0.12)', color: '#22c55e', border: '1px solid rgba(34, 197, 94, 0.25)' }}
                       >
                         <ShieldCheck className="w-3 h-3 text-green-400" />
@@ -545,25 +541,25 @@ export default function Activities({ activities = fallbackActivities }) {
                   </div>
 
                   {/* Description Excerpt */}
-                  <p className="text-xs sm:text-[13px] leading-relaxed font-sans" style={{ color: 'var(--color-text-muted)' }}>
+                  <p className="text-xs sm:text-[13px] leading-relaxed font-sans line-clamp-2" style={{ color: 'var(--color-text-muted)' }}>
                     {activeAct.desc}
                   </p>
 
                   {/* Impact Metric & Inspect Action */}
-                  <div className="pt-2 flex flex-wrap items-center justify-between gap-2.5" style={{ borderTop: '1px solid var(--color-border)' }}>
+                  <div className="pt-1.5 flex flex-wrap items-center justify-between gap-2" style={{ borderTop: '1px solid var(--color-border)' }}>
                     {activeAct.impact ? (
                       <div 
-                        className="px-3 py-1 rounded-xl text-xs font-mono font-bold flex items-center gap-2 shadow-inner"
+                        className="px-2.5 py-0.5 rounded-xl text-[11px] sm:text-xs font-mono font-bold flex items-center gap-1.5 shadow-inner"
                         style={{ background: 'rgba(56, 189, 248, 0.1)', color: 'var(--color-accent)', border: '1px solid rgba(56, 189, 248, 0.25)' }}
                       >
-                        <TrendingUp className="w-3.5 h-3.5 flex-shrink-0" />
+                        <TrendingUp className="w-3 h-3 sm:w-3.5 sm:h-3.5 flex-shrink-0" />
                         <span>{activeAct.impact}</span>
                       </div>
                     ) : <div />}
 
                     <button
                       onClick={() => setInspectedAct(activeAct)}
-                      className="px-4 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-md cursor-pointer hover:scale-105 active:scale-95"
+                      className="px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-md cursor-pointer hover:scale-105 active:scale-95"
                       style={{
                         background: 'var(--color-accent)',
                         color: '#000',
@@ -687,7 +683,7 @@ export default function Activities({ activities = fallbackActivities }) {
                     handleSelectIndex(idx);
                     setIsPlayingTour(false);
                   }}
-                  className="w-52 sm:w-60 p-3 rounded-2xl text-left transition-all duration-300 flex-shrink-0 cursor-pointer shadow-sm relative flex flex-col justify-between group hover:-translate-y-1 select-none"
+                  className="w-44 sm:w-52 md:w-56 lg:w-60 xl:w-64 p-2 sm:p-2.5 md:p-3 rounded-2xl text-left transition-all duration-300 flex-shrink-0 cursor-pointer shadow-sm relative flex flex-col justify-between group hover:-translate-y-1 select-none"
                   style={{
                     background: isSelected ? 'var(--color-surface-2)' : 'var(--color-surface)',
                     border: isSelected ? '2px solid var(--color-accent)' : '1px solid var(--color-border)',
@@ -699,13 +695,13 @@ export default function Activities({ activities = fallbackActivities }) {
                   {/* Top Laser Beam on Active Card */}
                   {isSelected && (
                     <div 
-                      className="absolute inset-x-0 top-0 h-[2.5px] z-30"
+                      className="absolute inset-x-0 top-0 h-[2.5px] z-30" 
                       style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }} 
                     />
                   )}
 
                   {/* Thumbnail Image Banner */}
-                  <div className="w-full h-24 rounded-xl overflow-hidden bg-black/40 relative shadow-inner mb-2.5 flex-shrink-0 pointer-events-none">
+                  <div className="w-full h-20 sm:h-22 md:h-24 lg:h-28 rounded-xl overflow-hidden bg-black/40 relative shadow-inner mb-1.5 flex-shrink-0 pointer-events-none">
                     <img
                       src={act.img || '/tech2.JPG'}
                       alt={act.title}
@@ -716,32 +712,32 @@ export default function Activities({ activities = fallbackActivities }) {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
 
                     {/* Top-Left Category Badge */}
-                    <div className="absolute top-1.5 left-1.5 text-[9px] font-bold px-2 py-0.5 rounded-md bg-black/75 text-accent border border-accent/30 flex items-center gap-1 backdrop-blur-sm">
+                    <div className="absolute top-1 left-1 text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-black/75 text-accent border border-accent/30 flex items-center gap-1 backdrop-blur-sm">
                       <Icon className="w-2.5 h-2.5" />
-                      <span className="truncate max-w-[80px]">{act.category?.replace(" Events", "") || "Event"}</span>
+                      <span className="truncate max-w-[70px]">{act.category?.replace(" Events", "") || "Event"}</span>
                     </div>
 
                     {/* Top-Right Year Pill */}
-                    <div className="absolute top-1.5 right-1.5 text-[9px] font-bold px-1.5 py-0.5 rounded bg-black/75 text-white/90 border border-white/10 backdrop-blur-sm">
+                    <div className="absolute top-1 right-1 text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded bg-black/75 text-white/90 border border-white/10 backdrop-blur-sm">
                       {act.year?.slice(0, 4) || "2023"}
                     </div>
 
                     {/* Bottom-Left Index & Waveform Indicator */}
-                    <div className="absolute bottom-1.5 left-1.5 right-1.5 flex items-center justify-between z-10">
-                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-black/80 text-white font-mono border border-white/15">
+                    <div className="absolute bottom-1 left-1 right-1 flex items-center justify-between z-10">
+                      <span className="text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded bg-black/80 text-white font-mono border border-white/15">
                         PASS #{idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
                       </span>
 
                       {/* Equalizer Waveform when Active */}
                       {isSelected ? (
-                        <div className="flex items-end gap-0.5 h-3 px-1.5 py-0.5 rounded bg-accent/20 border border-accent/40">
-                          <span className="w-0.5 h-2 bg-accent animate-pulse" />
-                          <span className="w-0.5 h-3 bg-accent animate-bounce" />
+                        <div className="flex items-end gap-0.5 h-2.5 px-1 py-0.5 rounded bg-accent/20 border border-accent/40">
                           <span className="w-0.5 h-1.5 bg-accent animate-pulse" />
                           <span className="w-0.5 h-2.5 bg-accent animate-bounce" />
+                          <span className="w-0.5 h-1 bg-accent animate-pulse" />
+                          <span className="w-0.5 h-2 bg-accent animate-bounce" />
                         </div>
                       ) : (
-                        <span className="text-[9px] font-mono text-zinc-400 opacity-80 group-hover:text-accent transition-colors">
+                        <span className="text-[8px] sm:text-[9px] font-mono text-zinc-400 opacity-80 group-hover:text-accent transition-colors">
                           View &rarr;
                         </span>
                       )}
@@ -749,21 +745,21 @@ export default function Activities({ activities = fallbackActivities }) {
                   </div>
 
                   {/* Card Content (Clean 2-line title wrapping, no clipping) */}
-                  <div className="space-y-1 flex-1 flex flex-col justify-between pointer-events-none">
+                  <div className="space-y-0.5 flex-1 flex flex-col justify-between pointer-events-none">
                     <div>
-                      <h4 className="text-xs font-bold font-sans line-clamp-2 leading-tight tracking-tight min-h-[32px]" style={{ color: isSelected ? '#fff' : 'var(--color-text)' }}>
+                      <h4 className="text-[11px] sm:text-xs font-bold font-sans line-clamp-2 leading-tight tracking-tight min-h-[28px]" style={{ color: isSelected ? '#fff' : 'var(--color-text)' }}>
                         {act.title}
                       </h4>
-                      <p className="text-[11px] font-semibold truncate pt-0.5" style={{ color: 'var(--color-accent)' }}>
+                      <p className="text-[10px] sm:text-[11px] font-semibold truncate pt-0.5" style={{ color: 'var(--color-accent)' }}>
                         {act.role}
                       </p>
                     </div>
 
                     {/* Key Metric Badge */}
                     {act.stat && (
-                      <div className="pt-1.5 mt-1 border-t flex items-center justify-between text-[10px]" style={{ borderColor: 'var(--color-border)' }}>
-                        <span className="text-zinc-400 text-[9px] uppercase tracking-wider">Impact:</span>
-                        <span className="font-bold text-accent truncate max-w-[120px]">{act.stat}</span>
+                      <div className="pt-1 mt-1 border-t flex items-center justify-between text-[9px] sm:text-[10px]" style={{ borderColor: 'var(--color-border)' }}>
+                        <span className="text-zinc-400 uppercase tracking-wider">Impact:</span>
+                        <span className="font-bold text-accent truncate max-w-[100px]">{act.stat}</span>
                       </div>
                     )}
                   </div>

@@ -28,10 +28,14 @@ export default function Hero({ personInfo = {} }) {
   useEffect(() => {
     const handleResize = () => {
       const w = window.innerWidth;
-      if (w < 480) setFontSize(54);
-      else if (w < 640) setFontSize(72);
+      if (w < 380) setFontSize(42);
+      else if (w < 480) setFontSize(52);
+      else if (w < 640) setFontSize(68);
+      else if (w < 768) setFontSize(82);
       else if (w < 1024) setFontSize(96);
-      else setFontSize(120);
+      else if (w < 1280) setFontSize(108);
+      else if (w < 1600) setFontSize(118);
+      else setFontSize(Math.min(140, Math.floor(w * 0.075)));
     };
     handleResize();
     window.addEventListener('resize', handleResize);
@@ -55,13 +59,13 @@ export default function Hero({ personInfo = {} }) {
         style={{ backgroundColor: 'rgba(56,189,248,0.12)' }}
       />
 
-      <motion.div className="w-full flex flex-col justify-center items-center relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-6 sm:py-8">
+      <motion.div className="w-full flex flex-col justify-center items-center relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-4 sm:py-6">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
           style={{ transformStyle: 'preserve-3d' }}
-          className="w-full space-y-4 sm:space-y-8 lg:space-y-10"
+          className="w-full space-y-3 sm:space-y-5 lg:space-y-6"
         >
           {/* Status Pill */}
           <motion.div variants={itemVariants} className="inline-block">

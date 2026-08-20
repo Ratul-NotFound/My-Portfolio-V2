@@ -105,17 +105,31 @@ export default function SectionWrapper({ children, className = '', id = '', vari
     scrollTransforms = { opacity: deckOpacity, y: deckY, scale: deckScale };
   }
 
+  const isHero = id === 'hero';
+
   return (
     <section 
       ref={containerRef}
       id={id}
-      className={`relative w-full flex flex-col justify-center items-center ${id === 'hero' ? 'pt-16 pb-2 sm:pt-24 sm:pb-8' : id === 'about' ? 'pt-4 pb-6 sm:py-14' : 'py-6 sm:py-12 lg:py-16'} overflow-x-hidden ${className}`}
-      style={{ perspective: isMobile ? 'none' : 1200, transformStyle: isMobile ? 'flat' : 'preserve-3d', willChange: 'transform' }}
+      className={`relative w-full min-h-screen flex flex-col justify-center items-center overflow-x-hidden ${className}`}
+      style={{ 
+        perspective: isMobile ? 'none' : 1200, 
+        transformStyle: isMobile ? 'flat' : 'preserve-3d', 
+        willChange: 'transform',
+        paddingTop: isHero ? 'clamp(4.5rem, 7vw, 6rem)' : 'var(--section-py)',
+        paddingBottom: isHero ? 'clamp(2rem, 4vw, 4rem)' : 'var(--section-py)',
+      }}
     >
       {/* Creative 3D Scroll Appearing Transition Container */}
       <motion.div
-        style={scrollTransforms}
-        className="w-full min-h-[inherit] h-full flex flex-col justify-center items-center max-w-7xl mx-auto transform-gpu relative z-10 px-4 sm:px-6 lg:px-8 overflow-x-hidden"
+        style={isHero ? scrollTransforms : {
+          ...scrollTransforms,
+          maxWidth: 'var(--container-max)',
+          width: '100%',
+          paddingLeft: 'var(--section-px)',
+          paddingRight: 'var(--section-px)',
+        }}
+        className={`h-full flex flex-col justify-center items-center transform-gpu relative z-10${isHero ? ' w-full overflow-visible' : ' mx-auto overflow-x-hidden'}`}
       >
         {children}
       </motion.div>

@@ -73,8 +73,8 @@ export default function Experience({ experiences = [] }) {
   const arrowPositionPercent = ((safeActiveIndex + 0.5) / totalItems) * 100;
 
   return (
-    <SectionWrapper id="experience" variant="deck-rise" className="py-10 sm:py-14">
-      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 relative z-10 space-y-5 sm:space-y-6">
+    <SectionWrapper id="experience" variant="slide-left">
+      <div className="w-full relative z-10" style={{ maxWidth: 'var(--container-inner)', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'var(--gap-md)' }}>
         
         {/* Section Header */}
         <SectionHeader
@@ -85,8 +85,8 @@ export default function Experience({ experiences = [] }) {
         />
 
         {/* 🎛️ CATEGORY TRACK FILTER PILLS */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pb-3 w-full" style={{ borderBottom: '1px solid var(--color-border)' }}>
-          <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2 pb-2 w-full" style={{ borderBottom: '1px solid var(--color-border)' }}>
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             {categories.map((cat) => {
               const count = cat === "All"
                 ? experiences.length
@@ -99,7 +99,7 @@ export default function Experience({ experiences = [] }) {
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all duration-200 flex items-center gap-2 cursor-pointer select-none shadow-sm hover:scale-105 active:scale-95"
+                  className="px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-xl text-xs md:text-sm font-mono font-bold transition-all duration-200 flex items-center gap-1.5 cursor-pointer select-none shadow-sm hover:scale-105 active:scale-95"
                   style={{
                     background: isActive ? 'var(--color-accent)' : 'var(--color-surface-2)',
                     color: isActive ? '#000' : 'var(--color-text-muted)',
@@ -107,10 +107,10 @@ export default function Experience({ experiences = [] }) {
                     boxShadow: isActive ? '0 0 15px rgba(56, 189, 248, 0.35)' : 'none',
                   }}
                 >
-                  <Icon className="w-3.5 h-3.5" />
+                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <span>{cat === "All" ? "All Roles" : cat}</span>
                   <span 
-                    className="text-[10px] px-1.5 py-0.5 rounded-full font-bold"
+                    className="text-[10px] sm:text-xs px-1.5 py-0.2 rounded-full font-bold"
                     style={{
                       background: isActive ? 'rgba(0,0,0,0.2)' : 'var(--color-surface)',
                       color: isActive ? '#000' : 'var(--color-accent)',
@@ -124,104 +124,80 @@ export default function Experience({ experiences = [] }) {
             })}
           </div>
 
-          <div className="flex items-center gap-1.5 text-xs font-mono opacity-75" style={{ color: 'var(--color-text-muted)' }}>
+          <div className="flex items-center gap-1.5 text-xs md:text-sm font-mono opacity-75" style={{ color: 'var(--color-text-muted)' }}>
             <MousePointerClick className="w-3.5 h-3.5 text-accent animate-bounce" />
-            <span>Hover or click circles to pop out details</span>
+            <span>Click nodes to inspect</span>
           </div>
         </div>
 
         {/* ⭕ HIGHLY POPPED CIRCULAR TIMELINE RAIL */}
-        <div className="relative py-2 sm:py-6 px-2 select-none font-mono">
+        <div className="relative py-1 sm:py-3 px-2 select-none font-mono">
           
-          {/* Connecting Glowing Laser Rail */}
+          {/* Subtle Connecting Background Line */}
           <div 
-            className="absolute left-8 right-8 top-12 sm:top-14 h-[3px] pointer-events-none hidden sm:block rounded-full z-0" 
-            style={{ 
-              background: 'linear-gradient(90deg, var(--color-accent) 0%, #38bdf8 50%, var(--color-border) 100%)' 
-            }}
+            className="absolute top-1/2 left-4 right-4 h-[2px] -translate-y-1/2 z-0 hidden sm:block opacity-40"
+            style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), var(--color-accent), transparent)' }}
           />
 
-          {/* Milestone Popping Circle Nodes Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-6 relative z-10">
+          {/* 4 POINTER NODES IN A CLEAN RESPONSIVE ROW */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 relative z-10">
             {filteredExperiences.map((exp, idx) => {
-              const isActive = exp.id === activeExp?.id;
-              const isPresent = exp.period?.toLowerCase().includes("present");
-              const logoPath = exp.logo || '/cpc1.jpg';
+              const isSelected = idx === safeActiveIndex;
 
               return (
                 <div 
-                  key={exp.id}
-                  className="flex flex-col items-center text-center group cursor-pointer relative"
+                  key={exp.id || idx}
                   onClick={() => setActiveExpId(exp.id)}
-                  onMouseEnter={() => setActiveExpId(exp.id)}
+                  className="flex flex-col items-center cursor-pointer group select-none text-center"
                 >
-                  {/* Highly Popped Circle Node */}
+                  {/* Popping Circular Node Icon */}
                   <motion.div
+                    whileHover={{ scale: 1.15, y: -4 }}
+                    whileTap={{ scale: 0.95 }}
                     animate={{
-                      scale: isActive ? 1.35 : 1,
-                      y: isActive ? -10 : 0,
+                      scale: isSelected ? 1.15 : 1,
+                      y: isSelected ? -4 : 0,
                     }}
-                    whileHover={{ scale: isActive ? 1.38 : 1.15, y: -6 }}
-                    transition={{ type: "spring", stiffness: 420, damping: 20 }}
-                    className="w-14 h-14 sm:w-18 sm:h-18 rounded-full relative p-1 flex items-center justify-center cursor-pointer"
+                    transition={{ type: "spring", stiffness: 450, damping: 20 }}
+                    className="w-12 h-12 sm:w-15 sm:h-15 md:w-16 md:h-16 rounded-full flex items-center justify-center relative shadow-lg transition-all duration-300"
                     style={{
-                      background: isActive ? 'var(--color-surface-2)' : 'var(--color-surface)',
-                      border: isActive ? '3px solid var(--color-accent)' : '1.5px solid var(--color-border)',
-                      boxShadow: isActive 
-                        ? '0 0 28px rgba(56, 189, 248, 0.7), 0 8px 20px rgba(0,0,0,0.4)' 
-                        : '0 4px 10px rgba(0,0,0,0.2)'
+                      background: isSelected ? 'var(--color-accent)' : 'var(--color-surface-2)',
+                      border: isSelected ? '2px solid #fff' : '2px solid var(--color-border)',
+                      boxShadow: isSelected ? '0 0 25px rgba(56, 189, 248, 0.65)' : 'none',
                     }}
                   >
-                    {/* Pulsating Ring on Active */}
-                    {isActive && (
-                      <motion.span 
-                        initial={{ scale: 0.85, opacity: 0.9 }}
-                        animate={{ scale: 1.5, opacity: 0 }}
-                        transition={{ repeat: Infinity, duration: 1.5, ease: "easeOut" }}
-                        className="absolute inset-0 rounded-full border-2 border-accent pointer-events-none" 
-                      />
-                    )}
+                    <Briefcase 
+                      className="w-5 h-5 sm:w-6 sm:h-6 transition-colors" 
+                      style={{ color: isSelected ? '#000' : 'var(--color-text-muted)' }} 
+                    />
 
-                    {/* Milestone Number Tag Badge */}
+                    {/* Step Number Badge */}
                     <div 
-                      className="absolute -top-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full font-bold text-[9px] sm:text-[10px] flex items-center justify-center shadow-md z-20"
+                      className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full text-[9px] sm:text-[10px] font-bold flex items-center justify-center shadow-md font-mono"
                       style={{
-                        background: isActive ? 'var(--color-accent)' : 'var(--color-surface-2)',
-                        color: isActive ? '#000' : 'var(--color-text)',
-                        border: '1px solid var(--color-border)',
+                        background: isSelected ? '#000' : 'var(--color-surface-3)',
+                        color: isSelected ? 'var(--color-accent)' : 'var(--color-text)',
+                        border: '1px solid var(--color-border)'
                       }}
                     >
-                      0{idx + 1}
-                    </div>
-
-                    {/* Circular Company Logo Avatar */}
-                    <div className="w-full h-full rounded-full overflow-hidden flex items-center justify-center p-0.5 bg-surface shadow-inner">
-                      <img
-                        src={logoPath}
-                        alt={exp.organization}
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-cover rounded-full"
-                      />
+                      {idx + 1}
                     </div>
                   </motion.div>
 
-                  {/* Circle Subtitle Label */}
-                  <div className="mt-2.5 space-y-0.5 max-w-[130px]">
-                    <div className="flex items-center justify-center gap-1">
-                      <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: isActive ? 'var(--color-accent)' : 'var(--color-text-muted)' }}>
-                        {exp.category || "Role"}
-                      </span>
-                      {isPresent && <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-ping" />}
-                    </div>
-
-                    <h4 className="text-xs font-bold font-sans truncate transition-colors" style={{ color: isActive ? 'var(--color-accent)' : 'var(--color-text)' }}>
-                      {exp.role}
-                    </h4>
-                    
-                    <p className="text-[10px] font-mono opacity-70" style={{ color: 'var(--color-text-muted)' }}>
-                      {exp.period}
+                  {/* Compact Milestone Titles Below Circle */}
+                  <div className="mt-1.5 sm:mt-2 space-y-0.5 max-w-[120px] sm:max-w-none">
+                    <p 
+                      className="text-[11px] sm:text-xs font-bold leading-tight line-clamp-1 transition-colors"
+                      style={{ color: isSelected ? 'var(--color-accent)' : 'var(--color-text)' }}
+                    >
+                      {exp.role.split('/')[0].trim()}
                     </p>
+                    <span 
+                      className="text-[9px] sm:text-[10px] font-semibold block uppercase tracking-wider opacity-75 truncate"
+                      style={{ color: isSelected ? 'var(--color-text)' : 'var(--color-text-muted)' }}
+                    >
+                      {exp.period || '2024'}
+                    </span>
                   </div>
                 </div>
               );
@@ -257,7 +233,7 @@ export default function Experience({ experiences = [] }) {
                   damping: 22,
                   mass: 0.75
                 }}
-                className="w-full p-5 sm:p-6 rounded-2xl sm:rounded-3xl relative overflow-hidden shadow-xl space-y-4 select-none"
+                className="w-full p-4 sm:p-5 md:p-6 lg:p-7 xl:p-8 rounded-2xl sm:rounded-3xl relative overflow-hidden shadow-xl space-y-3 sm:space-y-4 select-none"
                 style={{
                   background: 'var(--color-surface)',
                   border: '1.5px solid var(--color-border)',
@@ -272,10 +248,10 @@ export default function Experience({ experiences = [] }) {
                 />
 
                 {/* 1. Header Row: Logo, Role, Badges & Period */}
-                <div className="flex flex-wrap items-center justify-between gap-3 pb-3" style={{ borderBottom: '1px solid var(--color-border)' }}>
-                  <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center justify-between gap-2.5 pb-2" style={{ borderBottom: '1px solid var(--color-border)' }}>
+                  <div className="flex items-center gap-2.5">
                     <div 
-                      className="w-12 h-12 sm:w-13 sm:h-13 rounded-2xl overflow-hidden shadow-md p-1 flex items-center justify-center flex-shrink-0"
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl overflow-hidden shadow-md p-0.5 sm:p-1 flex items-center justify-center flex-shrink-0"
                       style={{
                         background: 'var(--color-surface-2)',
                         border: '1.5px solid var(--color-accent)',

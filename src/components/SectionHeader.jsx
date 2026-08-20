@@ -8,11 +8,23 @@ export default function SectionHeader({ number = '01', category = '', title = ''
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      className="text-center max-w-3xl mx-auto space-y-1 sm:space-y-2 mb-3.5 sm:mb-6"
+      className="text-center mx-auto glass-panel"
+      style={{ 
+        maxWidth: 'var(--container-inner)',
+        width: '100%',
+        marginBottom: 'var(--gap-lg)',
+        paddingTop: 'var(--gap-sm)',
+        borderRadius: '9999px',
+        background: 'transparent',
+        border: 'none',
+        backdropFilter: 'none',
+        WebkitBackdropFilter: 'none',
+      }}
     >
       {/* Category Pill */}
       <div
-        className="inline-flex items-center gap-2.5 px-3.5 py-1 rounded-full text-xs font-mono glass-panel"
+        className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full font-mono glass-panel"
+        style={{ fontSize: 'var(--text-xs)' }}
       >
         <span style={{ color: 'var(--color-accent)', fontWeight: 700 }}>{number} {"//"}</span>
         <span style={{ color: 'var(--color-text)', fontWeight: 600 }} className="uppercase tracking-wider">
@@ -21,16 +33,16 @@ export default function SectionHeader({ number = '01', category = '', title = ''
       </div>
 
       {/* Separator line */}
-      <div className="flex items-center justify-center gap-4 py-1">
-        <div className="h-[1px] w-16 sm:w-24" style={{ background: `linear-gradient(to right, transparent, var(--color-accent))` }} />
+      <div className="flex items-center justify-center gap-3" style={{ padding: 'clamp(0.25rem, 0.5vw, 0.5rem) 0' }}>
+        <div className="h-[1px]" style={{ width: 'clamp(3rem, 8vw, 7rem)', background: 'linear-gradient(to right, transparent, var(--color-accent))' }} />
         <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: 'var(--color-accent)' }} />
-        <div className="h-[1px] w-16 sm:w-24" style={{ background: `linear-gradient(to left, transparent, var(--color-accent))` }} />
+        <div className="h-[1px]" style={{ width: 'clamp(3rem, 8vw, 7rem)', background: 'linear-gradient(to left, transparent, var(--color-accent))' }} />
       </div>
 
       {/* Main Title */}
       <h2
-        className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight"
-        style={{ color: 'var(--color-text)' }}
+        className="font-black tracking-tight leading-tight"
+        style={{ color: 'var(--color-text)', fontSize: 'var(--text-5xl)' }}
       >
         {title}{' '}
         {highlight && (

@@ -80,11 +80,11 @@ function StackableDeckCard({ project, index, total, onInspect }) {
         </div>
 
         {/* 2-Column Side-by-Side Body (50% Picture, 50% Content) */}
-        <div className="grid grid-cols-12 gap-2.5 sm:gap-6 items-center my-1 sm:my-3">
+        <div className="grid grid-cols-12 gap-2 sm:gap-4 md:gap-5 items-center my-0.5 sm:my-2">
           
           {/* LEFT COLUMN: Project Screenshot */}
           <div 
-            className="col-span-6 md:col-span-6 relative rounded-lg sm:rounded-2xl overflow-hidden bg-black/40 h-28 sm:h-60 group/img shadow-inner cursor-pointer" 
+            className="col-span-6 md:col-span-6 relative rounded-lg sm:rounded-2xl overflow-hidden bg-black/40 h-28 sm:h-44 md:h-48 lg:h-56 xl:h-64 group/img shadow-inner cursor-pointer" 
             style={{ border: '1px solid var(--color-border)' }}
             onClick={() => onInspect(project)}
             onMouseEnter={() => {
@@ -103,7 +103,7 @@ function StackableDeckCard({ project, index, total, onInspect }) {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
             
-            <div className="absolute top-1 left-1 sm:top-3 sm:left-3 opacity-90 backdrop-blur-md px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-md text-[8px] sm:text-[10px] font-bold font-mono tracking-wider text-white bg-black/50 border border-white/10 pointer-events-none">
+            <div className="absolute top-1 left-1 sm:top-2.5 sm:left-2.5 opacity-90 backdrop-blur-md px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded-md text-[8px] sm:text-[9px] md:text-xs font-bold font-mono tracking-wider text-white bg-black/50 border border-white/10 pointer-events-none">
               {projectTechTags[0] || 'Web'}
             </div>
 
@@ -114,17 +114,17 @@ function StackableDeckCard({ project, index, total, onInspect }) {
               <span className="p-1.5 sm:p-2 rounded-full bg-white/10 border border-white/20 transform group-hover/img:scale-110 transition-transform">
                 <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color: 'var(--color-accent)' }} />
               </span>
-              <span className="tracking-wide uppercase text-[9px] sm:text-[10px]">Inspect Spec</span>
+              <span className="tracking-wide uppercase text-[9px] sm:text-[10px] md:text-xs">Inspect Spec</span>
             </div>
           </div>
 
           {/* RIGHT COLUMN: Project Content & Specs */}
-          <div className="col-span-6 md:col-span-6 space-y-1 sm:space-y-3">
+          <div className="col-span-6 md:col-span-6 space-y-1 sm:space-y-2 lg:space-y-3">
             <div>
-              <h3 className="text-xs sm:text-xl font-bold transition-colors leading-snug font-sans tracking-tight line-clamp-2" style={{ color: 'var(--color-text)' }}>
+              <h3 className="text-xs sm:text-lg md:text-xl lg:text-2xl font-bold transition-colors leading-snug font-sans tracking-tight line-clamp-2" style={{ color: 'var(--color-text)' }}>
                 {project.title}
               </h3>
-              <p className="text-[10px] sm:text-xs leading-snug sm:leading-relaxed pt-0.5 line-clamp-2 sm:line-clamp-3 font-sans" style={{ color: 'var(--color-text-muted)' }}>
+              <p className="text-[10px] sm:text-xs md:text-[13px] lg:text-sm leading-snug sm:leading-relaxed pt-0.5 line-clamp-2 font-sans" style={{ color: 'var(--color-text-muted)' }}>
                 {project.longDesc || project.description}
               </p>
             </div>
@@ -132,14 +132,14 @@ function StackableDeckCard({ project, index, total, onInspect }) {
             {/* Metric Telemetry Chip */}
             {project.metrics && (
               <div 
-                className="p-1 sm:p-2 rounded-md sm:rounded-xl flex items-center gap-1.5 sm:gap-2.5 text-[9px] sm:text-xs font-mono shadow-sm"
+                className="p-1 sm:p-1.5 rounded-md sm:rounded-xl flex items-center gap-1.5 sm:gap-2 text-[9px] sm:text-xs font-mono shadow-sm"
                 style={{
                   background: 'var(--color-surface-2)',
                   border: '1px solid var(--color-border)',
                   color: 'var(--color-accent)',
                 }}
               >
-                <Activity className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0 animate-pulse" style={{ color: 'var(--color-accent)' }} />
+                <Activity className="w-3 h-3 sm:w-3.5 sm:h-3.5 flex-shrink-0 animate-pulse" style={{ color: 'var(--color-accent)' }} />
                 <span className="truncate font-bold tracking-wide">{project.metrics}</span>
               </div>
             )}
@@ -149,7 +149,7 @@ function StackableDeckCard({ project, index, total, onInspect }) {
               {projectTechTags.slice(0, 3).map((tag) => (
                 <span
                   key={tag}
-                  className="text-[8px] sm:text-[10px] font-mono px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-md sm:rounded-lg font-semibold transition-all"
+                  className="text-[8px] sm:text-[9px] font-mono px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-lg font-semibold transition-all"
                   style={{
                     background: 'var(--color-surface-3)',
                     color: 'var(--color-text-muted)',
@@ -165,7 +165,7 @@ function StackableDeckCard({ project, index, total, onInspect }) {
         </div>
 
         {/* Action Links Footer Bar */}
-        <div className="pt-2 sm:pt-3 flex items-center justify-between gap-1.5" style={{ borderTop: '1px solid var(--color-border)' }}>
+        <div className="pt-1.5 sm:pt-2 flex items-center justify-between gap-1.5" style={{ borderTop: '1px solid var(--color-border)' }}>
           <Magnetic>
             <a
               href={githubLink}
@@ -285,8 +285,8 @@ export default function Projects({ projects = [], techSkills = [] }) {
   });
 
   return (
-    <SectionWrapper id="projects" variant="zoom-portal" className="py-6 sm:py-14">
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-3.5 sm:space-y-6 perspective-1200">
+    <SectionWrapper id="projects" variant="zoom-portal">
+      <div className="w-full relative z-10 perspective-1200" style={{ maxWidth: 'var(--container-inner)', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'var(--gap-md)' }}>
         
         {/* Section Header */}
         <SectionHeader
@@ -297,8 +297,8 @@ export default function Projects({ projects = [], techSkills = [] }) {
         />
 
         {/* 🎛️ SLEEK MODERN CATEGORY & TECH STACK FILTER BAR */}
-        <div className="space-y-3 pb-3 w-full" style={{ borderBottom: '1px solid var(--color-border)' }}>
-          <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="space-y-2 pb-2 w-full" style={{ borderBottom: '1px solid var(--color-border)' }}>
+          <div className="flex flex-wrap items-center justify-between gap-2.5">
             {/* Category Filter Pills */}
             <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
               {categories.map((cat) => {
@@ -313,7 +313,7 @@ export default function Projects({ projects = [], techSkills = [] }) {
                   <button
                     key={cat.id}
                     onClick={() => setActiveCategory(cat.id)}
-                    className="px-3 py-1.5 sm:px-3.5 sm:py-1.5 rounded-xl text-xs font-mono font-bold transition-all duration-200 flex items-center gap-1.5 cursor-pointer select-none shadow-sm hover:scale-105 active:scale-95"
+                    className="px-2.5 py-1 sm:px-3 sm:py-1 rounded-xl text-xs font-mono font-bold transition-all duration-200 flex items-center gap-1.5 cursor-pointer select-none shadow-sm hover:scale-105 active:scale-95"
                     style={{
                       background: isActive ? 'var(--color-accent)' : 'var(--color-surface-2)',
                       color: isActive ? '#000' : 'var(--color-text-muted)',
@@ -395,10 +395,10 @@ export default function Projects({ projects = [], techSkills = [] }) {
               </span>
             </div>
 
-            {filteredProjects.length === 0 && (
+            {(activeCategory !== 'all' || activeTechFilter !== 'all') && (
               <button 
                 onClick={() => { setActiveCategory('all'); setActiveTechFilter('all'); }} 
-                className="text-accent underline hover:opacity-80 text-[11px]"
+                className="text-accent underline hover:opacity-80 text-[11px] cursor-pointer"
                 style={{ color: 'var(--color-accent)' }}
               >
                 Clear all filters
@@ -408,19 +408,19 @@ export default function Projects({ projects = [], techSkills = [] }) {
         </div>
 
         {/* SCROLLSTACK FOLDER DECK CONTAINER */}
-        <div className="w-full h-[420px] sm:h-[520px] relative pt-6 sm:pt-4">
+        <div className="w-full h-[380px] sm:h-[430px] md:h-[460px] lg:h-[500px] xl:h-[550px] relative pt-2 sm:pt-3">
           <ScrollStack
-            itemDistance={isMobile ? 24 : 32}
+            itemDistance={isMobile ? 140 : 260}
             itemScale={0.02}
-            itemStackDistance={isMobile ? 14 : 24}
-            stackPosition="3%"
-            scaleEndPosition="2%"
+            itemStackDistance={isMobile ? 12 : 20}
+            stackPosition="2%"
+            scaleEndPosition="1%"
             baseScale={0.95}
             blurAmount={0}
             useWindowScroll={false}
-            duration={0.4}
-            wheelMultiplier={2.8}
-            touchMultiplier={4.5}
+            duration={0.5}
+            wheelMultiplier={1.2}
+            touchMultiplier={1.6}
             className="w-full h-full pr-2 custom-scrollbar"
           >
             {filteredProjects.map((project, index) => (

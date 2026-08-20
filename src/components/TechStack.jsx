@@ -144,37 +144,41 @@ const EyePleasingCard = forwardRef(function EyePleasingCard({ skill, index, proj
           transformStyle: 'preserve-3d', perspective: 1000,
           background: 'var(--color-surface)',
           borderColor: isHovered ? 'var(--color-border-accent)' : 'var(--color-border)',
+          padding: 'var(--card-p-sm)',
+          gap: 'clamp(0.5rem, 1.2vw, 0.875rem)',
         }}
-        whileHover={{ scale: 1.03 }}
-        whileTap={{ scale: 0.97 }}
-        className="p-2 sm:p-3 rounded-xl sm:rounded-2xl border flex items-center gap-2 sm:gap-2.5 relative cursor-pointer select-none transition-all duration-300 shadow-sm hover:shadow-md group w-full"
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        className="rounded-2xl border flex items-center relative cursor-pointer select-none transition-all duration-200 shadow-sm hover:shadow-md group w-full"
       >
         {/* Tech Icon Box */}
         <motion.div
-          whileHover={{ rotateZ: 360, scale: 1.12 }}
-          transition={{ duration: 0.45, type: 'spring', stiffness: 300 }}
-          className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl flex-shrink-0 flex items-center justify-center border shadow-inner"
+          whileHover={{ rotateZ: 360, scale: 1.1 }}
+          transition={{ duration: 0.4, type: 'spring', stiffness: 300 }}
+          className="rounded-xl flex-shrink-0 flex items-center justify-center border shadow-inner"
           style={{
+            width: 'clamp(1.75rem, 2.5vw, 2.5rem)',
+            height: 'clamp(1.75rem, 2.5vw, 2.5rem)',
             background: 'var(--color-surface-2)',
             borderColor: 'var(--color-border)',
           }}
         >
-          <GetTechLogo name={skill.name} className="w-4 h-4 sm:w-4.5 sm:h-4.5 object-contain" />
+          <GetTechLogo name={skill.name} style={{ width: 'clamp(1rem, 1.4vw, 1.375rem)', height: 'clamp(1rem, 1.4vw, 1.375rem)' }} className="object-contain" />
         </motion.div>
 
         {/* Info */}
         <div className="flex-1 min-w-0 overflow-hidden">
           <div className="flex items-center justify-between gap-1">
             <h3 
-              className="text-[11px] sm:text-xs font-mono font-bold truncate leading-tight tracking-tight"
-              style={{ color: 'var(--color-text)' }}
+              className="font-mono font-bold truncate leading-tight tracking-tight"
+              style={{ color: 'var(--color-text)', fontSize: 'var(--text-sm)' }}
             >
               {skill.name}
             </h3>
             {linkedProjects.length > 0 && (
               <span 
-                className="text-[9px] px-1 rounded font-mono font-bold"
-                style={{ background: 'rgba(56, 189, 248, 0.15)', color: 'var(--color-accent)' }}
+                className="px-1.5 py-0.5 rounded font-mono font-bold flex-shrink-0"
+                style={{ fontSize: 'var(--text-xs)', background: 'rgba(56, 189, 248, 0.15)', color: 'var(--color-accent)' }}
                 title={`${linkedProjects.length} linked project${linkedProjects.length > 1 ? 's' : ''}`}
               >
                 {linkedProjects.length}P
@@ -182,14 +186,14 @@ const EyePleasingCard = forwardRef(function EyePleasingCard({ skill, index, proj
             )}
           </div>
 
-          <div className="flex items-center gap-1 sm:gap-1.5 pt-0.5">
+          <div className="flex items-center gap-1.5" style={{ paddingTop: 'clamp(0.125rem, 0.3vw, 0.375rem)' }}>
             <span 
               className="w-1.5 h-1.5 rounded-full flex-shrink-0"
               style={{ backgroundColor: 'var(--color-accent)' }} 
             />
             <span 
-              className="text-[9px] sm:text-[10px] font-mono font-semibold uppercase tracking-wider truncate"
-              style={{ color: 'var(--color-text-muted)' }}
+              className="font-mono font-semibold uppercase tracking-wider truncate"
+              style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-xs)' }}
             >
               {skill.category}
             </span>
@@ -346,13 +350,12 @@ export default function TechStack({ categories = [], skills = [], projects = [] 
     const matchesSearch = searchQuery === '' ||
       skill.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       skill.category.toLowerCase().includes(searchQuery.toLowerCase());
-
-    return matchesTab && matchesSearch;
+return matchesTab && matchesSearch;
   });
 
   return (
-    <SectionWrapper id="tech-stack" variant="deck-rise" className="py-6 sm:py-14">
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-3 sm:space-y-6">
+    <SectionWrapper id="skills" variant="tilt-forward">
+      <div className="w-full" style={{ maxWidth: 'var(--container-inner)', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'var(--gap-md)' }}>
         
         {/* Section Header */}
         <SectionHeader
@@ -362,35 +365,42 @@ export default function TechStack({ categories = [], skills = [], projects = [] 
           highlight="Stack"
         />
 
-        {/* CONTROLS HEADER BAR */}
-        <div className="space-y-3">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3 pb-2" style={{ borderBottom: '1px solid var(--color-border)' }}>
-            {/* View Mode Switcher */}
-            <div className="flex items-center gap-1.5 p-1 rounded-xl" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }}>
-              {[[ 'grid', LayoutGrid, 'Glass Deck' ], [ 'terminal', TerminalSquare, 'CLI Terminal' ]].map(([mode, IconComp, label]) => (
-                <button 
-                  key={mode} 
+        {/* 🎛️ CONTROLS & FILTER BAR */}
+        <div className="space-y-2.5 sm:space-y-3">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-4">
+            
+            {/* View Switcher: Interactive Glass Deck vs CLI Terminal */}
+            <div 
+              className="p-1 rounded-xl flex items-center gap-1 border shadow-inner"
+              style={{ background: 'var(--color-surface-2)', borderColor: 'var(--color-border)' }}
+            >
+              {[
+                { mode: 'grid', label: 'Glass Deck', icon: LayoutGrid },
+                { mode: 'cli', label: 'CLI Terminal', icon: Terminal }
+              ].map(({ mode, label, icon: IconComp }) => (
+                <button
+                  key={mode}
                   onClick={() => setActiveViewMode(mode)}
-                  className="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer select-none"
+                  className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs md:text-sm font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
                   style={{
                     background: activeViewMode === mode ? 'var(--color-accent)' : 'transparent',
                     color:      activeViewMode === mode ? '#000'                 : 'var(--color-text-muted)',
                   }}
                 >
-                  <IconComp className="w-3.5 h-3.5" /><span>{label}</span>
+                  <IconComp className="w-3.5 h-3.5 sm:w-4 sm:h-4" /><span>{label}</span>
                 </button>
               ))}
             </div>
 
             {/* Search Bar */}
-            <div className="relative w-full sm:w-64">
-              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--color-accent)' }} />
+            <div className="relative w-full sm:w-64 md:w-72">
+              <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--color-accent)' }} />
               <input 
                 type="text" 
                 placeholder="Search technologies..." 
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                className="w-full rounded-xl pl-8 pr-3 py-1.5 text-xs font-mono outline-none transition-colors"
+                className="w-full rounded-xl pl-8 sm:pl-9 pr-3 py-1.5 sm:py-2 text-xs md:text-sm font-mono outline-none transition-colors"
                 style={{
                   background: 'var(--color-surface)',
                   border: '1px solid var(--color-border)',
@@ -402,7 +412,7 @@ export default function TechStack({ categories = [], skills = [], projects = [] 
 
           {/* Compact Category Tabs */}
           <div 
-            className="w-full flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1.5 sm:pb-0 custom-scrollbar select-none"
+            className="w-full flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 sm:pb-0 custom-scrollbar select-none"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {normalizedCategories.map((cat) => {
@@ -423,7 +433,7 @@ export default function TechStack({ categories = [], skills = [], projects = [] 
                 <button
                   key={catId}
                   onClick={() => setActiveTab(catId)}
-                  className="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs font-mono font-bold transition-all duration-200 flex items-center gap-1.5 cursor-pointer whitespace-nowrap flex-shrink-0 shadow-sm hover:scale-105 active:scale-95"
+                  className="px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-xl text-xs md:text-sm font-mono font-bold transition-all duration-200 flex items-center gap-1.5 cursor-pointer whitespace-nowrap flex-shrink-0 shadow-sm hover:scale-105 active:scale-95"
                   style={{
                     background: isActive ? 'var(--color-accent)' : 'var(--color-surface-2)',
                     color: isActive ? '#000' : 'var(--color-text-muted)',
@@ -431,10 +441,10 @@ export default function TechStack({ categories = [], skills = [], projects = [] 
                     boxShadow: isActive ? '0 0 16px rgba(56, 189, 248, 0.35)' : 'none',
                   }}
                 >
-                  <IconComp className="w-3.5 h-3.5 flex-shrink-0" />
+                  <IconComp className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
                   <span>{shortLabel}</span>
                   <span
-                    className="text-[10px] px-1.5 py-0.2 rounded-full font-bold flex-shrink-0"
+                    className="text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full font-bold flex-shrink-0"
                     style={{
                       background: isActive ? 'rgba(0,0,0,0.2)' : 'var(--color-surface)',
                       color: isActive ? '#000' : 'var(--color-accent)',
@@ -451,7 +461,16 @@ export default function TechStack({ categories = [], skills = [], projects = [] 
 
         {/* SKILLS CONTAINER */}
         {activeViewMode === 'grid' ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3 min-h-[220px] items-start w-full">
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(clamp(140px, 16vw, 220px), 1fr))',
+              gap: 'var(--gap-sm)',
+              minHeight: '160px',
+              alignItems: 'start',
+              width: '100%',
+            }}
+          >
             <AnimatePresence mode="popLayout">
               {filteredSkills.map((skill, index) => (
                 <EyePleasingCard

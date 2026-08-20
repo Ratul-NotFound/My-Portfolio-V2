@@ -44,16 +44,23 @@ export default function Contact({ personInfo = {} }) {
   };
 
   return (
-    <SectionWrapper id="contact" variant="glass-rise" className="py-6 sm:py-14">
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4 sm:space-y-6">
-        <SectionHeader number="08" category="Let's Work Together" title="Get In" highlight="Touch" />
+    <SectionWrapper id="contact" variant="zoom-portal" className="py-6 sm:py-8 md:py-10 lg:py-14">
+      <div className="w-full relative z-10" style={{ maxWidth: 'var(--container-inner)', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'var(--gap-md)' }}>
+        
+        {/* Section Header */}
+        <SectionHeader
+          number="08"
+          category="Let's Work Together"
+          title="Get In"
+          highlight="Touch"
+        />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 max-w-5xl mx-auto w-full items-stretch">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 24rem), 1fr))', gap: 'var(--gap-md)', alignItems: 'stretch', width: '100%' }}>
 
           {/* LEFT: Contact Details Spec Card */}
           <div className="lg:col-span-5 flex flex-col">
             <div 
-              className="p-5 sm:p-7 flex flex-col justify-between h-full rounded-3xl relative overflow-hidden group transition-all duration-300 font-mono shadow-xl"
+              className="p-4 sm:p-5 md:p-6 lg:p-7 xl:p-8 flex flex-col justify-between h-full rounded-3xl relative overflow-hidden group transition-all duration-300 font-mono shadow-xl"
               style={{
                 background: 'var(--glass-bg)',
                 border: '1px solid var(--color-border)',
@@ -76,14 +83,14 @@ export default function Contact({ personInfo = {} }) {
               />
 
               {/* Card Header */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between pb-3" style={{ borderBottom: '1px solid var(--color-border)' }}>
-                  <h3 className="text-base font-bold font-sans flex items-center gap-2" style={{ color: 'var(--color-text)' }}>
+              <div className="space-y-2.5 sm:space-y-3">
+                <div className="flex items-center justify-between pb-2" style={{ borderBottom: '1px solid var(--color-border)' }}>
+                  <h3 className="text-sm sm:text-base font-bold font-sans flex items-center gap-2" style={{ color: 'var(--color-text)' }}>
                     <MessageSquare className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
                     <span>Direct Channels</span>
                   </h3>
                   <span 
-                    className="text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 shadow-sm"
+                    className="text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm"
                     style={{ 
                       background: 'rgba(34, 197, 94, 0.12)', 
                       border: '1px solid rgba(34, 197, 94, 0.25)', 
@@ -96,11 +103,11 @@ export default function Contact({ personInfo = {} }) {
                 </div>
 
                 {/* Contact Items List */}
-                <div className="space-y-2.5">
+                <div className="space-y-2">
                   {/* Direct Email */}
                   <a
                     href={`mailto:${email}`}
-                    className="p-3 rounded-2xl flex items-center gap-3 transition-all cursor-pointer group/item border"
+                    className="p-2.5 rounded-xl flex items-center gap-2.5 transition-all cursor-pointer group/item border"
                     style={{
                       background: 'var(--color-surface-2)',
                       borderColor: 'var(--color-border)',
@@ -115,13 +122,13 @@ export default function Contact({ personInfo = {} }) {
                     }}
                   >
                     <div 
-                      className="p-2 rounded-xl flex-shrink-0 transition-transform group-hover/item:scale-110"
+                      className="p-1.5 rounded-lg flex-shrink-0 transition-transform group-hover/item:scale-110"
                       style={{ background: 'var(--color-surface-3)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}
                     >
-                      <Mail className="w-4 h-4" />
+                      <Mail className="w-3.5 h-3.5" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <span className="text-[10px] font-bold block opacity-75" style={{ color: 'var(--color-text-muted)' }}>DIRECT EMAIL</span>
+                      <span className="text-[9px] font-bold block opacity-75" style={{ color: 'var(--color-text-muted)' }}>DIRECT EMAIL</span>
                       <span className="text-xs font-bold truncate block transition-colors group-hover/item:text-accent" style={{ color: 'var(--color-text)' }}>
                         {email}
                       </span>
@@ -131,20 +138,20 @@ export default function Contact({ personInfo = {} }) {
 
                   {/* Location */}
                   <div 
-                    className="p-3 rounded-2xl flex items-center gap-3 border"
+                    className="p-2.5 rounded-xl flex items-center gap-2.5 border"
                     style={{
                       background: 'var(--color-surface-2)',
                       borderColor: 'var(--color-border)',
                     }}
                   >
                     <div 
-                      className="p-2 rounded-xl flex-shrink-0"
+                      className="p-1.5 rounded-lg flex-shrink-0"
                       style={{ background: 'var(--color-surface-3)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}
                     >
-                      <MapPin className="w-4 h-4" />
+                      <MapPin className="w-3.5 h-3.5" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <span className="text-[10px] font-bold block opacity-75" style={{ color: 'var(--color-text-muted)' }}>LOCATION</span>
+                      <span className="text-[9px] font-bold block opacity-75" style={{ color: 'var(--color-text-muted)' }}>LOCATION</span>
                       <span className="text-xs font-bold truncate block" style={{ color: 'var(--color-text)' }}>
                         {location}
                       </span>
@@ -153,20 +160,20 @@ export default function Contact({ personInfo = {} }) {
 
                   {/* Response Time */}
                   <div 
-                    className="p-3 rounded-2xl flex items-center gap-3 border"
+                    className="p-2.5 rounded-xl flex items-center gap-2.5 border"
                     style={{
                       background: 'var(--color-surface-2)',
                       borderColor: 'var(--color-border)',
                     }}
                   >
                     <div 
-                      className="p-2 rounded-xl flex-shrink-0"
+                      className="p-1.5 rounded-lg flex-shrink-0"
                       style={{ background: 'var(--color-surface-3)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}
                     >
-                      <Clock className="w-4 h-4" />
+                      <Clock className="w-3.5 h-3.5" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <span className="text-[10px] font-bold block opacity-75" style={{ color: 'var(--color-text-muted)' }}>TYPICAL RESPONSE</span>
+                      <span className="text-[9px] font-bold block opacity-75" style={{ color: 'var(--color-text-muted)' }}>TYPICAL RESPONSE</span>
                       <span className="text-xs font-bold" style={{ color: 'var(--color-accent)' }}>
                         ⚡ Within 2 Hours
                       </span>
@@ -176,12 +183,12 @@ export default function Contact({ personInfo = {} }) {
               </div>
 
               {/* Bottom Actions: Copy Button & Social Row */}
-              <div className="space-y-3 pt-4" style={{ borderTop: '1px solid var(--color-border)' }}>
+              <div className="space-y-2 pt-2.5" style={{ borderTop: '1px solid var(--color-border)' }}>
                 {/* One-Click Copy Email Button */}
                 <button 
                   type="button"
                   onClick={copyEmail}
-                  className="w-full p-2.5 rounded-xl flex items-center justify-between text-xs font-mono font-bold cursor-pointer transition-all border active:scale-98 shadow-sm"
+                  className="w-full p-2 rounded-xl flex items-center justify-between text-xs font-mono font-bold cursor-pointer transition-all border active:scale-98 shadow-sm"
                   style={{ 
                     background: copied ? 'rgba(56, 189, 248, 0.15)' : 'var(--color-surface-3)', 
                     borderColor: copied ? 'var(--color-accent)' : 'var(--color-border)', 
@@ -192,29 +199,29 @@ export default function Contact({ personInfo = {} }) {
                 >
                   <span className="truncate text-[11px]">{email}</span>
                   {copied ? (
-                    <span className="flex items-center gap-1.5 text-xs text-accent font-bold" style={{ color: 'var(--color-accent)' }}>
+                    <span className="flex items-center gap-1 text-xs text-accent font-bold" style={{ color: 'var(--color-accent)' }}>
                       <Check className="w-3.5 h-3.5 text-green-400" /> Copied!
                     </span>
                   ) : (
-                    <span className="flex items-center gap-1.5 text-xs text-accent opacity-85 hover:opacity-100" style={{ color: 'var(--color-accent)' }}>
+                    <span className="flex items-center gap-1 text-xs text-accent opacity-85 hover:opacity-100" style={{ color: 'var(--color-accent)' }}>
                       <Copy className="w-3.5 h-3.5" /> Copy
                     </span>
                   )}
                 </button>
 
                 {/* Social Connect Icons Row */}
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-1.5">
                   {[
-                    { href: github, icon: <GithubIcon className="w-4 h-4 fill-current" />, label: 'GitHub' },
-                    { href: linkedin, icon: <LinkedinIcon className="w-4 h-4 fill-current" />, label: 'LinkedIn' },
-                    { href: `mailto:${email}`, icon: <Mail className="w-4 h-4" />, label: 'Mail' },
+                    { href: github, icon: <GithubIcon className="w-3.5 h-3.5 fill-current" />, label: 'GitHub' },
+                    { href: linkedin, icon: <LinkedinIcon className="w-3.5 h-3.5 fill-current" />, label: 'LinkedIn' },
+                    { href: `mailto:${email}`, icon: <Mail className="w-3.5 h-3.5" />, label: 'Mail' },
                   ].map(({ href, icon, label }, i) => (
                     <a 
                       key={i} 
                       href={href} 
                       target={href.startsWith('http') ? '_blank' : undefined}
                       rel="noopener noreferrer"
-                      className="py-2 px-2 rounded-xl flex items-center justify-center gap-1.5 text-xs font-mono font-semibold transition-all border group/soc cursor-pointer hover:scale-103 active:scale-95 shadow-sm"
+                      className="py-1.5 px-2 rounded-xl flex items-center justify-center gap-1.5 text-xs font-mono font-semibold transition-all border group/soc cursor-pointer hover:scale-103 active:scale-95 shadow-sm"
                       style={{ 
                         background: 'var(--color-surface-2)', 
                         borderColor: 'var(--color-border)', 
@@ -243,7 +250,7 @@ export default function Contact({ personInfo = {} }) {
           {/* RIGHT: High-Performance Contact Message Form */}
           <div className="lg:col-span-7 flex flex-col">
             <div 
-              className="p-5 sm:p-7 flex flex-col justify-between h-full rounded-3xl relative overflow-hidden group transition-all duration-300 font-mono shadow-xl"
+              className="p-4 sm:p-5 md:p-6 lg:p-7 xl:p-8 flex flex-col justify-between h-full rounded-3xl relative overflow-hidden group transition-all duration-300 font-mono shadow-xl"
               style={{
                 background: 'var(--glass-bg)',
                 border: '1px solid var(--color-border)',
@@ -259,22 +266,22 @@ export default function Contact({ personInfo = {} }) {
                 style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }} 
               />
 
-              <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4 flex flex-col justify-between h-full">
-                <div className="space-y-3 sm:space-y-3.5">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <form onSubmit={handleSubmit} className="space-y-2.5 sm:space-y-3 flex flex-col justify-between h-full">
+                <div className="space-y-2.5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     {/* Name Input */}
-                    <div className="space-y-1">
+                    <div className="space-y-0.5">
                       <label className="text-xs font-mono font-bold flex items-center justify-between" style={{ color: 'var(--color-text-muted)' }}>
                         <span>Your Name</span>
                         <span className="text-[10px] opacity-50 font-normal">Required</span>
                       </label>
-                      <input
+                      <input 
                         type="text" 
                         required 
                         placeholder="Mahmud Hasan"
                         value={formData.name}
                         onChange={e => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono outline-none transition-all duration-200 placeholder:text-zinc-500 focus:ring-2 focus:ring-accent/30"
+                        className="w-full px-3 py-2 rounded-xl border text-xs font-mono outline-none transition-all duration-200 placeholder:text-zinc-500 focus:ring-2 focus:ring-accent/30"
                         style={{
                           background: 'var(--color-surface-2)',
                           borderColor: 'var(--color-border)',
@@ -286,18 +293,18 @@ export default function Contact({ personInfo = {} }) {
                     </div>
 
                     {/* Email Input */}
-                    <div className="space-y-1">
+                    <div className="space-y-0.5">
                       <label className="text-xs font-mono font-bold flex items-center justify-between" style={{ color: 'var(--color-text-muted)' }}>
                         <span>Email Address</span>
                         <span className="text-[10px] opacity-50 font-normal">Required</span>
                       </label>
-                      <input
+                      <input 
                         type="email" 
                         required 
                         placeholder="you@company.com"
                         value={formData.email}
                         onChange={e => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono outline-none transition-all duration-200 placeholder:text-zinc-500 focus:ring-2 focus:ring-accent/30"
+                        className="w-full px-3 py-2 rounded-xl border text-xs font-mono outline-none transition-all duration-200 placeholder:text-zinc-500 focus:ring-2 focus:ring-accent/30"
                         style={{
                           background: 'var(--color-surface-2)',
                           borderColor: 'var(--color-border)',
@@ -310,7 +317,7 @@ export default function Contact({ personInfo = {} }) {
                   </div>
 
                   {/* Subject Input */}
-                  <div className="space-y-1">
+                  <div className="space-y-0.5">
                     <label className="text-xs font-mono font-bold flex items-center justify-between" style={{ color: 'var(--color-text-muted)' }}>
                       <span>Subject</span>
                       <span className="text-[10px] opacity-50 font-normal">Inquiry Type</span>
@@ -321,7 +328,7 @@ export default function Contact({ personInfo = {} }) {
                       placeholder="Project Collaboration / Full-Time Engineering Role"
                       value={formData.subject}
                       onChange={e => setFormData({ ...formData, subject: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono outline-none transition-all duration-200 placeholder:text-zinc-500 focus:ring-2 focus:ring-accent/30"
+                      className="w-full px-3 py-2 rounded-xl border text-xs font-mono outline-none transition-all duration-200 placeholder:text-zinc-500 focus:ring-2 focus:ring-accent/30"
                       style={{
                         background: 'var(--color-surface-2)',
                         borderColor: 'var(--color-border)',
@@ -333,18 +340,18 @@ export default function Contact({ personInfo = {} }) {
                   </div>
 
                   {/* Message Body */}
-                  <div className="space-y-1">
+                  <div className="space-y-0.5">
                     <label className="text-xs font-mono font-bold flex items-center justify-between" style={{ color: 'var(--color-text-muted)' }}>
                       <span>Message</span>
                       <span className="text-[10px] opacity-50 font-normal">Details</span>
                     </label>
                     <textarea 
                       required 
-                      rows={3} 
+                      rows={2.5} 
                       placeholder="Hi Mahmud, I came across your portfolio and would like to discuss..."
                       value={formData.message}
                       onChange={e => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono outline-none transition-all duration-200 placeholder:text-zinc-500 focus:ring-2 focus:ring-accent/30 resize-none"
+                      className="w-full px-3 py-2 rounded-xl border text-xs font-mono outline-none transition-all duration-200 placeholder:text-zinc-500 focus:ring-2 focus:ring-accent/30 resize-none"
                       style={{
                         background: 'var(--color-surface-2)',
                         borderColor: 'var(--color-border)',
@@ -357,7 +364,7 @@ export default function Contact({ personInfo = {} }) {
                 </div>
 
                 {/* Submit Action Button */}
-                <div className="pt-2">
+                <div className="pt-1.5">
                   <Magnetic>
                     <button 
                       type="submit" 
