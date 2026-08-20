@@ -241,12 +241,6 @@ html.light .shadow-card:hover {
   -webkit-backface-visibility: hidden;
 }
 
-/* Off-screen section rendering optimization: browser skips painting until near viewport */
-section:not(#hero) {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 650px;
-}
-
 /* Optimize backdrop-filter GPU memory */
 .glass-panel, .glass-card, .glass-button {
   transform: translateZ(0);

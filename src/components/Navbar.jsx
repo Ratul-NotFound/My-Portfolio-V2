@@ -1,20 +1,25 @@
 'use client';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Terminal, Download, Menu, X, User, Layers, Cpu, Briefcase, Mail, Award, BookOpen } from 'lucide-react';
 import ThemeToggle from './ux/ThemeToggle';
 
 const navItems = [
-  { name: 'About',      href: '#about',      icon: User      },
-  { name: 'Skills',     href: '#tech-stack',  icon: Layers    },
-  { name: 'Projects',   href: '#projects',   icon: Cpu       },
-  { name: 'Research',   href: '#research',   icon: BookOpen  },
-  { name: 'Experience', href: '#experience', icon: Briefcase },
-  { name: 'Activities', href: '#activities', icon: Award     },
-  { name: 'Contact',    href: '#contact',    icon: Mail      },
+  { name: 'About',      path: '/about',      hash: '#about',      id: 'about',      icon: User      },
+  { name: 'Skills',     path: '/skills',     hash: '#skills',     id: 'skills',     icon: Layers    },
+  { name: 'Projects',   path: '/projects',   hash: '#projects',   id: 'projects',   icon: Cpu       },
+  { name: 'Research',   path: '/research',   hash: '#research',   id: 'research',   icon: BookOpen  },
+  { name: 'Experience', path: '/experience', hash: '#experience', id: 'experience', icon: Briefcase },
+  { name: 'Activities', path: '/activities', hash: '#activities', id: 'activities', icon: Award     },
+  { name: 'Contact',    path: '/contact',    hash: '#contact',    id: 'contact',    icon: Mail      },
 ];
 
 export default function Navbar({ personInfo = {} }) {
+  const pathname = usePathname();
+  const isHome = pathname === '/' || !pathname;
+
   const [scrolled, setScrolled]           = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
@@ -23,37 +28,38 @@ export default function Navbar({ personInfo = {} }) {
   const resumeLink = personInfo.resumeUrl || '/Mahmud_Hasan_Ratul_CV.pdf';
 
   useEffect(() => {
+    if (!isHome) return;
     const onScroll = () => {
       setScrolled(window.scrollY > 40);
-      const ids = navItems.map(i => i.href.slice(1));
-      for (const id of ids) {
-        const el = document.getElementById(id);
+      for (const item of navItems) {
+        const el = document.getElementById(item.id);
         if (el) {
           const r = el.getBoundingClientRect();
-          if (r.top <= 220 && r.bottom >= 180) { setActiveSection(id); break; }
+          if (r.top <= 220 && r.bottom >= 180) { setActiveSection(item.id); break; }
         }
       }
     };
     window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [isHome]);
 
   return (
     <header
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
-        paddingTop:    scrolled ? '0.625rem' : '1rem',
-        paddingBottom: scrolled ? '0.625rem' : '1rem',
-        background:    scrolled ? 'var(--glass-panel-bg)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(16px)' : 'none',
-        WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
-        borderBottom:  scrolled ? '1px solid var(--color-border)' : 'none',
+        paddingTop:    scrolled || !isHome ? '0.625rem' : '1rem',
+        paddingBottom: scrolled || !isHome ? '0.625rem' : '1rem',
+        background:    scrolled || !isHome ? 'var(--glass-panel-bg)' : 'transparent',
+        backdropFilter: scrolled || !isHome ? 'blur(16px)' : 'none',
+        WebkitBackdropFilter: scrolled || !isHome ? 'blur(16px)' : 'none',
+        borderBottom:  scrolled || !isHome ? '1px solid var(--color-border)' : 'none',
       }}
     >
       <div className="mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-2" style={{ maxWidth: 'var(--container-max)' }}>
 
-        {/* Brand */}
-        <a href="#" className="flex items-center gap-2.5 group shrink-0">
+        {/* Brand Logo & Name */}
+        <Link href="/" className="flex items-center gap-2.5 group shrink-0">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center glass-button transition-transform duration-300 group-hover:scale-105">
             <Terminal className="w-4 h-4" style={{ color: 'var(--color-text)' }} />
           </div>
@@ -65,17 +71,19 @@ export default function Navbar({ personInfo = {} }) {
               {personInfo.title || 'Full-Stack & AI'}
             </span>
           </div>
-        </a>
+        </Link>
 
         {/* Desktop Nav (Visible on lg screens 1024px+) */}
         <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 glass-panel px-2.5 py-1.5 rounded-full">
           {navItems.map(item => {
             const Icon = item.icon;
-            const isActive = activeSection === item.href.slice(1);
+            const isActive = isHome ? activeSection === item.id : pathname === item.path;
+            const targetHref = isHome ? item.hash : item.path;
+
             return (
-              <a
+              <Link
                 key={item.name}
-                href={item.href}
+                href={targetHref}
                 className="relative px-2.5 xl:px-3 py-1.5 rounded-full text-[11px] xl:text-xs font-medium transition-all flex items-center gap-1.5 whitespace-nowrap"
                 style={{
                   color:      isActive ? '#000' : 'var(--color-text-muted)',
@@ -92,7 +100,7 @@ export default function Navbar({ personInfo = {} }) {
                 )}
                 <Icon className="w-3.5 h-3.5 relative z-10 shrink-0" />
                 <span className="relative z-10">{item.name}</span>
-              </a>
+              </Link>
             );
           })}
         </nav>
@@ -147,11 +155,13 @@ export default function Navbar({ personInfo = {} }) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2">
               {navItems.map(item => {
                 const Icon = item.icon;
-                const isActive = activeSection === item.href.slice(1);
+                const isActive = isHome ? activeSection === item.id : pathname === item.path;
+                const targetHref = isHome ? item.hash : item.path;
+
                 return (
-                  <a
+                  <Link
                     key={item.name}
-                    href={item.href}
+                    href={targetHref}
                     onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all"
                     style={{
@@ -162,7 +172,7 @@ export default function Navbar({ personInfo = {} }) {
                   >
                     <Icon className="w-4 h-4 shrink-0" style={{ color: isActive ? 'var(--color-accent)' : 'var(--color-text-faint)' }} />
                     <span>{item.name}</span>
-                  </a>
+                  </Link>
                 );
               })}
             </div>

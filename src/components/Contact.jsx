@@ -44,7 +44,7 @@ export default function Contact({ personInfo = {} }) {
   };
 
   return (
-    <SectionWrapper id="contact" variant="zoom-portal">
+    <SectionWrapper id="contact" variant="glass-rise">
       <div className="w-full relative z-10" style={{ maxWidth: 'var(--container-inner)', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'var(--gap-md)' }}>
         
         {/* Section Header */}
@@ -55,7 +55,7 @@ export default function Contact({ personInfo = {} }) {
           highlight="Touch"
         />
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 24rem), 1fr))', gap: 'var(--gap-md)', alignItems: 'stretch', width: '100%' }}>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 w-full items-stretch">
 
           {/* LEFT: Contact Details Spec Card */}
           <div className="lg:col-span-5 flex flex-col">

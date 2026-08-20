@@ -46,42 +46,39 @@ export default function SectionWrapper({ children, className = '', id = '', vari
   const scMin   = tier === 'high' ? 0.92 : tier === 'mid' ? 0.96 : 0.98;
   const noRot   = isMobile || tier !== 'high';
 
-  // ── Shared motion values (reduced from ~40 hooks to ~12) ─────────────────
-  const opacity = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0, 1, 1, 0]);
-  const y       = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [yRange, 0, 0, -yRange]);
-  const scale   = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [scMin, 1, 1, scMin]);
-  const z       = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [-zRange, 0, 0, -zRange]);
-  const rotateX = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [rxRange, 0, 0, -rxRange]);
-  const slideX  = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [noRot ? 0 : -35, 0, 0, noRot ? 0 : 35]);
-  const rotateY = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [noRot ? 0 : 8, 0, 0, noRot ? 0 : -8]);
+  // ── Gentle, elegant motion values that preserve full readability ─────────
+  const isContact = id === 'contact' || variant === 'glass-rise';
 
-  // Hero-specific (recede on scroll-out)
-  const heroOpacity = useTransform(activeProgress, [0.0, 0.4, 0.75, 1.0], [1, 1, 0.92, 0.25]);
-  const heroY       = useTransform(activeProgress, [0.0, 0.4, 0.75, 1.0], [0, 0, -30, -60]);
-  const heroScale   = useTransform(activeProgress, [0.0, 0.4, 0.75, 1.0], [1, 1, 0.97, 0.94]);
+  // Opacity stays at 1 throughout reading range (0.15 → 0.88), never drops below 0.35 on edges
+  const opacity = useTransform(activeProgress, [0.0, 0.15, 0.85, 1.0], [0.35, 1, 1, 0.35]);
+  const y       = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [yRange * 0.4, 0, 0, -yRange * 0.4]);
+  const scale   = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [scMin, 1, 1, scMin]);
+  const z       = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [-zRange * 0.4, 0, 0, -zRange * 0.4]);
+  const rotateX = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [noRot ? 0 : rxRange * 0.4, 0, 0, noRot ? 0 : -rxRange * 0.4]);
+  const slideX  = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [noRot ? 0 : -20, 0, 0, noRot ? 0 : 20]);
+  const rotateY = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [noRot ? 0 : 4, 0, 0, noRot ? 0 : -4]);
 
-  // About-specific (flip-left)
-  const flipOpacity = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [0.3, 1, 1, 0.3]);
-  const flipY       = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [yRange * 0.5, 0, 0, -yRange * 0.5]);
-  const flipRotY    = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [noRot ? 0 : -7, 0, 0, noRot ? 0 : 7]);
-  const flipRotX    = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [noRot ? 0 : 3, 0, 0, noRot ? 0 : -3]);
+  // Hero-specific (recede gently on scroll-out)
+  const heroOpacity = useTransform(activeProgress, [0.0, 0.4, 0.75, 1.0], [1, 1, 0.95, 0.4]);
+  const heroY       = useTransform(activeProgress, [0.0, 0.4, 0.75, 1.0], [0, 0, -20, -45]);
+  const heroScale   = useTransform(activeProgress, [0.0, 0.4, 0.75, 1.0], [1, 1, 0.98, 0.95]);
 
-  // Contact-specific (glass-rise — stays visible once in)
-  const glassOpacity = useTransform(activeProgress, [0.05, 0.25, 0.88, 1.0], [0, 1, 1, 1]);
-  const glassY       = useTransform(activeProgress, [0.05, 0.25, 0.88, 1.0], [yRange * 0.7, 0, 0, 0]);
+  // Contact-specific (stays 100% visible at the bottom of the page)
+  const glassOpacity = useTransform(activeProgress, [0.0, 0.15, 1.0], [0.35, 1, 1]);
+  const glassY       = useTransform(activeProgress, [0.0, 0.18, 1.0], [yRange * 0.4, 0, 0]);
 
   // ── Select transforms for this section variant ────────────────────────────
   let scrollTransforms;
-  if (variant === 'recede') {
+  if (variant === 'recede' || id === 'hero') {
     scrollTransforms = { opacity: heroOpacity, y: heroY, scale: heroScale };
-  } else if (variant === 'flip-left') {
-    scrollTransforms = { opacity: flipOpacity, y: flipY, rotateY: noRot ? 0 : flipRotY, rotateX: noRot ? 0 : flipRotX };
+  } else if (isContact) {
+    scrollTransforms = { opacity: glassOpacity, y: glassY };
   } else if (variant === 'slide-right') {
     scrollTransforms = { opacity, y, x: slideX, rotateY: noRot ? 0 : rotateY };
-  } else if (variant === 'glass-rise') {
-    scrollTransforms = { opacity: glassOpacity, y: glassY };
+  } else if (variant === 'flip-left') {
+    scrollTransforms = { opacity, y, rotateY: noRot ? 0 : -rotateY, rotateX: noRot ? 0 : rotateX };
   } else {
-    // deck-rise / zoom-portal / spiral-drop / elastic-pop / cyber-shutter / tilt-forward
+    // deck-rise, slide-left, zoom-portal, etc.
     scrollTransforms = { opacity, y, scale, z: tier === 'low' ? 0 : z, rotateX: noRot ? 0 : rotateX };
   }
 

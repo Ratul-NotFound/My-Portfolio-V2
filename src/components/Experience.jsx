@@ -73,8 +73,8 @@ export default function Experience({ experiences = [] }) {
   const arrowPositionPercent = ((safeActiveIndex + 0.5) / totalItems) * 100;
 
   return (
-    <SectionWrapper id="experience" variant="deck-rise" className="py-10 sm:py-14">
-      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 relative z-10 space-y-5 sm:space-y-6">
+    <SectionWrapper id="experience" variant="deck-rise">
+      <div className="w-full relative z-10" style={{ maxWidth: 'var(--container-inner)', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'var(--gap-md)' }}>
         
         {/* Section Header */}
         <SectionHeader
@@ -146,7 +146,7 @@ export default function Experience({ experiences = [] }) {
             {filteredExperiences.map((exp, idx) => {
               const isActive = exp.id === activeExp?.id;
               const isPresent = exp.period?.toLowerCase().includes("present");
-              const logoPath = exp.logo || '/cpc1.jpg';
+              const logoPath = exp.logo || exp.image || exp.img || '/cpc1.jpg';
 
               return (
                 <div 
@@ -282,7 +282,7 @@ export default function Experience({ experiences = [] }) {
                       }}
                     >
                       <img
-                        src={activeExp.logo || '/cpc1.jpg'}
+                        src={activeExp.logo || activeExp.image || activeExp.img || '/cpc1.jpg'}
                         alt={activeExp.organization}
                         loading="lazy"
                         decoding="async"

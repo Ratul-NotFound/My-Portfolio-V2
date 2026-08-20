@@ -1,0 +1,23 @@
+import { getPortfolioData } from '@/lib/supabase';
+import StandalonePageLayout from '@/components/StandalonePageLayout';
+import Projects from '@/components/Projects';
+
+export const revalidate = 60;
+
+export const metadata = {
+  title: 'Projects & Demos | Mahmud Hasan Ratul — Featured Portfolio',
+  description: 'Production software systems, Edge AI frameworks, RAG document engines, and scalable web applications built by Mahmud Hasan Ratul.',
+};
+
+export default async function ProjectsPage() {
+  const data = await getPortfolioData();
+
+  return (
+    <StandalonePageLayout initialData={data}>
+      <Projects
+        projects={data.projects}
+        techSkills={data.techSkills}
+      />
+    </StandalonePageLayout>
+  );
+}
