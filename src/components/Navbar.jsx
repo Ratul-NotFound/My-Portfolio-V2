@@ -3,17 +3,18 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Terminal, Download, Menu, X, User, Layers, Cpu, Briefcase, Mail, Award, BookOpen } from 'lucide-react';
+import { Home, Terminal, Download, Menu, X, User, Layers, Cpu, Briefcase, Mail, Award, BookOpen } from 'lucide-react';
 import ThemeToggle from './ux/ThemeToggle';
 
 const navItems = [
-  { name: 'About',      path: '/about',      hash: '#about',      id: 'about',      icon: User      },
-  { name: 'Skills',     path: '/skills',     hash: '#skills',     id: 'skills',     icon: Layers    },
-  { name: 'Projects',   path: '/projects',   hash: '#projects',   id: 'projects',   icon: Cpu       },
-  { name: 'Research',   path: '/research',   hash: '#research',   id: 'research',   icon: BookOpen  },
-  { name: 'Experience', path: '/experience', hash: '#experience', id: 'experience', icon: Briefcase },
-  { name: 'Activities', path: '/activities', hash: '#activities', id: 'activities', icon: Award     },
-  { name: 'Contact',    path: '/contact',    hash: '#contact',    id: 'contact',    icon: Mail      },
+  { name: 'Home',       path: '/',           id: 'hero',       icon: Home      },
+  { name: 'About',      path: '/about',      id: 'about',      icon: User      },
+  { name: 'Skills',     path: '/skills',     id: 'skills',     icon: Layers    },
+  { name: 'Projects',   path: '/projects',   id: 'projects',   icon: Cpu       },
+  { name: 'Research',   path: '/research',   id: 'research',   icon: BookOpen  },
+  { name: 'Experience', path: '/experience', id: 'experience', icon: Briefcase },
+  { name: 'Activities', path: '/activities', id: 'activities', icon: Award     },
+  { name: 'Contact',    path: '/contact',    id: 'contact',    icon: Mail      },
 ];
 
 export default function Navbar({ personInfo = {} }) {
@@ -77,13 +78,12 @@ export default function Navbar({ personInfo = {} }) {
         <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 glass-panel px-2.5 py-1.5 rounded-full">
           {navItems.map(item => {
             const Icon = item.icon;
-            const isActive = isHome ? activeSection === item.id : pathname === item.path;
-            const targetHref = isHome ? item.hash : item.path;
+            const isActive = pathname === item.path || (isHome && activeSection === item.id);
 
             return (
               <Link
                 key={item.name}
-                href={targetHref}
+                href={item.path}
                 className="relative px-2.5 xl:px-3 py-1.5 rounded-full text-[11px] xl:text-xs font-medium transition-all flex items-center gap-1.5 whitespace-nowrap"
                 style={{
                   color:      isActive ? '#000' : 'var(--color-text-muted)',
@@ -155,13 +155,12 @@ export default function Navbar({ personInfo = {} }) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2">
               {navItems.map(item => {
                 const Icon = item.icon;
-                const isActive = isHome ? activeSection === item.id : pathname === item.path;
-                const targetHref = isHome ? item.hash : item.path;
+                const isActive = pathname === item.path || (isHome && activeSection === item.id);
 
                 return (
                   <Link
                     key={item.name}
-                    href={targetHref}
+                    href={item.path}
                     onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all"
                     style={{

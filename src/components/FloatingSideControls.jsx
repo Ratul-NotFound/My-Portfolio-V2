@@ -4,14 +4,14 @@ import { Mail, Hand } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from './SocialIcons';
 
 const SECTIONS = [
-  { id: 'hero',       number: '01', label: 'Home',       subtitle: 'Overview & Introduction' },
-  { id: 'about',      number: '02', label: 'About',      subtitle: 'Biography & Core Focus' },
-  { id: 'skills',     number: '03', label: 'Skills',     subtitle: 'Technologies & Stack' },
-  { id: 'projects',   number: '04', label: 'Projects',   subtitle: 'Featured Showcase & Demos' },
-  { id: 'research',   number: '05', label: 'Research',   subtitle: 'Publications & AI Lab' },
-  { id: 'experience', number: '06', label: 'Experience', subtitle: 'Career & Leadership' },
-  { id: 'activities', number: '07', label: 'Activities', subtitle: 'Extracurricular & Roles' },
-  { id: 'contact',    number: '08', label: 'Contact',    subtitle: 'Get In Touch' },
+  { id: 'hero',       number: '01', label: 'Home',       subtitle: 'Overview & Introduction',   path: '/' },
+  { id: 'about',      number: '02', label: 'About',      subtitle: 'Biography & Core Focus',     path: '/about' },
+  { id: 'skills',     number: '03', label: 'Skills',     subtitle: 'Technologies & Stack',      path: '/skills' },
+  { id: 'projects',   number: '04', label: 'Projects',   subtitle: 'Featured Showcase & Demos', path: '/projects' },
+  { id: 'research',   number: '05', label: 'Research',   subtitle: 'Publications & AI Lab',     path: '/research' },
+  { id: 'experience', number: '06', label: 'Experience', subtitle: 'Career & Leadership',       path: '/experience' },
+  { id: 'activities', number: '07', label: 'Activities', subtitle: 'Extracurricular & Roles',   path: '/activities' },
+  { id: 'contact',    number: '08', label: 'Contact',    subtitle: 'Get In Touch',              path: '/contact' },
 ];
 
 const iconBtn = {
@@ -181,8 +181,13 @@ export default function FloatingSideControls({ personInfo }) {
     };
   }, []);
 
-  const scrollTo = id => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  const scrollTo = (sec) => {
+    const el = document.getElementById(sec.id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    } else if (typeof window !== 'undefined') {
+      window.location.href = sec.path;
+    }
   };
 
   const socialStyle = {
@@ -200,7 +205,7 @@ export default function FloatingSideControls({ personInfo }) {
         {SECTIONS.map((sec, idx) => (
           <button 
             key={sec.id} 
-            onClick={() => scrollTo(sec.id)}
+            onClick={() => scrollTo(sec)}
             onMouseEnter={() => setHoveredId(sec.id)}
             onMouseLeave={() => setHoveredId(null)}
             className="group relative flex items-center cursor-pointer py-1.5 px-1"
