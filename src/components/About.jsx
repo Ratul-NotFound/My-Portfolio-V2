@@ -24,7 +24,7 @@ export default function About({ personInfo = {}, stats, education }) {
   };
 
   const bioText = personInfo.about || personInfo.bio || 
-    "I specialize in architecting high-throughput full-stack web applications and low-latency Edge AI hardware systems. My work spans building modern React/Next.js production platforms, engineering RAG document vector search engines, and deploying quantized neural networks onto microcontrollers.";
+    "I specialize in building high-performance full-stack web applications and intelligent AI automation systems. My work spans crafting modern React/Next.js production platforms, engineering RAG document vector search engines, and developing autonomous AI agent workflows.";
 
   return (
     <SectionWrapper id="about" variant="flip-left">
@@ -91,7 +91,7 @@ export default function About({ personInfo = {}, stats, education }) {
                 {bioText}
               </p>
               <div className="flex flex-wrap gap-1.5 sm:gap-2 pt-1 sm:pt-2">
-                {['Next.js 14 / React', 'Edge AI & TinyML', 'RAG Vector Search'].map(tag => (
+                {['Next.js 14 / React', 'AI & Automation Workflows', 'RAG Vector Search'].map(tag => (
                   <span key={tag} className="px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[11px] sm:text-xs md:text-sm font-mono font-bold"
                     style={{ background: 'var(--color-surface-2)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}>
                     {tag}

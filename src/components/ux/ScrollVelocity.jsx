@@ -12,7 +12,7 @@ import {
 } from 'framer-motion';
 
 export default function ScrollVelocity({
-  text = "FULL-STACK ARCHITECT // EDGE AI // RAG ENGINES // DIU LEADER // NEXT.JS 14 //",
+  text = "FULL-STACK DEVELOPER // AI & AUTOMATION // CLOUD & WEB PLATFORMS // DIU LEADER // NEXT.JS //",
   baseVelocity = 3,
   className = ""
 }) {

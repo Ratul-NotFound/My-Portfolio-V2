@@ -89,11 +89,17 @@ const StrokeText = ({
 
     measure();
     if (typeof document !== 'undefined' && document.fonts?.ready) {
-      document.fonts.ready.then(measure).catch(() => {});
+      document.fonts.ready.then(() => {
+        measure();
+        setTimeout(measure, 150);
+      }).catch(() => {});
     }
+
+    const t = setTimeout(measure, 300);
 
     return () => {
       cancelled = true;
+      clearTimeout(t);
     };
   }, [characters, fontSize, fontWeight, letterSpacing, strokeWidth]);
 
@@ -123,7 +129,7 @@ const StrokeText = ({
       gsap.killTweensOf(targets);
       gsap.set(strokes, { strokeDasharray: dash, strokeDashoffset: 0 });
       gsap.set(fills, { opacity: fillEnabled ? 1 : 0 });
-      if (wipe) gsap.set(wipe, { attr: { width: fillEnabled ? box.width : 0 } });
+      if (wipe) gsap.set(wipe, { attr: { width: fillEnabled ? 99999 : 0 } });
     };
 
     const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -132,13 +138,21 @@ const StrokeText = ({
       return () => gsap.killTweensOf(targets);
     }
 
+    const targetWipeWidth = Math.max(box.width * 1.5, box.width + 300, 2000);
+
     const build = () => {
       setStart();
       const tl = gsap.timeline({
         paused: true,
         repeat: trigger === 'loop' ? -1 : 0,
         repeatDelay: trigger === 'loop' ? 0.9 : 0,
-        defaults: { overwrite: 'auto' }
+        defaults: { overwrite: 'auto' },
+        onComplete: () => {
+          if (fillEnabled) {
+            gsap.set(fills, { opacity: 1 });
+            if (wipe) gsap.set(wipe, { attr: { width: 99999 } });
+          }
+        }
       });
 
       tl.to(strokes, { strokeDashoffset: 0, duration: drawDuration, ease, stagger: staggerConfig }, 0);
@@ -146,7 +160,7 @@ const StrokeText = ({
       if (useWipe && wipe) {
         tl.to(
           wipe,
-          { attr: { width: box.width }, duration: fillDuration, ease: 'power2.inOut' },
+          { attr: { width: targetWipeWidth }, duration: fillDuration, ease: 'power2.inOut' },
           drawDuration + fillDelay
         );
       } else if (fillEnabled) {

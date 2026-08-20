@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 export default function WordRotate({
-  words = ['Full-Stack Architect', 'Edge AI Engineer', 'RAG Search Specialist', 'DIUCPC VP Leader'],
+  words = ['Full-Stack Developer', 'AI & Automation Engineer', 'Full-Stack Architect', 'DIUCPC VP Leader'],
   duration = 2500,
   className = ''
 }) {

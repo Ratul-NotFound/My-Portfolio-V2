@@ -3,22 +3,22 @@ import { ThemeProvider } from '@/context/ThemeContext';
 import SmoothCursor from '@/components/ux/SmoothCursor';
 
 export const metadata = {
-  title: 'Mahmud Hasan Ratul — Full-Stack Engineer & AI Researcher',
-  description: 'Executive Portfolio of Mahmud Hasan Ratul. Full-Stack Engineer & AI Researcher specializing in High-Performance Web Systems, Edge AI, and RAG Architectures.',
+  title: 'Mahmud Hasan Ratul — Full-Stack Developer & AI Automation Engineer',
+  description: 'Executive Portfolio of Mahmud Hasan Ratul. Full-Stack Developer & AI Automation Engineer specializing in High-Performance Web Systems, Autonomous AI Workflows, and Scalable Cloud Architectures.',
   keywords: [
     'Mahmud Hasan Ratul',
-    'Full Stack Engineer',
-    'AI Researcher',
+    'Full-Stack Developer',
+    'AI Automation Engineer',
     'Next.js 14',
     'React Developer',
-    'TinyML Edge AI',
+    'AI Agent Workflows',
     'DIUCPC Vice President',
-    'RAG Chatbot'
+    'Full Stack Cloud Architect'
   ],
   authors: [{ name: 'Mahmud Hasan Ratul', url: 'https://github.com/ratul-notfound' }],
   openGraph: {
-    title: 'Mahmud Hasan Ratul — Full-Stack Engineer & AI Researcher',
-    description: 'Executive Portfolio of Mahmud Hasan Ratul. Architecting High-Performance Web Applications, Edge AI Systems & RAG Frameworks.',
+    title: 'Mahmud Hasan Ratul — Full-Stack Developer & AI Automation Engineer',
+    description: 'Executive Portfolio of Mahmud Hasan Ratul. Architecting High-Performance Web Applications, Autonomous AI Workflows & Cloud Platforms.',
     url: 'https://github.com/ratul-notfound',
     siteName: 'Mahmud Hasan Ratul Portfolio',
     locale: 'en_US',

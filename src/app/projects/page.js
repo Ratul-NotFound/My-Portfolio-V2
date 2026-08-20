@@ -5,8 +5,8 @@ import Projects from '@/components/Projects';
 export const revalidate = 60;
 
 export const metadata = {
-  title: 'Projects & Demos | Mahmud Hasan Ratul — Featured Portfolio',
-  description: 'Production software systems, Edge AI frameworks, RAG document engines, and scalable web applications built by Mahmud Hasan Ratul.',
+  title: 'Projects | Mahmud Hasan Ratul — Full-Stack Developer & AI Automation Engineer',
+  description: 'Production software systems, AI automation frameworks, RAG document engines, and scalable web applications built by Mahmud Hasan Ratul.',
 };
 
 export default async function ProjectsPage() {

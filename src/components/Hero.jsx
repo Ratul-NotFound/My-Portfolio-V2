@@ -43,7 +43,7 @@ export default function Hero({ personInfo = {} }) {
   }, []);
 
   const resumeLink = personInfo.resumeUrl || '/Mahmud_Hasan_Ratul_CV.pdf';
-  const tagline = personInfo.tagline || 'Building high-performance web systems, low-latency Edge AI nodes, and enterprise RAG document intelligence platforms.';
+  const tagline = personInfo.tagline || 'Building high-performance web systems, autonomous AI automation pipelines, and enterprise RAG document intelligence platforms.';
   const githubLink = personInfo.github || 'https://github.com/Ratul-NotFound';
   const linkedinLink = personInfo.linkedin || 'https://linkedin.com/in/ratul-notfound';
   const emailLink = personInfo.email ? `mailto:${personInfo.email}` : 'mailto:mhratul.dev@gmail.com';

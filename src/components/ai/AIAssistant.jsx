@@ -89,7 +89,7 @@ export default function AIAssistant({ data = {} }) {
 
     // 5. General Bio Query
     return {
-      text: `${person.name || 'Mahmud Hasan Ratul'} is a **${person.title || person.role || 'Full-Stack & Edge AI Engineer'}** based in ${person.location || 'Dhaka, Bangladesh'}. ${person.about || person.bio || 'He architects high-throughput web applications with Next.js & Node.js, and researches low-latency embedded AI hardware systems.'}`
+      text: `${person.name || 'Mahmud Hasan Ratul'} is a **${person.title || person.role || 'Full-Stack Developer & AI Automation Engineer'}** based in ${person.location || 'Dhaka, Bangladesh'}. ${person.about || person.bio || 'He builds high-performance full-stack web applications, AI automation pipelines, and scalable cloud platforms.'}`
     };
   };
 
