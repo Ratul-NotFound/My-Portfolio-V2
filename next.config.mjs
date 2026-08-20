@@ -5,6 +5,11 @@ const nextConfig = {
     unoptimized: true,
   },
   trailingSlash: true,
+  swcMinify: true,
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'framer-motion', 'three', '@react-three/fiber', 'gsap'],
+  },
 };
 
 export default nextConfig;
+

@@ -44,7 +44,7 @@ export default function Contact({ personInfo = {} }) {
   };
 
   return (
-    <SectionWrapper id="contact" variant="zoom-portal" className="py-6 sm:py-8 md:py-10 lg:py-14">
+    <SectionWrapper id="contact" variant="zoom-portal">
       <div className="w-full relative z-10" style={{ maxWidth: 'var(--container-inner)', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'var(--gap-md)' }}>
         
         {/* Section Header */}

@@ -3,130 +3,112 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
+// ── Device capability detection (cached globally across all section instances) ─
+let _deviceTier = null;
+function getDeviceTier() {
+  if (_deviceTier !== null) return _deviceTier;
+  if (typeof window === 'undefined') return (_deviceTier = 'high');
+  const cores = navigator.hardwareConcurrency ?? 4;
+  const mem   = navigator.deviceMemory    ?? 4;
+  const conn  = navigator.connection?.effectiveType ?? '4g';
+  const isLow = cores <= 4 || mem <= 2 || conn === '2g' || conn === 'slow-2g';
+  const isMid = !isLow && (cores <= 6 || mem <= 4 || conn === '3g');
+  _deviceTier = isLow ? 'low' : isMid ? 'mid' : 'high';
+  return _deviceTier;
+}
+
 export default function SectionWrapper({ children, className = '', id = '', variant = 'deck-rise' }) {
   const containerRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [tier, setTier] = useState('high');
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile, { passive: true });
-    return () => window.removeEventListener('resize', checkMobile);
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check, { passive: true });
+    setTier(getDeviceTier());
+    return () => window.removeEventListener('resize', check);
   }, []);
 
-  // Precision Scroll Progress relative to section entering and exiting viewport
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "end start"]
+    offset: ['start end', 'end start'],
   });
 
-  // Smooth scroll progress spring (optimized damping on mobile/desktop for 60fps)
-  const springProgress = useSpring(scrollYProgress, { stiffness: 120, damping: 24, restDelta: 0.005 });
-  const activeProgress = isMobile ? scrollYProgress : springProgress;
+  // Spring only on high-end devices — saves per-frame JS on mid/low
+  const springProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 22, restDelta: 0.005 });
+  const activeProgress = (isMobile || tier === 'low') ? scrollYProgress : springProgress;
 
-  // HIGH-IMPACT 3D APPEARING SCROLL TRANSITION LIFECYCLES:
-  // --- Variant 1: 'recede' (Hero Section 3D Cyber Dissolve) ---
-  const heroOpacity = useTransform(activeProgress, [0.0, 0.4, 0.75, 1.0], [1, 1, 0.9, 0.2]);
-  const heroY = useTransform(activeProgress, [0.0, 0.4, 0.75, 1.0], [0, 0, -40, -80]);
-  const heroZ = useTransform(activeProgress, [0.0, 0.4, 0.75, 1.0], [0, 0, -80, -150]);
-  const heroScale = useTransform(activeProgress, [0.0, 0.4, 0.75, 1.0], [1, 1, 0.96, 0.92]);
-  const heroRotateX = useTransform(activeProgress, [0.0, 0.4, 0.75, 1.0], [0, 0, -4, -8]);
+  // ── Scale ranges per device tier ──────────────────────────────────────────
+  const yRange  = tier === 'high' ? 80  : tier === 'mid' ? 45 : 25;
+  const zRange  = tier === 'high' ? 120 : tier === 'mid' ? 50 : 0;
+  const rxRange = tier === 'high' ? 12  : tier === 'mid' ? 5  : 0;
+  const scMin   = tier === 'high' ? 0.92 : tier === 'mid' ? 0.96 : 0.98;
+  const noRot   = isMobile || tier !== 'high';
 
-  // --- Variant 2: 'flip-left' (3D Origami Unfold - About Me) ---
+  // ── Shared motion values (reduced from ~40 hooks to ~12) ─────────────────
+  const opacity = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0, 1, 1, 0]);
+  const y       = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [yRange, 0, 0, -yRange]);
+  const scale   = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [scMin, 1, 1, scMin]);
+  const z       = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [-zRange, 0, 0, -zRange]);
+  const rotateX = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [rxRange, 0, 0, -rxRange]);
+  const slideX  = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [noRot ? 0 : -35, 0, 0, noRot ? 0 : 35]);
+  const rotateY = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [noRot ? 0 : 8, 0, 0, noRot ? 0 : -8]);
+
+  // Hero-specific (recede on scroll-out)
+  const heroOpacity = useTransform(activeProgress, [0.0, 0.4, 0.75, 1.0], [1, 1, 0.92, 0.25]);
+  const heroY       = useTransform(activeProgress, [0.0, 0.4, 0.75, 1.0], [0, 0, -30, -60]);
+  const heroScale   = useTransform(activeProgress, [0.0, 0.4, 0.75, 1.0], [1, 1, 0.97, 0.94]);
+
+  // About-specific (flip-left)
   const flipOpacity = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [0.3, 1, 1, 0.3]);
-  const flipY = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [40, 0, 0, -40]);
-  const flipZ = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [-60, 0, 0, -60]);
-  const flipScale = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [0.96, 1, 1, 0.96]);
-  const flipRotateY = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [-8, 0, 0, 8]);
-  const flipRotateX = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [4, 0, 0, -4]);
+  const flipY       = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [yRange * 0.5, 0, 0, -yRange * 0.5]);
+  const flipRotY    = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [noRot ? 0 : -7, 0, 0, noRot ? 0 : 7]);
+  const flipRotX    = useTransform(activeProgress, [0.0, 0.18, 0.82, 1.0], [noRot ? 0 : 3, 0, 0, noRot ? 0 : -3]);
 
-  // --- Variant 3: 'deck-rise' / 'cyber-shutter' (3D Deck Elevator Lift - Tech Stack) ---
-  const deckOpacity = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0, 1, 1, 0]);
-  const deckY = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [80, 0, 0, -80]);
-  const deckZ = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [-120, 0, 0, -120]);
-  const deckScale = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0.92, 1, 1, 0.92]);
-  const deckRotateX = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [12, 0, 0, -12]);
-
-  // --- Variant 4: 'zoom-portal' (3D Hyper Portal Unfold - Projects) ---
-  const portalOpacity = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0, 1, 1, 0]);
-  const portalY = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [80, 0, 0, -80]);
-  const portalZ = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [-120, 0, 0, -120]);
-  const portalScale = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0.92, 1, 1, 0.92]);
-  const portalRotateX = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [10, 0, 0, -10]);
-
-  // --- Variant 5: 'slide-right' (3D Curved Stage Slide - Research) ---
-  const slideOpacity = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0, 1, 1, 0]);
-  const slideX = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [-40, 0, 0, 40]);
-  const slideY = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [60, 0, 0, -60]);
-  const slideZ = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [-120, 0, 0, -120]);
-  const slideRotateY = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [10, 0, 0, -10]);
-
-  // --- Variant 6: 'spiral-drop' (3D Helix Cascade - Experience) ---
-  const spiralOpacity = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0, 1, 1, 0]);
-  const spiralY = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [80, 0, 0, -80]);
-  const spiralZ = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [-120, 0, 0, -120]);
-  const spiralScale = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0.92, 1, 1, 0.92]);
-
-  // --- Variant 7: 'elastic-pop' (3D Cubic Matrix Pop - Activities) ---
-  const popOpacity = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0, 1, 1, 0]);
-  const popY = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [80, 0, 0, -80]);
-  const popZ = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [-120, 0, 0, -120]);
-  const popScale = useTransform(activeProgress, [0.05, 0.25, 0.75, 0.95], [0.92, 1, 1, 0.92]);
-
-  // --- Variant 8: 'glass-rise' (3D Vault Elevator - Contact) ---
+  // Contact-specific (glass-rise — stays visible once in)
   const glassOpacity = useTransform(activeProgress, [0.05, 0.25, 0.88, 1.0], [0, 1, 1, 1]);
-  const glassY = useTransform(activeProgress, [0.05, 0.25, 0.88, 1.0], [80, 0, 0, 0]);
-  const glassZ = useTransform(activeProgress, [0.05, 0.25, 0.88, 1.0], [-120, 0, 0, 0]);
-  const glassScale = useTransform(activeProgress, [0.05, 0.25, 0.88, 1.0], [0.92, 1, 1, 1]);
+  const glassY       = useTransform(activeProgress, [0.05, 0.25, 0.88, 1.0], [yRange * 0.7, 0, 0, 0]);
 
-  // Select current scroll-based transform configuration
-  let scrollTransforms = { opacity: deckOpacity, y: deckY, z: deckZ, scale: deckScale, rotateX: deckRotateX };
-
+  // ── Select transforms for this section variant ────────────────────────────
+  let scrollTransforms;
   if (variant === 'recede') {
-    scrollTransforms = { opacity: heroOpacity, y: heroY, z: heroZ, scale: heroScale, rotateX: heroRotateX };
+    scrollTransforms = { opacity: heroOpacity, y: heroY, scale: heroScale };
   } else if (variant === 'flip-left') {
-    scrollTransforms = { opacity: flipOpacity, y: flipY, z: flipZ, scale: flipScale, rotateY: isMobile ? 0 : flipRotateY, rotateX: isMobile ? 0 : flipRotateX };
-  } else if (variant === 'deck-rise' || variant === 'cyber-shutter') {
-    scrollTransforms = { opacity: deckOpacity, y: deckY, z: deckZ, scale: deckScale, rotateX: isMobile ? 0 : deckRotateX };
-  } else if (variant === 'zoom-portal') {
-    scrollTransforms = { opacity: portalOpacity, y: portalY, z: portalZ, scale: portalScale, rotateX: isMobile ? 0 : portalRotateX };
+    scrollTransforms = { opacity: flipOpacity, y: flipY, rotateY: noRot ? 0 : flipRotY, rotateX: noRot ? 0 : flipRotX };
   } else if (variant === 'slide-right') {
-    scrollTransforms = { opacity: slideOpacity, x: isMobile ? 0 : slideX, y: slideY, z: slideZ, rotateY: isMobile ? 0 : slideRotateY };
-  } else if (variant === 'spiral-drop') {
-    scrollTransforms = { opacity: spiralOpacity, y: spiralY, z: spiralZ, scale: spiralScale };
-  } else if (variant === 'elastic-pop') {
-    scrollTransforms = { opacity: popOpacity, y: popY, z: popZ, scale: popScale };
+    scrollTransforms = { opacity, y, x: slideX, rotateY: noRot ? 0 : rotateY };
   } else if (variant === 'glass-rise') {
-    scrollTransforms = { opacity: glassOpacity, y: glassY, z: glassZ, scale: glassScale };
-  }
-
-  // On mobile, force flat 2D transforms to eliminate horizontal overflow
-  if (isMobile) {
-    scrollTransforms = { opacity: deckOpacity, y: deckY, scale: deckScale };
+    scrollTransforms = { opacity: glassOpacity, y: glassY };
+  } else {
+    // deck-rise / zoom-portal / spiral-drop / elastic-pop / cyber-shutter / tilt-forward
+    scrollTransforms = { opacity, y, scale, z: tier === 'low' ? 0 : z, rotateX: noRot ? 0 : rotateX };
   }
 
   const isHero = id === 'hero';
+  const usePerspective = tier === 'high' && !isMobile;
 
   return (
-    <section 
+    <section
       ref={containerRef}
       id={id}
       className={`relative w-full min-h-screen flex flex-col justify-center items-center overflow-x-hidden ${className}`}
-      style={{ 
-        perspective: isMobile ? 'none' : 1200, 
-        transformStyle: isMobile ? 'flat' : 'preserve-3d', 
+      style={{
+        perspective:    usePerspective ? 1200 : 'none',
+        transformStyle: usePerspective ? 'preserve-3d' : 'flat',
         willChange: 'transform',
-        paddingTop: isHero ? 'clamp(4.5rem, 7vw, 6rem)' : 'var(--section-py)',
-        paddingBottom: isHero ? 'clamp(2rem, 4vw, 4rem)' : 'var(--section-py)',
+        paddingTop:    isHero ? 'clamp(4.5rem, 7vw, 6rem)' : 'var(--section-py)',
+        paddingBottom: isHero ? 'clamp(2rem, 4vw, 4rem)'   : 'var(--section-py)',
+        // CSS containment: browser skips layout/style recalcs for off-screen sections
+        contain: isHero ? 'none' : 'layout style',
       }}
     >
-      {/* Creative 3D Scroll Appearing Transition Container */}
       <motion.div
         style={isHero ? scrollTransforms : {
           ...scrollTransforms,
           maxWidth: 'var(--container-max)',
           width: '100%',
-          paddingLeft: 'var(--section-px)',
+          paddingLeft:  'var(--section-px)',
           paddingRight: 'var(--section-px)',
         }}
         className={`h-full flex flex-col justify-center items-center transform-gpu relative z-10${isHero ? ' w-full overflow-visible' : ' mx-auto overflow-x-hidden'}`}
@@ -136,3 +118,4 @@ export default function SectionWrapper({ children, className = '', id = '', vari
     </section>
   );
 }
+

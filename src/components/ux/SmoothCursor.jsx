@@ -13,8 +13,11 @@ export default function SmoothCursor() {
   const ringY = useSpring(0, { damping: 30, stiffness: 200, mass: 0.5 });
 
   useEffect(() => {
-    // Only show custom smooth cursor on desktop pointer devices
-    if (typeof window === 'undefined' || window.innerWidth <= 768) return;
+    // Only show custom smooth cursor on desktop pointer devices with fine tracking
+    if (typeof window === 'undefined') return;
+    const isFinePointer = window.matchMedia('(pointer: fine)').matches;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!isFinePointer || prefersReducedMotion || window.innerWidth <= 768) return;
 
     const handleMouseMove = (e) => {
       setIsVisible(true);
@@ -26,8 +29,8 @@ export default function SmoothCursor() {
 
     const handleMouseLeave = () => setIsVisible(false);
 
-    window.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseleave', handleMouseLeave);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    document.addEventListener('mouseleave', handleMouseLeave, { passive: true });
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);

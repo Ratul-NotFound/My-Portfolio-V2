@@ -7,14 +7,17 @@ import ScrollProgress from '@/components/ScrollProgress';
 import IntroLoader from '@/components/IntroLoader';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
-import About from '@/components/About';
-import TechStack from '@/components/TechStack';
-import Projects from '@/components/Projects';
-import Research from '@/components/Research';
-import Experience from '@/components/Experience';
-import Activities from '@/components/Activities';
-import Contact from '@/components/Contact';
-import Footer from '@/components/Footer';
+
+// ── Lazy-load ALL below-fold sections — code-split, parsed only when needed ──
+// This cuts initial JS parse time significantly on low-end devices
+const About      = dynamic(() => import('@/components/About'),      { ssr: false });
+const TechStack  = dynamic(() => import('@/components/TechStack'),  { ssr: false });
+const Projects   = dynamic(() => import('@/components/Projects'),   { ssr: false });
+const Research   = dynamic(() => import('@/components/Research'),   { ssr: false });
+const Experience = dynamic(() => import('@/components/Experience'), { ssr: false });
+const Activities = dynamic(() => import('@/components/Activities'), { ssr: false });
+const Contact    = dynamic(() => import('@/components/Contact'),    { ssr: false });
+const Footer     = dynamic(() => import('@/components/Footer'),     { ssr: false });
 
 // Defer non-critical floating widgets to reduce initial payload and CPU workload
 const FloatingSideControls = dynamic(() => import('@/components/FloatingSideControls'), { ssr: false });

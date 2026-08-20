@@ -6,11 +6,12 @@ import { GithubIcon, LinkedinIcon } from './SocialIcons';
 const SECTIONS = [
   { id: 'hero',       number: '01', label: 'Home',       subtitle: 'Overview & Introduction' },
   { id: 'about',      number: '02', label: 'About',      subtitle: 'Biography & Core Focus' },
-  { id: 'tech-stack', number: '03', label: 'Skills',     subtitle: 'Technologies & Stack' },
+  { id: 'skills',     number: '03', label: 'Skills',     subtitle: 'Technologies & Stack' },
   { id: 'projects',   number: '04', label: 'Projects',   subtitle: 'Featured Showcase & Demos' },
   { id: 'research',   number: '05', label: 'Research',   subtitle: 'Publications & AI Lab' },
   { id: 'experience', number: '06', label: 'Experience', subtitle: 'Career & Leadership' },
-  { id: 'contact',    number: '07', label: 'Contact',    subtitle: 'Get In Touch' },
+  { id: 'activities', number: '07', label: 'Activities', subtitle: 'Extracurricular & Roles' },
+  { id: 'contact',    number: '08', label: 'Contact',    subtitle: 'Get In Touch' },
 ];
 
 const iconBtn = {

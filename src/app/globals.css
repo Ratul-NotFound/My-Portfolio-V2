@@ -229,3 +229,36 @@ html.light .shadow-card {
 html.light .shadow-card:hover {
   box-shadow: 0 12px 40px rgba(2,132,199,0.14), 0 2px 8px rgba(15,23,42,0.06);
 }
+
+/* ============================================================
+   PERFORMANCE & 60FPS HARDWARE ACCELERATION
+   ============================================================ */
+/* Promote key animated elements to hardware composite layers */
+.transform-gpu {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Off-screen section rendering optimization: browser skips painting until near viewport */
+section:not(#hero) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 650px;
+}
+
+/* Optimize backdrop-filter GPU memory */
+.glass-panel, .glass-card, .glass-button {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Accessibility: Respect OS-level reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
