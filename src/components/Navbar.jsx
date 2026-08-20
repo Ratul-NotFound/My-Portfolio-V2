@@ -69,7 +69,7 @@ export default function Navbar({ personInfo = {} }) {
               {brandName}
             </span>
             <span className="hidden sm:inline-block text-[10px] font-mono uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>
-              {personInfo.title || 'Full-Stack & AI'}
+              {personInfo.title || 'Full-Stack Developer & AI Automation Engineer'}
             </span>
           </div>
         </Link>

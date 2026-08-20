@@ -253,8 +253,8 @@ export async function savePersonInfo(infoData) {
   const supabase = await getSupabaseClient();
   const payload = {
     name: infoData.name || 'Mahmud Hasan Ratul',
-    title: infoData.title || infoData.role || 'Full-Stack & Edge AI Architect',
-    role: infoData.role || infoData.title || 'Full-Stack & Edge AI Architect',
+    title: infoData.title || infoData.role || 'Full-Stack Developer & AI Automation Engineer',
+    role: infoData.role || infoData.title || 'Full-Stack Developer & AI Automation Engineer',
     tagline: infoData.tagline || '',
     about: infoData.about || infoData.bio || '',
     bio: infoData.bio || infoData.about || '',

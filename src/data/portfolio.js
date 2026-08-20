@@ -1,8 +1,8 @@
 export const personInfo = {
   name: "Mahmud Hasan Ratul",
-  title: "Full-Stack Software Engineer & AI Researcher",
-  tagline: "Building High-Performance Web Systems, Edge AI, & Scalable Cloud Solutions",
-  about: "I am a passionate Full-Stack Engineer and AI Researcher specializing in React, Next.js, Node.js, Python, and Edge AI. Currently leading technical operations and competitive programming initiatives at Daffodil International University Computer Programming Club (DIUCPC).",
+  title: "Full-Stack Developer & AI Automation Engineer",
+  tagline: "Building High-Performance Web Systems, AI Solutions & Automated Intelligent Workflows",
+  about: "I am a passionate Full-Stack Developer and AI Automation Engineer specializing in React, Next.js, Node.js, Python, Edge AI, and autonomous agent workflows. Currently leading technical operations and competitive programming initiatives at Daffodil International University Computer Programming Club (DIUCPC).",
   location: "Dhaka, Bangladesh",
   email: "mhratul.dev@gmail.com",
   github: "https://github.com/Ratul-NotFound",

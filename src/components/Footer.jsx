@@ -32,7 +32,7 @@ export default function Footer({ personInfo = {} }) {
   };
 
   const name = personInfo.name || 'Mahmud Hasan Ratul';
-  const title = personInfo.title || personInfo.role || 'Full-Stack & Edge AI Architect';
+  const title = personInfo.title || personInfo.role || 'Full-Stack Developer & AI Automation Engineer';
   const tagline = personInfo.tagline || 'Architecting high-throughput full-stack web platforms, low-latency Edge AI hardware systems, and enterprise RAG search engines.';
 
   return (

@@ -53,7 +53,7 @@ export default function About({ personInfo = {}, stats, education }) {
                 {personInfo.name || 'Mahmud Hasan Ratul'}
               </h3>
               <p className="font-mono font-bold" style={{ color: 'var(--color-accent)', fontSize: 'var(--text-sm)' }}>
-                {personInfo.title || personInfo.role || 'Full-Stack & Edge AI Architect'}
+                {personInfo.title || personInfo.role || 'Full-Stack Developer & AI Automation Engineer'}
               </p>
             </div>
 

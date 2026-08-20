@@ -75,7 +75,7 @@ export default function Hero({ personInfo = {} }) {
                 <span className="relative inline-flex rounded-full h-2 w-2" style={{ backgroundColor: 'var(--color-accent)' }} />
               </span>
               <span style={{ color: 'var(--color-text)' }}>
-                <WordRotate words={['Full-Stack Architect', 'Edge AI Engineer', 'RAG Search Specialist', 'DIUCPC VP Leader']} duration={2600} />
+                <WordRotate words={['Full Stack Developer', 'AI & Automation Engineer', 'Full-Stack Architect', 'DIUCPC VP Leader']} duration={2600} />
               </span>
             </div>
           </motion.div>
