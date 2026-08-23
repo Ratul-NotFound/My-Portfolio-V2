@@ -68,6 +68,7 @@ const EyePleasingCard = forwardRef(function EyePleasingCard({ skill, index, proj
   const cardRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
   const [popupPlacement, setPopupPlacement] = useState('top');
+  const [popupAlign, setPopupAlign] = useState('center'); // 'center' | 'left' | 'right'
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -90,13 +91,24 @@ const EyePleasingCard = forwardRef(function EyePleasingCard({ skill, index, proj
   };
 
   const handleMouseEnter = () => {
-    if (cardRef.current) {
+    if (cardRef.current && typeof window !== 'undefined') {
       const rect = cardRef.current.getBoundingClientRect();
-      // If near top of screen, show popup below instead of above
-      if (rect.top < 260) {
+      const vw = window.innerWidth;
+      const cardCenter = rect.left + rect.width / 2;
+
+      // Vertical: If near top of screen (< 320px), place popup below
+      if (rect.top < 320) {
         setPopupPlacement('bottom');
       } else {
         setPopupPlacement('top');
+      }
+
+      // Horizontal: Cards on the right half open leftward; cards on the left half open rightward.
+      // This guarantees zero screen edge collision or horizontal clipping on any display.
+      if (cardCenter > vw * 0.5) {
+        setPopupAlign('right');
+      } else {
+        setPopupAlign('left');
       }
     }
     setIsHovered(true);
@@ -123,9 +135,12 @@ const EyePleasingCard = forwardRef(function EyePleasingCard({ skill, index, proj
     }
   };
 
+  // Determine alignment classes: opens strictly inward toward center
+  const alignClass = popupAlign === 'right' ? 'right-0 left-auto' : 'left-0 right-auto';
+
   return (
     <div 
-      className="relative w-full"
+      className={`relative w-full ${isHovered ? 'z-50' : 'z-10'}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -179,7 +194,6 @@ const EyePleasingCard = forwardRef(function EyePleasingCard({ skill, index, proj
               <span 
                 className="px-1.5 py-0.5 rounded font-mono font-bold flex-shrink-0"
                 style={{ fontSize: 'var(--text-xs)', background: 'rgba(56, 189, 248, 0.15)', color: 'var(--color-accent)' }}
-                title={`${linkedProjects.length} linked project${linkedProjects.length > 1 ? 's' : ''}`}
               >
                 {linkedProjects.length}P
               </span>
@@ -209,13 +223,12 @@ const EyePleasingCard = forwardRef(function EyePleasingCard({ skill, index, proj
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: popupPlacement === 'top' ? 6 : -6, scale: 0.95 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className={`absolute ${popupPlacement === 'top' ? 'bottom-full mb-2.5' : 'top-full mt-2.5'} left-1/2 -translate-x-1/2 z-50 w-64 sm:w-72 md:w-80 rounded-2xl p-3.5 shadow-2xl border pointer-events-auto backdrop-blur-2xl
+            className={`absolute ${popupPlacement === 'top' ? 'bottom-full mb-2.5' : 'top-full mt-2.5'} ${alignClass} z-50 w-64 sm:w-72 md:w-80 rounded-2xl p-3.5 shadow-2xl border pointer-events-auto backdrop-blur-2xl
               hidden sm:block`}
             style={{
-              background: 'rgba(12, 14, 24, 0.95)',
+              background: 'rgba(12, 14, 24, 0.96)',
               borderColor: 'var(--color-border-accent)',
-              boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.25)',
-              /* Ensure popup doesn't overflow viewport edges */
+              boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.85), 0 0 25px rgba(56, 189, 248, 0.25)',
               maxWidth: 'min(320px, calc(100vw - 2rem))',
             }}
           >

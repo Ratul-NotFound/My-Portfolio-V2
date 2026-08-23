@@ -63,6 +63,9 @@ function normalizePersonInfo(p) {
     role: p.role || p.title || fallbackData.personInfo.title,
     about: p.about || p.bio || fallbackData.personInfo.about,
     bio: p.bio || p.about || fallbackData.personInfo.bio,
+    aboutHeadline: p.aboutHeadline || p.aboutheadline || fallbackData.personInfo.aboutHeadline || 'Architecting high-performance web systems and autonomous AI workflows.',
+    status: p.status || p.availability || fallbackData.personInfo.status || 'Available for Roles',
+    skills: Array.isArray(p.skills) ? p.skills : (typeof p.skills === 'string' ? p.skills.split(',').map(s => s.trim()).filter(Boolean) : (fallbackData.personInfo.skills || ['Next.js 14', 'React', 'TypeScript', 'Python', 'LangChain & RAG', 'Edge AI', 'Tailwind CSS'])),
     avatar: p.avatar || p.avatar_url || fallbackData.personInfo.avatar,
     resumeUrl: p.resumeurl || p.resumeUrl || p.resume_url || fallbackData.personInfo.resumeUrl,
     github: p.github || p.github_url || fallbackData.personInfo.github,
@@ -252,14 +255,18 @@ function deleteLocalItem(key, fallbackList, id) {
 export async function savePersonInfo(infoData) {
   const supabase = await getSupabaseClient();
   const payload = {
+    ...infoData,
     name: infoData.name || 'Mahmud Hasan Ratul',
     title: infoData.title || infoData.role || 'Full-Stack Developer & AI Automation Engineer',
     role: infoData.role || infoData.title || 'Full-Stack Developer & AI Automation Engineer',
     tagline: infoData.tagline || '',
+    aboutHeadline: infoData.aboutHeadline || infoData.aboutheadline || '',
+    status: infoData.status || infoData.availability || 'Available for Roles',
     about: infoData.about || infoData.bio || '',
     bio: infoData.bio || infoData.about || '',
     email: infoData.email || '',
     location: infoData.location || '',
+    skills: Array.isArray(infoData.skills) ? infoData.skills : (typeof infoData.skills === 'string' ? infoData.skills.split(',').map(s => s.trim()).filter(Boolean) : []),
     avatar: infoData.avatar || infoData.avatar_url || '',
     resumeurl: infoData.resumeUrl || infoData.resumeurl || infoData.resume_url || '',
     github: infoData.github || infoData.github_url || '',

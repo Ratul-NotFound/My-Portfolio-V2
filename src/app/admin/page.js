@@ -968,86 +968,132 @@ export default function AdminPage() {
                 </div>
               )}
 
-              {/* ================= PROFILE & SOCIAL LINKS ================= */}
+              {/* ================= PROFILE & ABOUT ME CONTENT ================= */}
               {activeTab === 'profile' && (
-                <form onSubmit={handleSavePersonInfo} className="space-y-4 font-sans">
+                <form onSubmit={handleSavePersonInfo} className="space-y-5 font-sans">
                   <div className="flex items-center justify-between pb-3 border-b" style={{ borderColor: 'var(--color-border)' }}>
-                    <h2 className="text-base font-bold text-white">Edit Profile, Bio, & Social Links</h2>
-                    <button type="submit" disabled={saving} className="px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-md font-mono" style={{ background: 'var(--color-accent)', color: '#000' }}>
+                    <div>
+                      <h2 className="text-base font-bold text-white">Edit Profile, About Content & Social Links</h2>
+                      <p className="text-xs text-zinc-400 font-mono">Live synchronization with Hero, About, Navbar, and Footer sections</p>
+                    </div>
+                    <button type="submit" disabled={saving} className="px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-md font-mono hover:opacity-90" style={{ background: 'var(--color-accent)', color: '#000' }}>
                       <Check className="w-4 h-4" />
-                      <span>{saving ? 'Saving...' : 'Save Profile'}</span>
+                      <span>{saving ? 'Saving...' : 'Save Profile & About'}</span>
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
-                    <div>
-                      <label className="text-xs block mb-1 text-zinc-400 font-sans">Full Name</label>
-                      <input type="text" value={personInfo.name || ''} onChange={e => setPersonInfo({ ...personInfo, name: e.target.value })} className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
-                    </div>
+                  {/* 1. Identity & Hero */}
+                  <div className="space-y-3">
+                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-accent" style={{ color: 'var(--color-accent)' }}>1. Identity & Hero Details</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
+                      <div>
+                        <label className="text-xs block mb-1 text-zinc-400 font-sans">Full Name</label>
+                        <input type="text" value={personInfo.name || ''} onChange={e => setPersonInfo({ ...personInfo, name: e.target.value })} className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                      </div>
 
-                    <div>
-                      <label className="text-xs block mb-1 text-zinc-400 font-sans">Headline Title</label>
-                      <input type="text" value={personInfo.title || personInfo.role || ''} onChange={e => setPersonInfo({ ...personInfo, title: e.target.value })} className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
-                    </div>
+                      <div>
+                        <label className="text-xs block mb-1 text-zinc-400 font-sans">Headline Title / Role</label>
+                        <input type="text" value={personInfo.title || personInfo.role || ''} onChange={e => setPersonInfo({ ...personInfo, title: e.target.value, role: e.target.value })} className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                      </div>
 
-                    <div>
-                      <label className="text-xs block mb-1 text-zinc-400 font-sans">Hero Subtitle Tagline</label>
-                      <input type="text" value={personInfo.tagline || ''} onChange={e => setPersonInfo({ ...personInfo, tagline: e.target.value })} placeholder="Building High-Performance Web Systems..." className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
-                    </div>
+                      <div>
+                        <label className="text-xs block mb-1 text-zinc-400 font-sans">Availability Status</label>
+                        <input type="text" value={personInfo.status || personInfo.availability || ''} onChange={e => setPersonInfo({ ...personInfo, status: e.target.value, availability: e.target.value })} placeholder="Available for Roles / Open for Work" className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                      </div>
 
-                    <div>
-                      <label className="text-xs block mb-1 text-zinc-400 font-sans">Email Address</label>
-                      <input type="email" value={personInfo.email || ''} onChange={e => setPersonInfo({ ...personInfo, email: e.target.value })} className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
-                    </div>
+                      <div>
+                        <label className="text-xs block mb-1 text-zinc-400 font-sans">Location</label>
+                        <input type="text" value={personInfo.location || ''} onChange={e => setPersonInfo({ ...personInfo, location: e.target.value })} placeholder="Savar, Dhaka, Bangladesh" className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                      </div>
 
-                    <div>
-                      <label className="text-xs block mb-1 text-zinc-400 font-sans">Location</label>
-                      <input type="text" value={personInfo.location || ''} onChange={e => setPersonInfo({ ...personInfo, location: e.target.value })} className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
-                    </div>
-
-                    <div>
-                      <label className="text-xs block mb-1 text-zinc-400 font-sans">GitHub Profile URL</label>
-                      <input type="text" value={personInfo.github || ''} onChange={e => setPersonInfo({ ...personInfo, github: e.target.value })} placeholder="https://github.com/..." className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
-                    </div>
-
-                    <div>
-                      <label className="text-xs block mb-1 text-zinc-400 font-sans">LinkedIn Profile URL</label>
-                      <input type="text" value={personInfo.linkedin || ''} onChange={e => setPersonInfo({ ...personInfo, linkedin: e.target.value })} placeholder="https://linkedin.com/in/..." className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
-                    </div>
-
-                    <div>
-                      <label className="text-xs block mb-1 text-zinc-400 font-sans">Twitter / X URL</label>
-                      <input type="text" value={personInfo.twitter || ''} onChange={e => setPersonInfo({ ...personInfo, twitter: e.target.value })} placeholder="https://twitter.com/..." className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                      <div className="sm:col-span-2">
+                        <label className="text-xs block mb-1 text-zinc-400 font-sans">Hero Subtitle Tagline</label>
+                        <input type="text" value={personInfo.tagline || ''} onChange={e => setPersonInfo({ ...personInfo, tagline: e.target.value })} placeholder="Building high-performance web systems..." className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                      </div>
                     </div>
                   </div>
 
-                  <div>
-                    <label className="text-xs block mb-1 text-zinc-400 font-sans">Resume PDF Document (Upload File or URL)</label>
-                    <div className="flex items-center gap-2 font-mono">
-                      <input type="text" value={personInfo.resumeUrl || ''} onChange={e => setPersonInfo({ ...personInfo, resumeUrl: e.target.value })} placeholder="/arcipta.pdf" className="flex-1 px-3.5 py-2 rounded-xl text-xs outline-none text-white font-mono" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
-                      <label className="px-3.5 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer border" style={{ background: 'var(--color-surface-2)', borderColor: 'var(--color-border)', color: 'var(--color-accent)' }}>
-                        <Upload className="w-3.5 h-3.5" />
-                        <span>Upload PDF</span>
-                        <input type="file" accept="application/pdf" className="hidden" onChange={e => handleSingleFileUpload(e, url => setPersonInfo({ ...personInfo, resumeUrl: url }))} />
-                      </label>
+                  {/* 2. About Section Content */}
+                  <div className="space-y-3 pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
+                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-accent" style={{ color: 'var(--color-accent)' }}>2. About Section Content</h3>
+                    
+                    <div>
+                      <label className="text-xs block mb-1 text-zinc-400 font-sans">About Section Bold Headline</label>
+                      <input type="text" value={personInfo.aboutHeadline || ''} onChange={e => setPersonInfo({ ...personInfo, aboutHeadline: e.target.value })} placeholder="Architecting high-performance web systems and autonomous AI workflows." className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                    </div>
+
+                    <div>
+                      <label className="text-xs block mb-1 text-zinc-400 font-sans">About Narrative Bio (Summary)</label>
+                      <textarea rows={3} value={personInfo.about || personInfo.bio || ''} onChange={e => setPersonInfo({ ...personInfo, about: e.target.value, bio: e.target.value })} placeholder="B.Sc in CSE at Daffodil International University..." className="w-full px-3.5 py-2 rounded-xl text-xs outline-none text-white font-sans leading-relaxed" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                    </div>
+
+                    <div>
+                      <label className="text-xs block mb-1 text-zinc-400 font-sans">Core Capability Pills (Comma Separated)</label>
+                      <input 
+                        type="text" 
+                        value={Array.isArray(personInfo.skills) ? personInfo.skills.join(', ') : (personInfo.skills || '')} 
+                        onChange={e => setPersonInfo({ ...personInfo, skills: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })} 
+                        placeholder="Next.js 14, React, TypeScript, Python, LangChain & RAG, Edge AI / TinyML, Tailwind CSS" 
+                        className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans text-xs" 
+                        style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} 
+                      />
                     </div>
                   </div>
 
-                  <div>
-                    <label className="text-xs block mb-1 text-zinc-400 font-sans">Avatar Image (Upload or URL)</label>
-                    <div className="flex items-center gap-2 font-mono">
-                      <input type="text" value={personInfo.avatar || ''} onChange={e => setPersonInfo({ ...personInfo, avatar: e.target.value })} placeholder="/images/profile/pp2.png" className="flex-1 px-3.5 py-2 rounded-xl text-xs outline-none text-white font-mono" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
-                      <label className="px-3.5 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer border" style={{ background: 'var(--color-surface-2)', borderColor: 'var(--color-border)', color: 'var(--color-accent)' }}>
-                        <Upload className="w-3.5 h-3.5" />
-                        <span>Upload Image</span>
-                        <input type="file" accept="image/*" className="hidden" onChange={e => handleSingleFileUpload(e, url => setPersonInfo({ ...personInfo, avatar: url }))} />
-                      </label>
+                  {/* 3. Media & Documents */}
+                  <div className="space-y-3 pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
+                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-accent" style={{ color: 'var(--color-accent)' }}>3. Profile Avatar & Documents</h3>
+                    
+                    <div>
+                      <label className="text-xs block mb-1 text-zinc-400 font-sans">Profile Cutout Avatar (Upload or URL)</label>
+                      <div className="flex items-center gap-2 font-mono">
+                        <input type="text" value={personInfo.avatar || ''} onChange={e => setPersonInfo({ ...personInfo, avatar: e.target.value })} placeholder="/images/profile/Profile Pic Without BG.png" className="flex-1 px-3.5 py-2 rounded-xl text-xs outline-none text-white font-mono" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                        <label className="px-3.5 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer border hover:opacity-90" style={{ background: 'var(--color-surface-2)', borderColor: 'var(--color-border)', color: 'var(--color-accent)' }}>
+                          <Upload className="w-3.5 h-3.5" />
+                          <span>Upload Avatar</span>
+                          <input type="file" accept="image/*" className="hidden" onChange={e => handleSingleFileUpload(e, url => setPersonInfo({ ...personInfo, avatar: url }))} />
+                        </label>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-xs block mb-1 text-zinc-400 font-sans">Resume PDF Document (Upload or URL)</label>
+                      <div className="flex items-center gap-2 font-mono">
+                        <input type="text" value={personInfo.resumeUrl || ''} onChange={e => setPersonInfo({ ...personInfo, resumeUrl: e.target.value })} placeholder="/Mahmud_Hasan_Ratul_CV.pdf" className="flex-1 px-3.5 py-2 rounded-xl text-xs outline-none text-white font-mono" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                        <label className="px-3.5 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer border hover:opacity-90" style={{ background: 'var(--color-surface-2)', borderColor: 'var(--color-border)', color: 'var(--color-accent)' }}>
+                          <Upload className="w-3.5 h-3.5" />
+                          <span>Upload PDF</span>
+                          <input type="file" accept="application/pdf" className="hidden" onChange={e => handleSingleFileUpload(e, url => setPersonInfo({ ...personInfo, resumeUrl: url }))} />
+                        </label>
+                      </div>
                     </div>
                   </div>
 
-                  <div>
-                    <label className="text-xs block mb-1 text-zinc-400 font-sans">Bio Summary</label>
-                    <textarea rows={3} value={personInfo.about || personInfo.bio || ''} onChange={e => setPersonInfo({ ...personInfo, about: e.target.value })} className="w-full px-3.5 py-2 rounded-xl text-xs outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                  {/* 4. Social Links & Contact */}
+                  <div className="space-y-3 pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
+                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-accent" style={{ color: 'var(--color-accent)' }}>4. Contact & Social Profiles</h3>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
+                      <div>
+                        <label className="text-xs block mb-1 text-zinc-400 font-sans">Email Address</label>
+                        <input type="email" value={personInfo.email || ''} onChange={e => setPersonInfo({ ...personInfo, email: e.target.value })} className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                      </div>
+
+                      <div>
+                        <label className="text-xs block mb-1 text-zinc-400 font-sans">GitHub Profile URL</label>
+                        <input type="text" value={personInfo.github || ''} onChange={e => setPersonInfo({ ...personInfo, github: e.target.value })} placeholder="https://github.com/..." className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                      </div>
+
+                      <div>
+                        <label className="text-xs block mb-1 text-zinc-400 font-sans">LinkedIn Profile URL</label>
+                        <input type="text" value={personInfo.linkedin || ''} onChange={e => setPersonInfo({ ...personInfo, linkedin: e.target.value })} placeholder="https://linkedin.com/in/..." className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                      </div>
+
+                      <div>
+                        <label className="text-xs block mb-1 text-zinc-400 font-sans">Twitter / X URL</label>
+                        <input type="text" value={personInfo.twitter || ''} onChange={e => setPersonInfo({ ...personInfo, twitter: e.target.value })} placeholder="https://twitter.com/..." className="w-full px-3.5 py-2 rounded-xl outline-none text-white font-sans" style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }} />
+                      </div>
+                    </div>
                   </div>
                 </form>
               )}
