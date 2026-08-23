@@ -63,10 +63,10 @@ export default function Footer({ personInfo = {} }) {
             <p className="text-xs leading-relaxed font-sans max-w-sm" style={{ color: 'var(--color-text-muted)' }}>
               {tagline}
             </p>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold"
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold whitespace-nowrap max-w-full"
               style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border-accent)', color: 'var(--color-accent)' }}>
-              <span className="w-2 h-2 rounded-full animate-ping" style={{ backgroundColor: 'var(--color-accent)' }} />
-              Available for Technical Roles &amp; AI Research
+              <span className="w-2 h-2 rounded-full animate-ping flex-shrink-0" style={{ backgroundColor: 'var(--color-accent)' }} />
+              <span className="truncate">Available for Technical Roles &amp; AI Research</span>
             </div>
           </div>
 

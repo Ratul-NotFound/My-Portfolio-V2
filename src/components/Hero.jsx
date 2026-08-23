@@ -28,14 +28,24 @@ export default function Hero({ personInfo = {} }) {
   useEffect(() => {
     const handleResize = () => {
       const w = window.innerWidth;
-      if (w < 380) setFontSize(42);
-      else if (w < 480) setFontSize(52);
-      else if (w < 640) setFontSize(68);
-      else if (w < 768) setFontSize(82);
-      else if (w < 1024) setFontSize(96);
-      else if (w < 1280) setFontSize(108);
-      else if (w < 1600) setFontSize(118);
-      else setFontSize(Math.min(140, Math.floor(w * 0.075)));
+      const h = window.innerHeight;
+      let size = 120;
+      if (w < 380) size = 42;
+      else if (w < 480) size = 50;
+      else if (w < 640) size = 64;
+      else if (w < 768) size = 76;
+      else if (w < 1024) size = 88;
+      else if (w < 1280) size = 100;
+      else if (w < 1600) size = 112;
+      else size = Math.min(130, Math.floor(w * 0.07));
+
+      // Height-aware constraint for Nest Hub (600px height) & Nest Hub Max (800px height)
+      if (h <= 650) {
+        size = Math.min(size, 58);
+      } else if (h <= 820) {
+        size = Math.min(size, 78);
+      }
+      setFontSize(size);
     };
     handleResize();
     window.addEventListener('resize', handleResize);
@@ -91,16 +101,16 @@ export default function Hero({ personInfo = {} }) {
               strokeColor="var(--color-accent)"
               fillColor="var(--color-text)"
               strokeWidth={fontSize < 70 ? 1 : 1.5}
-              drawDuration={1.5}
-              fillDelay={0.2}
-              stagger={0.05}
+              drawDuration={0.8}
+              fillDelay={0.15}
+              stagger={0.04}
               ease="power2.out"
               trigger="mount"
               fillMode="wipe"
               fontSize={fontSize}
               fontWeight={900}
               letterSpacing={fontSize < 70 ? -1 : -3}
-              delay={1.15}
+              delay={0.3}
             />
           </motion.div>
 

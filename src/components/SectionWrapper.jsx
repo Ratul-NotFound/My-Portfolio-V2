@@ -94,8 +94,8 @@ export default function SectionWrapper({ children, className = '', id = '', vari
         perspective:    usePerspective ? 1200 : 'none',
         transformStyle: usePerspective ? 'preserve-3d' : 'flat',
         willChange: 'transform',
-        paddingTop:    isHero ? 'clamp(4.5rem, 7vw, 6rem)' : 'var(--section-py)',
-        paddingBottom: isHero ? 'clamp(2rem, 4vw, 4rem)'   : 'var(--section-py)',
+        paddingTop:    isHero ? 'clamp(3.75rem, 4vh + 2.5rem, 5.5rem)' : 'var(--section-py)',
+        paddingBottom: isHero ? 'clamp(1.5rem, 3vh, 3.5rem)'           : 'var(--section-py)',
         // CSS containment: browser skips layout/style recalcs for off-screen sections
         contain: isHero ? 'none' : 'layout style',
       }}

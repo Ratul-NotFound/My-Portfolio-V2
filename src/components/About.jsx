@@ -8,11 +8,12 @@ import PhotoCircle from './ux/PhotoCircle';
 const card = {
   borderRadius: '1.5rem',
   padding: '1.5rem',
-  border: '1px solid var(--color-border)',
-  background: 'var(--glass-bg)',
-  backdropFilter: 'blur(14px)',
-  WebkitBackdropFilter: 'blur(14px)',
-  transition: 'border-color 0.3s ease',
+  border: '1px solid var(--color-border-strong, rgba(255,255,255,0.12))',
+  background: 'var(--color-surface, #111217)',
+  backdropFilter: 'blur(16px)',
+  WebkitBackdropFilter: 'blur(16px)',
+  boxShadow: '0 12px 36px -8px rgba(0,0,0,0.6)',
+  transition: 'border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease',
 };
 
 export default function About({ personInfo = {}, stats, education }) {

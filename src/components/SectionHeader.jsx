@@ -23,8 +23,12 @@ export default function SectionHeader({ number = '01', category = '', title = ''
     >
       {/* Category Pill */}
       <div
-        className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full font-mono glass-panel"
-        style={{ fontSize: 'var(--text-xs)' }}
+        className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full font-mono glass-panel"
+        style={{ 
+          fontSize: 'var(--text-xs)',
+          border: '1px solid var(--color-border-strong, rgba(255,255,255,0.12))',
+          boxShadow: '0 0 20px rgba(56, 189, 248, 0.12)',
+        }}
       >
         <span style={{ color: 'var(--color-accent)', fontWeight: 700 }}>{number} {"//"}</span>
         <span style={{ color: 'var(--color-text)', fontWeight: 600 }} className="uppercase tracking-wider">
@@ -33,9 +37,9 @@ export default function SectionHeader({ number = '01', category = '', title = ''
       </div>
 
       {/* Separator line */}
-      <div className="flex items-center justify-center gap-3" style={{ padding: 'clamp(0.25rem, 0.5vw, 0.5rem) 0' }}>
+      <div className="flex items-center justify-center gap-3" style={{ padding: 'clamp(0.35rem, 0.6vw, 0.65rem) 0' }}>
         <div className="h-[1px]" style={{ width: 'clamp(3rem, 8vw, 7rem)', background: 'linear-gradient(to right, transparent, var(--color-accent))' }} />
-        <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: 'var(--color-accent)' }} />
+        <div className="h-1.5 w-1.5 rounded-full shadow-sm" style={{ backgroundColor: 'var(--color-accent)', boxShadow: '0 0 8px var(--color-accent)' }} />
         <div className="h-[1px]" style={{ width: 'clamp(3rem, 8vw, 7rem)', background: 'linear-gradient(to left, transparent, var(--color-accent))' }} />
       </div>
 

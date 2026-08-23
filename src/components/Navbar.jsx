@@ -65,17 +65,17 @@ export default function Navbar({ personInfo = {} }) {
             <Terminal className="w-4 h-4" style={{ color: 'var(--color-text)' }} />
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="font-mono text-sm font-bold tracking-tight truncate" style={{ color: 'var(--color-text)' }}>
+            <span className="font-mono text-sm font-bold tracking-tight" style={{ color: 'var(--color-text)' }}>
               {brandName}
             </span>
-            <span className="hidden md:inline-block text-[10px] font-mono uppercase tracking-wider truncate max-w-[200px] lg:max-w-none" style={{ color: 'var(--color-text-muted)' }}>
+            <span className="hidden 2xl:inline-block text-[10px] font-mono uppercase tracking-wider truncate" style={{ color: 'var(--color-text-muted)' }}>
               {personInfo.title || 'Full-Stack Developer & AI Automation Engineer'}
             </span>
           </div>
         </Link>
 
-        {/* Desktop Nav (Visible on lg screens 1024px+) */}
-        <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 glass-panel px-2.5 py-1.5 rounded-full">
+        {/* Desktop Nav (Visible on xl screens 1280px+) */}
+        <nav className="hidden xl:flex items-center gap-0.5 2xl:gap-1 glass-panel px-2 2xl:px-3 py-1 rounded-full shrink-0">
           {navItems.map(item => {
             const Icon = item.icon;
             const isActive = pathname === item.path || (isHome && activeSection === item.id);
@@ -84,7 +84,7 @@ export default function Navbar({ personInfo = {} }) {
               <Link
                 key={item.name}
                 href={item.path}
-                className="relative px-2.5 xl:px-3 py-1.5 rounded-full text-[11px] xl:text-xs font-medium transition-all flex items-center gap-1.5 whitespace-nowrap"
+                className="relative px-2.5 2xl:px-3 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 whitespace-nowrap select-none"
                 style={{
                   color:      isActive ? '#000' : 'var(--color-text-muted)',
                   fontWeight: isActive ? 700 : 500,
@@ -98,7 +98,7 @@ export default function Navbar({ personInfo = {} }) {
                     transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                   />
                 )}
-                <Icon className="w-3.5 h-3.5 relative z-10 shrink-0" />
+                <Icon className="w-3.5 h-3.5 relative z-10 shrink-0 hidden 2xl:block" />
                 <span className="relative z-10">{item.name}</span>
               </Link>
             );
@@ -116,17 +116,17 @@ export default function Navbar({ personInfo = {} }) {
             target="_blank"
             rel="noopener noreferrer"
             download
-            className="hidden sm:flex glass-button px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold items-center gap-2 transition-all hover:scale-105"
+            className="hidden sm:flex glass-button px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold items-center gap-2 transition-all hover:scale-105"
           >
             <Download className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
             <span className="hidden md:inline">CV / Resume</span>
             <span className="md:hidden">CV</span>
           </a>
 
-          {/* Mobile / Tablet Menu Button - Visible on screens < 1024px */}
+          {/* Mobile / Tablet Menu Button - Visible ONLY on screens < 1280px */}
           <button
             onClick={() => setMobileMenuOpen(o => !o)}
-            className="lg:hidden glass-button p-2.5 rounded-xl focus:outline-none touch-target-exempt"
+            className="xl:hidden glass-button p-2.5 rounded-xl focus:outline-none touch-target-exempt cursor-pointer"
             aria-label="Toggle navigation menu"
             style={{ minWidth: '44px', minHeight: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >

@@ -197,10 +197,10 @@ export default function FloatingSideControls({ personInfo }) {
 
   return (
     <>
-      {/* Left section nav bar with hover section previews */}
+      {/* Left section nav bar with hover section previews - only on screens with wide side gutters (2xl: 1536px+) */}
       <nav
         aria-label="Section Navigation"
-        className="fixed left-6 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col items-start gap-3 pointer-events-auto"
+        className="fixed left-6 top-1/2 -translate-y-1/2 z-40 hidden 2xl:flex flex-col items-start gap-3 pointer-events-auto"
       >
         {SECTIONS.map((sec, idx) => (
           <button 
@@ -231,10 +231,10 @@ export default function FloatingSideControls({ personInfo }) {
         ))}
       </nav>
 
-      {/* Left social dock - only show at xl+ to match section nav breakpoint */}
+      {/* Left social dock - only show at 2xl+ to avoid overlapping cards on Nest Hub Max (1280px) & 1366px laptops */}
       <aside
         aria-label="Social Profiles"
-        className="fixed left-6 bottom-10 z-40 hidden xl:flex flex-col items-start gap-3.5 pointer-events-auto"
+        className="fixed left-6 bottom-10 z-40 hidden 2xl:flex flex-col items-start gap-3.5 pointer-events-auto"
       >
         {/* Get in Touch */}
         <button
