@@ -101,16 +101,16 @@ export default function Hero({ personInfo = {} }) {
               strokeColor="var(--color-accent)"
               fillColor="var(--color-text)"
               strokeWidth={fontSize < 70 ? 1 : 1.5}
-              drawDuration={0.8}
-              fillDelay={0.15}
-              stagger={0.04}
+              drawDuration={1.5}
+              fillDelay={0.2}
+              stagger={0.05}
               ease="power2.out"
               trigger="mount"
               fillMode="wipe"
               fontSize={fontSize}
               fontWeight={900}
               letterSpacing={fontSize < 70 ? -1 : -3}
-              delay={0.3}
+              delay={1.15}
             />
           </motion.div>
 
