@@ -100,6 +100,8 @@ html {
 
 *, *::before, *::after {
   box-sizing: border-box;
+  /* Prevent elements from creating unintentional horizontal overflow */
+  min-width: 0;
 }
 
 body {
@@ -114,7 +116,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-overflow-scrolling: touch;
   transition: background-color 0.35s ease, color 0.35s ease;
+  /* scrollbar-gutter causes layout shift on mobile — only apply on wide screens */
   scrollbar-gutter: stable;
+  /* Prevents text from overflowing containers on small screens */
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* Ambient radial glow (dark) */
@@ -127,9 +133,9 @@ body::before {
     radial-gradient(ellipse at 85% 20%, rgba(56,189,248,0.04) 0%, transparent 45%);
   pointer-events: none;
   z-index: -1;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  will-change: transform;
+  /* NOTE: NO will-change or transform here — fixed pseudo-elements with
+     will-change:transform create a new stacking context that breaks
+     position:sticky children and causes mobile overflow artifacts. */
   transition: opacity 0.35s ease;
 }
 
@@ -254,5 +260,42 @@ html.light .shadow-card:hover {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   MOBILE RESPONSIVE OVERRIDES
+   ============================================================ */
+/* Prevent scrollbar-gutter from shifting layout on narrow viewports */
+@media (max-width: 1024px) {
+  body {
+    scrollbar-gutter: auto;
+  }
+}
+
+/* Fluid image defaults — prevent images overflowing their containers */
+img, video, canvas, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Ensure flex children never overflow their parents on small screens */
+.flex, [class*='flex'] {
+  min-width: 0;
+}
+
+/* ============================================================
+   TOUCH DEVICE OPTIMIZATIONS
+   ============================================================ */
+@media (pointer: coarse) {
+  /* Larger minimum touch targets for small interactive elements */
+  button, a, [role='button'] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  /* Exception for decorative/layout elements (those have explicit small sizes) */
+  .touch-target-exempt {
+    min-height: unset;
+    min-width: unset;
   }
 }

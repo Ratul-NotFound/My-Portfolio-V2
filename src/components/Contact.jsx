@@ -271,9 +271,9 @@ export default function Contact({ personInfo = {} }) {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     {/* Name Input */}
                     <div className="space-y-0.5">
-                      <label className="text-xs font-mono font-bold flex items-center justify-between" style={{ color: 'var(--color-text-muted)' }}>
+                      <label className="text-xs font-mono font-bold flex items-start sm:items-center justify-between gap-1" style={{ color: 'var(--color-text-muted)' }}>
                         <span>Your Name</span>
-                        <span className="text-[10px] opacity-50 font-normal">Required</span>
+                        <span className="text-[10px] opacity-50 font-normal flex-shrink-0">Required</span>
                       </label>
                       <input 
                         type="text" 
@@ -294,9 +294,9 @@ export default function Contact({ personInfo = {} }) {
 
                     {/* Email Input */}
                     <div className="space-y-0.5">
-                      <label className="text-xs font-mono font-bold flex items-center justify-between" style={{ color: 'var(--color-text-muted)' }}>
+                      <label className="text-xs font-mono font-bold flex items-start sm:items-center justify-between gap-1" style={{ color: 'var(--color-text-muted)' }}>
                         <span>Email Address</span>
-                        <span className="text-[10px] opacity-50 font-normal">Required</span>
+                        <span className="text-[10px] opacity-50 font-normal flex-shrink-0">Required</span>
                       </label>
                       <input 
                         type="email" 
@@ -318,9 +318,9 @@ export default function Contact({ personInfo = {} }) {
 
                   {/* Subject Input */}
                   <div className="space-y-0.5">
-                    <label className="text-xs font-mono font-bold flex items-center justify-between" style={{ color: 'var(--color-text-muted)' }}>
+                    <label className="text-xs font-mono font-bold flex items-start sm:items-center justify-between gap-1" style={{ color: 'var(--color-text-muted)' }}>
                       <span>Subject</span>
-                      <span className="text-[10px] opacity-50 font-normal">Inquiry Type</span>
+                      <span className="text-[10px] opacity-50 font-normal flex-shrink-0">Inquiry Type</span>
                     </label>
                     <input 
                       type="text" 
@@ -341,13 +341,13 @@ export default function Contact({ personInfo = {} }) {
 
                   {/* Message Body */}
                   <div className="space-y-0.5">
-                    <label className="text-xs font-mono font-bold flex items-center justify-between" style={{ color: 'var(--color-text-muted)' }}>
+                    <label className="text-xs font-mono font-bold flex items-start sm:items-center justify-between gap-1" style={{ color: 'var(--color-text-muted)' }}>
                       <span>Message</span>
-                      <span className="text-[10px] opacity-50 font-normal">Details</span>
+                      <span className="text-[10px] opacity-50 font-normal flex-shrink-0">Details</span>
                     </label>
                     <textarea 
                       required 
-                      rows={2.5} 
+                      rows={4} 
                       placeholder="Hi Mahmud, I came across your portfolio and would like to discuss..."
                       value={formData.message}
                       onChange={e => setFormData({ ...formData, message: e.target.value })}

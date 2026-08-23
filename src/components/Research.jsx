@@ -77,12 +77,12 @@ export default function Research({ researchPapers = [] }) {
     setTimeout(() => setCopiedFormat(null), 2000);
   };
 
-  // Clean 3D Horizon Slide Transition
+  // Clean 3D Horizon Slide Transition - simplified for mobile
   const slideVariants = {
     enter: (dir) => ({
-      x: dir > 0 ? '60%' : '-60%',
-      rotateY: dir > 0 ? 20 : -20,
-      scale: 0.92,
+      x: dir > 0 ? '55%' : '-55%',
+      rotateY: 0, // disabled - causes GPU jitter on mobile
+      scale: 0.94,
       opacity: 0,
     }),
     center: {
@@ -92,15 +92,14 @@ export default function Research({ researchPapers = [] }) {
       opacity: 1,
       transition: {
         x: { type: "spring", stiffness: 280, damping: 26 },
-        rotateY: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
         scale: { duration: 0.38, ease: [0.16, 1, 0.3, 1] },
         opacity: { duration: 0.22 }
       }
     },
     exit: (dir) => ({
-      x: dir > 0 ? '-60%' : '60%',
-      rotateY: dir > 0 ? -20 : 20,
-      scale: 0.92,
+      x: dir > 0 ? '-55%' : '55%',
+      rotateY: 0,
+      scale: 0.94,
       opacity: 0,
       transition: {
         duration: 0.25,
@@ -160,7 +159,7 @@ export default function Research({ researchPapers = [] }) {
           </button>
 
           {/* Active Animated Slide Card */}
-          <div className="w-full z-20" style={{ maxWidth: 'clamp(28rem, 60vw, 56rem)', paddingLeft: 'clamp(1rem, 3vw, 2.5rem)', paddingRight: 'clamp(1rem, 3vw, 2.5rem)' }}>
+          <div className="w-full z-20" style={{ maxWidth: 'clamp(18rem, 80vw, 56rem)', paddingLeft: 'clamp(2.5rem, 5vw, 3rem)', paddingRight: 'clamp(2.5rem, 5vw, 3rem)' }}>
             <AnimatePresence custom={direction} mode="wait">
               {currentPaper && (
                 <motion.div

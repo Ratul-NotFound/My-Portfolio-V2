@@ -7,6 +7,15 @@ module.exports = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    screens: {
+      // Custom extra-small breakpoint for phones under 475px
+      'xs': '475px',
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+    },
     extend: {
       colors: {
         deep: "var(--bg-deep)",
@@ -25,6 +34,12 @@ module.exports = {
       fontFamily: {
         sans: ["Plus Jakarta Sans", "sans-serif"],
         mono: ["JetBrains Mono", "monospace"]
+      },
+      // Perspective utilities for 3D section transitions
+      perspective: {
+        '1000': '1000px',
+        '1200': '1200px',
+        '1400': '1400px',
       }
     },
   },

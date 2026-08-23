@@ -53,13 +53,17 @@ export default function Hero({ personInfo = {} }) {
       {/* 3D Background Canvas */}
       <HeroCanvas />
 
-      {/* Ambient Spotlight */}
+      {/* Ambient Spotlight — clamped to viewport to prevent horizontal overflow */}
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] blur-[120px] rounded-full pointer-events-none z-0 opacity-50 animate-pulse"
-        style={{ backgroundColor: 'rgba(56,189,248,0.12)' }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-[120px] rounded-full pointer-events-none z-0 opacity-50 animate-pulse"
+        style={{ 
+          backgroundColor: 'rgba(56,189,248,0.12)',
+          width: 'clamp(200px, 50vw, 500px)',
+          height: 'clamp(120px, 30vw, 300px)',
+        }}
       />
 
-      <motion.div className="w-full flex flex-col justify-center items-center relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-4 sm:py-6">
+      <motion.div className="w-full flex flex-col justify-center items-center relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-4 sm:py-6" style={{ isolation: 'isolate' }}>
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -68,13 +72,13 @@ export default function Hero({ personInfo = {} }) {
           className="w-full space-y-3 sm:space-y-5 lg:space-y-6"
         >
           {/* Status Pill */}
-          <motion.div variants={itemVariants} className="inline-block">
-            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full glass-panel text-xs font-mono uppercase tracking-widest font-semibold">
-              <span className="relative flex h-2 w-2">
+          <motion.div variants={itemVariants} className="inline-block max-w-full">
+            <div className="inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 py-1.5 rounded-full glass-panel text-[10px] sm:text-xs font-mono uppercase tracking-widest font-semibold max-w-[calc(100vw-2rem)] overflow-hidden">
+              <span className="relative flex h-2 w-2 flex-shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ backgroundColor: 'var(--color-accent)' }} />
                 <span className="relative inline-flex rounded-full h-2 w-2" style={{ backgroundColor: 'var(--color-accent)' }} />
               </span>
-              <span style={{ color: 'var(--color-text)' }}>
+              <span style={{ color: 'var(--color-text)' }} className="truncate">
                 <WordRotate words={['Full Stack Developer', 'AI & Automation Engineer', 'Full-Stack Architect', 'DIUCPC VP Leader']} duration={2600} />
               </span>
             </div>

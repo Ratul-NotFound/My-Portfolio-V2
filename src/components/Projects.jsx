@@ -313,16 +313,19 @@ export default function Projects({ projects = [], techSkills = [] }) {
                   <button
                     key={cat.id}
                     onClick={() => setActiveCategory(cat.id)}
-                    className="px-2.5 py-1 sm:px-3 sm:py-1 rounded-xl text-xs font-mono font-bold transition-all duration-200 flex items-center gap-1.5 cursor-pointer select-none shadow-sm hover:scale-105 active:scale-95"
+                    className="px-2 py-1 sm:px-3 sm:py-1 rounded-xl text-[10px] sm:text-xs font-mono font-bold transition-all duration-200 flex items-center gap-1 sm:gap-1.5 cursor-pointer select-none shadow-sm hover:scale-105 active:scale-95 touch-target-exempt"
                     style={{
                       background: isActive ? 'var(--color-accent)' : 'var(--color-surface-2)',
                       color: isActive ? '#000' : 'var(--color-text-muted)',
                       border: `1px solid ${isActive ? 'var(--color-accent)' : 'var(--color-border)'}`,
                       boxShadow: isActive ? '0 0 15px rgba(56, 189, 248, 0.35)' : 'none',
+                      minHeight: 'unset',
                     }}
                   >
-                    <Icon className="w-3.5 h-3.5" />
-                    <span>{cat.label}</span>
+                    <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                    {/* Hide label text on very small screens */}
+                    <span className="hidden xs:inline sm:inline">{cat.label}</span>
+                    <span className="xs:hidden">{cat.id === 'all' ? 'All' : cat.label.split(' ')[0]}</span>
                     <span 
                       className="text-[10px] px-1.5 py-0.2 rounded-full font-bold"
                       style={{
@@ -408,7 +411,7 @@ export default function Projects({ projects = [], techSkills = [] }) {
         </div>
 
         {/* SCROLLSTACK FOLDER DECK CONTAINER */}
-        <div className="w-full h-[380px] sm:h-[430px] md:h-[460px] lg:h-[500px] xl:h-[550px] relative pt-2 sm:pt-3">
+        <div className="w-full h-[360px] sm:h-[420px] md:h-[450px] lg:h-[490px] xl:h-[540px] relative pt-2 sm:pt-3">
           <ScrollStack
             itemDistance={isMobile ? 140 : 260}
             itemScale={0.02}
@@ -468,19 +471,21 @@ function ProjectInspectModal({ inspectedProject, onClose }) {
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-xl" 
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 backdrop-blur-xl" 
       style={{ background: 'rgba(0,0,0,0.65)' }}
       onClick={onClose}
     >
       <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        initial={{ opacity: 0, scale: 0.95, y: 40 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+        exit={{ opacity: 0, scale: 0.95, y: 40 }}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-2xl rounded-3xl p-6 space-y-4 relative overflow-hidden font-mono shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar"
+        className="w-full sm:max-w-2xl rounded-none sm:rounded-3xl p-4 sm:p-6 space-y-4 relative overflow-hidden font-mono shadow-2xl max-h-[90vh] sm:max-h-[90vh] overflow-y-auto custom-scrollbar"
         style={{
           border: '1px solid var(--color-border)',
           background: 'var(--color-surface)',
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0,
         }}
       >
         <button

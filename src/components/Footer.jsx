@@ -37,25 +37,25 @@ export default function Footer({ personInfo = {} }) {
 
   return (
     <footer
-      className="pt-8 pb-24 md:py-12 relative z-10 text-xs font-mono"
+      className="pt-8 pb-28 sm:pb-10 md:py-12 relative z-10 text-xs font-mono"
       style={{ borderTop: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface-3)' }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
         {/* TOP: 3-column */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start pb-6" style={{ borderBottom: '1px solid var(--color-border)' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-6 items-start pb-6" style={{ borderBottom: '1px solid var(--color-border)' }}>
 
           {/* Brand & Tagline */}
-          <div className="md:col-span-5 space-y-3">
+          <div className="sm:col-span-2 md:col-span-5 space-y-3">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl flex items-center justify-center glass-button">
+              <div className="w-10 h-10 rounded-2xl flex items-center justify-center glass-button flex-shrink-0">
                 <Terminal className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
               </div>
-              <div>
-                <span className="text-base font-bold font-sans block" style={{ color: 'var(--color-text)' }}>
+              <div className="min-w-0">
+                <span className="text-base font-bold font-sans block truncate" style={{ color: 'var(--color-text)' }}>
                   {name}
                 </span>
-                <span className="text-xs font-semibold" style={{ color: 'var(--color-accent)' }}>
+                <span className="text-xs font-semibold block truncate" style={{ color: 'var(--color-accent)' }}>
                   {title}
                 </span>
               </div>
@@ -78,8 +78,8 @@ export default function Footer({ personInfo = {} }) {
             <div className="grid grid-cols-2 gap-2">
               {NAV_LINKS.map(link => (
                 <button key={link.id} onClick={() => scrollTo(link.id)}
-                  className="text-xs font-semibold text-left py-0.5 transition-colors"
-                  style={{ color: 'var(--color-text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}
+                  className="text-xs font-semibold text-left py-1 transition-colors touch-target-exempt"
+                  style={{ color: 'var(--color-text-muted)', background: 'none', border: 'none', cursor: 'pointer', minHeight: 'unset' }}
                   onMouseEnter={e => e.currentTarget.style.color = 'var(--color-accent)'}
                   onMouseLeave={e => e.currentTarget.style.color = 'var(--color-text-muted)'}
                 >
@@ -90,7 +90,7 @@ export default function Footer({ personInfo = {} }) {
           </div>
 
           {/* Clock + Top */}
-          <div className="md:col-span-3 flex flex-col items-start md:items-end gap-4">
+          <div className="md:col-span-3 flex flex-row sm:flex-col md:flex-col items-start md:items-end gap-4">
             <div className="space-y-1">
               <span className="text-[10px] font-bold uppercase tracking-wider block" style={{ color: 'var(--color-text-muted)' }}>
                 LOCAL TIME (DHAKA, BST)
@@ -104,8 +104,8 @@ export default function Footer({ personInfo = {} }) {
             <Magnetic>
               <button
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all hover:scale-105"
-                style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)', color: 'var(--color-text)', cursor: 'pointer' }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all hover:scale-105 touch-target-exempt"
+                style={{ background: 'var(--color-surface-2)', border: '1px solid var(--color-border)', color: 'var(--color-text)', cursor: 'pointer', minHeight: 'unset' }}
                 aria-label="Back to top"
               >
                 Back to Top

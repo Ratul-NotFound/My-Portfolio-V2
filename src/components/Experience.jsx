@@ -141,8 +141,8 @@ export default function Experience({ experiences = [] }) {
             }}
           />
 
-          {/* Milestone Popping Circle Nodes Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-6 relative z-10">
+          {/* Milestone Popping Circle Nodes Grid - 2 cols on xs/sm, 4 on md+ */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 relative z-10">
             {filteredExperiences.map((exp, idx) => {
               const isActive = exp.id === activeExp?.id;
               const isPresent = exp.period?.toLowerCase().includes("present");
@@ -207,19 +207,19 @@ export default function Experience({ experiences = [] }) {
                   </motion.div>
 
                   {/* Circle Subtitle Label */}
-                  <div className="mt-2.5 space-y-0.5 max-w-[130px]">
+                  <div className="mt-2 sm:mt-2.5 space-y-0.5 max-w-[120px]">
                     <div className="flex items-center justify-center gap-1">
-                      <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: isActive ? 'var(--color-accent)' : 'var(--color-text-muted)' }}>
+                      <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider" style={{ color: isActive ? 'var(--color-accent)' : 'var(--color-text-muted)' }}>
                         {exp.category || "Role"}
                       </span>
                       {isPresent && <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-ping" />}
                     </div>
 
-                    <h4 className="text-xs font-bold font-sans truncate transition-colors" style={{ color: isActive ? 'var(--color-accent)' : 'var(--color-text)' }}>
+                    <h4 className="text-[10px] sm:text-xs font-bold font-sans truncate transition-colors" style={{ color: isActive ? 'var(--color-accent)' : 'var(--color-text)' }}>
                       {exp.role}
                     </h4>
                     
-                    <p className="text-[10px] font-mono opacity-70" style={{ color: 'var(--color-text-muted)' }}>
+                    <p className="text-[9px] sm:text-[10px] font-mono opacity-70" style={{ color: 'var(--color-text-muted)' }}>
                       {exp.period}
                     </p>
                   </div>
@@ -338,7 +338,7 @@ export default function Experience({ experiences = [] }) {
                 </div>
 
                 {/* 2. Structured 2-Column Grid (Left: Overview + Metric | Right: Deliverables) */}
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-3.5 items-start">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 items-start">
                   
                   {/* Left Col (5 Cols): Role Overview Quote + Metric */}
                   <div className="md:col-span-5 space-y-2.5">

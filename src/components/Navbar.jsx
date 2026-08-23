@@ -60,15 +60,15 @@ export default function Navbar({ personInfo = {} }) {
       <div className="mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-2" style={{ maxWidth: 'var(--container-max)' }}>
 
         {/* Brand Logo & Name */}
-        <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center glass-button transition-transform duration-300 group-hover:scale-105">
+        <Link href="/" className="flex items-center gap-2 sm:gap-2.5 group shrink-0 min-w-0">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center glass-button transition-transform duration-300 group-hover:scale-105 flex-shrink-0">
             <Terminal className="w-4 h-4" style={{ color: 'var(--color-text)' }} />
           </div>
-          <div className="flex flex-col">
-            <span className="font-mono text-sm font-bold tracking-tight" style={{ color: 'var(--color-text)' }}>
+          <div className="flex flex-col min-w-0">
+            <span className="font-mono text-sm font-bold tracking-tight truncate" style={{ color: 'var(--color-text)' }}>
               {brandName}
             </span>
-            <span className="hidden sm:inline-block text-[10px] font-mono uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>
+            <span className="hidden md:inline-block text-[10px] font-mono uppercase tracking-wider truncate max-w-[200px] lg:max-w-none" style={{ color: 'var(--color-text-muted)' }}>
               {personInfo.title || 'Full-Stack Developer & AI Automation Engineer'}
             </span>
           </div>
@@ -126,8 +126,9 @@ export default function Navbar({ personInfo = {} }) {
           {/* Mobile / Tablet Menu Button - Visible on screens < 1024px */}
           <button
             onClick={() => setMobileMenuOpen(o => !o)}
-            className="lg:hidden glass-button p-2 rounded-xl focus:outline-none"
+            className="lg:hidden glass-button p-2.5 rounded-xl focus:outline-none touch-target-exempt"
             aria-label="Toggle navigation menu"
+            style={{ minWidth: '44px', minHeight: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
             {mobileMenuOpen
               ? <X className="w-5 h-5" style={{ color: 'var(--color-text)' }} />

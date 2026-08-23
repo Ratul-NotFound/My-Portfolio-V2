@@ -201,7 +201,7 @@ const EyePleasingCard = forwardRef(function EyePleasingCard({ skill, index, proj
         </div>
       </motion.div>
 
-      {/* 🚀 INTERACTIVE HOVER POPUP WITH LINKED PROJECTS */}
+      {/* 🚀 INTERACTIVE HOVER POPUP WITH LINKED PROJECTS - Desktop only */}
       <AnimatePresence>
         {isHovered && (
           <motion.div
@@ -209,11 +209,14 @@ const EyePleasingCard = forwardRef(function EyePleasingCard({ skill, index, proj
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: popupPlacement === 'top' ? 6 : -6, scale: 0.95 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className={`absolute ${popupPlacement === 'top' ? 'bottom-full mb-2.5' : 'top-full mt-2.5'} left-1/2 -translate-x-1/2 z-50 w-72 sm:w-80 rounded-2xl p-3.5 shadow-2xl border pointer-events-auto backdrop-blur-2xl`}
+            className={`absolute ${popupPlacement === 'top' ? 'bottom-full mb-2.5' : 'top-full mt-2.5'} left-1/2 -translate-x-1/2 z-50 w-64 sm:w-72 md:w-80 rounded-2xl p-3.5 shadow-2xl border pointer-events-auto backdrop-blur-2xl
+              hidden sm:block`}
             style={{
               background: 'rgba(12, 14, 24, 0.95)',
               borderColor: 'var(--color-border-accent)',
               boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.25)',
+              /* Ensure popup doesn't overflow viewport edges */
+              maxWidth: 'min(320px, calc(100vw - 2rem))',
             }}
           >
             {/* Laser Line Accent */}
@@ -393,7 +396,7 @@ return matchesTab && matchesSearch;
             </div>
 
             {/* Search Bar */}
-            <div className="relative w-full sm:w-64 md:w-72">
+            <div className="relative w-full sm:w-60 md:w-72 flex-shrink-0">
               <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--color-accent)' }} />
               <input 
                 type="text" 
@@ -464,7 +467,7 @@ return matchesTab && matchesSearch;
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(clamp(140px, 16vw, 220px), 1fr))',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(clamp(130px, 14vw, 220px), 1fr))',
               gap: 'var(--gap-sm)',
               minHeight: '160px',
               alignItems: 'start',

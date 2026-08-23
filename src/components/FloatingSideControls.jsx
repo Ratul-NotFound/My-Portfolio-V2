@@ -231,10 +231,10 @@ export default function FloatingSideControls({ personInfo }) {
         ))}
       </nav>
 
-      {/* Left social dock */}
+      {/* Left social dock - only show at xl+ to match section nav breakpoint */}
       <aside
         aria-label="Social Profiles"
-        className="fixed left-6 bottom-10 z-40 hidden lg:flex flex-col items-start gap-3.5 pointer-events-auto"
+        className="fixed left-6 bottom-10 z-40 hidden xl:flex flex-col items-start gap-3.5 pointer-events-auto"
       >
         {/* Get in Touch */}
         <button
