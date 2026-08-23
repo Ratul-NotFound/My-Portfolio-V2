@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Home, Terminal, Download, Menu, X, User, Layers, Cpu, Briefcase, Mail, Award, BookOpen } from 'lucide-react';
 import ThemeToggle from './ux/ThemeToggle';
+import { downloadResumeFile } from '@/lib/downloadHelper';
 
 const navItems = [
   { name: 'Home',       path: '/',           id: 'hero',       icon: Home      },
@@ -111,17 +112,15 @@ export default function Navbar({ personInfo = {} }) {
           <ThemeToggle />
 
           {/* CV Button - Visible on sm screens and up */}
-          <a
-            href={resumeLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            download
-            className="hidden sm:flex glass-button px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold items-center gap-2 transition-all hover:scale-105"
+          <button
+            type="button"
+            onClick={() => downloadResumeFile(resumeLink, 'Mahmud_Hasan_Ratul_Resume.pdf')}
+            className="hidden sm:flex glass-button px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold items-center gap-2 transition-all hover:scale-105 cursor-pointer"
           >
             <Download className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
             <span className="hidden md:inline">CV / Resume</span>
             <span className="md:hidden">CV</span>
-          </a>
+          </button>
 
           {/* Mobile / Tablet Menu Button - Visible ONLY on screens < 1280px */}
           <button
@@ -179,17 +178,17 @@ export default function Navbar({ personInfo = {} }) {
 
             {/* CV Download button inside mobile drawer for quick access */}
             <div className="pt-3 mt-2 border-t border-theme">
-              <a
-                href={resumeLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                download
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full py-2.5 rounded-xl glass-button text-xs font-semibold flex items-center justify-center gap-2"
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  downloadResumeFile(resumeLink, 'Mahmud_Hasan_Ratul_Resume.pdf');
+                }}
+                className="w-full py-2.5 rounded-xl glass-button text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Download className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
                 <span>Download CV / Resume</span>
-              </a>
+              </button>
             </div>
           </motion.div>
         )}

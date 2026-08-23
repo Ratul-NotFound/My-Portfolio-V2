@@ -9,6 +9,7 @@ import StrokeText from './StrokeText';
 import SectionWrapper from './SectionWrapper';
 import WordRotate from './ux/WordRotate';
 import Magnetic from './ux/Magnetic';
+import { downloadResumeFile } from '@/lib/downloadHelper';
 
 const containerVariants = {
   hidden: { opacity: 0, rotateX: 16, y: 40, scale: 0.92 },
@@ -55,7 +56,7 @@ export default function Hero({ personInfo = {} }) {
   const resumeLink = personInfo.resumeUrl || '/Mahmud_Hasan_Ratul_CV.pdf';
   const tagline = personInfo.tagline || 'Building high-performance web systems, autonomous AI automation pipelines, and enterprise RAG document intelligence platforms.';
   const githubLink = personInfo.github || 'https://github.com/Ratul-NotFound';
-  const linkedinLink = personInfo.linkedin || 'https://linkedin.com/in/ratul-notfound';
+  const linkedinLink = personInfo.linkedin || 'https://www.linkedin.com/in/mahmud-hasan-ratul';
   const emailLink = personInfo.email ? `mailto:${personInfo.email}` : 'mailto:mhratul.dev@gmail.com';
 
   return (
@@ -137,17 +138,15 @@ export default function Hero({ personInfo = {} }) {
             </Magnetic>
 
             <Magnetic>
-              <a
-                href={resumeLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                download
+              <button
+                type="button"
+                onClick={() => downloadResumeFile(resumeLink, 'Mahmud_Hasan_Ratul_Resume.pdf')}
                 className="w-full sm:w-auto px-7 py-3 rounded-2xl glass-panel font-mono font-bold text-sm flex items-center justify-center gap-2 group cursor-pointer transition-all"
                 style={{ color: 'var(--color-text)' }}
               >
                 <Download className="w-4 h-4 group-hover:scale-110 transition-transform" style={{ color: 'var(--color-accent)' }} />
                 <span>Download Resume</span>
-              </a>
+              </button>
             </Magnetic>
           </motion.div>
 

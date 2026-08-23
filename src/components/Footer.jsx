@@ -125,9 +125,11 @@ export default function Footer({ personInfo = {} }) {
               className="hover:text-accent transition-colors flex items-center gap-1.5" style={{ color: 'var(--color-text-muted)' }}>
               <GithubIcon className="w-3.5 h-3.5 fill-current" /> GitHub
             </a>
-            <a href="https://linkedin.com/in/ratul-notfound" target="_blank" rel="noopener noreferrer"
-              className="hover:text-accent transition-colors flex items-center gap-1.5" style={{ color: 'var(--color-text-muted)' }}>
-              <LinkedinIcon className="w-3.5 h-3.5 fill-current" /> LinkedIn
+            <a href="https://www.linkedin.com/in/mahmud-hasan-ratul" target="_blank" rel="noopener noreferrer"
+              aria-label="Visit Mahmud Hasan Ratul on LinkedIn"
+              className="p-2 rounded-xl border flex items-center justify-center transition-all group"
+              style={{ background: 'var(--color-surface-2)', borderColor: 'var(--color-border)' }}>
+              <LinkedinIcon className="w-4 h-4 fill-zinc-400 group-hover:fill-sky-400 transition-colors" />
             </a>
           </div>
         </div>

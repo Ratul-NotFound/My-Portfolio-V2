@@ -6,7 +6,7 @@ export const personInfo = {
   location: "Dhaka, Bangladesh",
   email: "mhratul.dev@gmail.com",
   github: "https://github.com/Ratul-NotFound",
-  linkedin: "https://linkedin.com/in/ratul-notfound",
+  linkedin: "https://www.linkedin.com/in/mahmud-hasan-ratul",
   twitter: "https://twitter.com/ratul_dev",
   resumeUrl: "/arcipta.pdf",
   avatar: "/images/profile/pp2.png"

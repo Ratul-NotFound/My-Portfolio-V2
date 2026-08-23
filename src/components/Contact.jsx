@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 import { useState } from 'react';
 import { 
   Mail, 
@@ -27,7 +27,7 @@ export default function Contact({ personInfo = {} }) {
   const email    = personInfo.email    || 'mhratul.dev@gmail.com';
   const location = personInfo.location || personInfo.address || 'Savar, Dhaka, Bangladesh';
   const github   = personInfo.github   || 'https://github.com/Ratul-NotFound';
-  const linkedin = personInfo.linkedin || 'https://linkedin.com/in/ratul-notfound';
+  const linkedin = personInfo.linkedin || 'https://www.linkedin.com/in/mahmud-hasan-ratul';
   const status   = personInfo.status   || personInfo.availability || 'Available for Roles';
 
   const copyEmail = () => {
