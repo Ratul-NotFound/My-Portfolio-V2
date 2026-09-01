@@ -84,7 +84,7 @@ function StackableDeckCard({ project, index, total, onInspect }) {
           
           {/* LEFT COLUMN: Project Screenshot */}
           <div 
-            className="col-span-6 md:col-span-6 relative rounded-lg sm:rounded-2xl overflow-hidden bg-black/40 h-28 sm:h-44 md:h-48 lg:h-56 xl:h-64 group/img shadow-inner cursor-pointer" 
+            className="col-span-6 md:col-span-6 relative rounded-lg sm:rounded-2xl overflow-hidden bg-black/40 h-28 sm:h-36 md:h-40 lg:h-44 xl:h-48 group/img shadow-inner cursor-pointer" 
             style={{ border: '1px solid var(--color-border)' }}
             onClick={() => onInspect(project)}
             onMouseEnter={() => {
@@ -411,14 +411,14 @@ export default function Projects({ projects = [], techSkills = [] }) {
         </div>
 
         {/* SCROLLSTACK FOLDER DECK CONTAINER */}
-        <div className="w-full h-[360px] sm:h-[420px] md:h-[450px] lg:h-[490px] xl:h-[540px] relative pt-2 sm:pt-3">
+        <div className="w-full h-[420px] sm:h-[500px] md:h-[550px] lg:h-[590px] xl:h-[630px] relative pt-2 sm:pt-3 pb-6">
           <ScrollStack
-            itemDistance={isMobile ? 140 : 260}
+            itemDistance={isMobile ? 140 : 240}
             itemScale={0.02}
-            itemStackDistance={isMobile ? 12 : 20}
-            stackPosition="2%"
-            scaleEndPosition="1%"
-            baseScale={0.95}
+            itemStackDistance={isMobile ? 6 : 8}
+            stackPosition="1%"
+            scaleEndPosition="0%"
+            baseScale={0.96}
             blurAmount={0}
             useWindowScroll={false}
             duration={0.5}

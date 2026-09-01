@@ -87,56 +87,55 @@ export default function Navbar({ personInfo = {} }) {
         borderBottom:  scrolled || !isHome ? '1px solid var(--color-border)' : 'none',
       }}
     >
-      <div className="mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-2" style={{ maxWidth: 'var(--container-max)' }}>
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative flex items-center justify-between min-h-[44px]">
 
-        {/* Brand Logo & Name */}
-        <Link href="/" className="flex items-center gap-2 sm:gap-2.5 group shrink-0 min-w-0">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center glass-button transition-transform duration-300 group-hover:scale-105 flex-shrink-0">
-            <Terminal className="w-4 h-4" style={{ color: 'var(--color-text)' }} />
-          </div>
-          <div className="flex flex-col min-w-0">
+        {/* LEFT ZONE: Brand Logo & Name */}
+        <div className="flex items-center justify-start z-10 min-w-0">
+          <Link href="/" className="flex items-center gap-2 sm:gap-2.5 group shrink-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center glass-button transition-transform duration-300 group-hover:scale-105 flex-shrink-0">
+              <Terminal className="w-4 h-4" style={{ color: 'var(--color-text)' }} />
+            </div>
             <span className="font-mono text-sm font-bold tracking-tight" style={{ color: 'var(--color-text)' }}>
               {brandName}
             </span>
-            <span className="hidden 2xl:inline-block text-[10px] font-mono uppercase tracking-wider truncate" style={{ color: 'var(--color-text-muted)' }}>
-              {personInfo.title || 'Full-Stack Developer & AI Automation Engineer'}
-            </span>
-          </div>
-        </Link>
+          </Link>
+        </div>
 
-        {/* Desktop Nav (Visible on xl screens 1280px+) */}
-        <nav className="hidden xl:flex items-center gap-0.5 2xl:gap-1 glass-panel px-2 2xl:px-3 py-1 rounded-full shrink-0">
-          {navItems.map(item => {
-            const Icon = item.icon;
-            const isActive = pathname === item.path || (isHome && activeSection === item.id);
+        {/* CENTER ZONE: 100% Absolute Geometric Center on Desktop */}
+        <div className="hidden xl:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-auto">
+          <nav className="flex items-center gap-1 glass-panel px-3 py-1.5 rounded-full shadow-lg">
+            {navItems.map(item => {
+              const Icon = item.icon;
+              const isActive = pathname === item.path || (isHome && activeSection === item.id);
 
-            return (
-              <Link
-                key={item.name}
-                href={item.path}
-                className="relative px-2.5 2xl:px-3 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 whitespace-nowrap select-none"
-                style={{
-                  color:      isActive ? '#000' : 'var(--color-text-muted)',
-                  fontWeight: isActive ? 700 : 500,
-                }}
-              >
-                {isActive && (
-                  <motion.div
-                    layoutId="activeNavPill"
-                    className="absolute inset-0 rounded-full"
-                    style={{ backgroundColor: 'var(--color-accent)' }}
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                  />
-                )}
-                <Icon className="w-3.5 h-3.5 relative z-10 shrink-0 hidden 2xl:block" />
-                <span className="relative z-10">{item.name}</span>
-              </Link>
-            );
-          })}
-        </nav>
+              return (
+                <Link
+                  key={item.name}
+                  href={item.path}
+                  className="relative px-2.5 2xl:px-3 py-1 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 whitespace-nowrap select-none"
+                  style={{
+                    color:      isActive ? '#000' : 'var(--color-text-muted)',
+                    fontWeight: isActive ? 700 : 500,
+                  }}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeNavPill"
+                      className="absolute inset-0 rounded-full"
+                      style={{ backgroundColor: 'var(--color-accent)' }}
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  <Icon className="w-3.5 h-3.5 relative z-10 shrink-0 hidden 2xl:block" />
+                  <span className="relative z-10">{item.name}</span>
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
 
-        {/* Right Controls (ThemeToggle + CV Button + Hamburger) */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {/* RIGHT ZONE: Controls (ThemeToggle + CV Button + Mobile Menu) */}
+        <div className="flex items-center gap-2 sm:gap-3 z-10 shrink-0">
           {/* Theme Toggle - Always visible */}
           <ThemeToggle />
 
@@ -144,19 +143,19 @@ export default function Navbar({ personInfo = {} }) {
           <button
             type="button"
             onClick={() => downloadResumeFile(resumeLink, 'Mahmud_Hasan_Ratul_Resume.pdf')}
-            className="hidden sm:flex glass-button px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold items-center gap-2 transition-all hover:scale-105 cursor-pointer"
+            className="hidden sm:flex glass-button px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold items-center gap-2 transition-all hover:scale-105 cursor-pointer shrink-0"
           >
             <Download className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
             <span className="hidden md:inline">CV / Resume</span>
             <span className="md:hidden">CV</span>
           </button>
 
-          {/* Mobile / Tablet Menu Button - Visible ONLY on screens < 1280px */}
+          {/* Mobile / Tablet Menu Button - Strictly visible ONLY on screens < 1280px */}
           <button
+            type="button"
             onClick={() => setMobileMenuOpen(o => !o)}
-            className="xl:hidden glass-button p-2.5 rounded-xl focus:outline-none touch-target-exempt cursor-pointer"
+            className="xl:hidden flex items-center justify-center w-10 h-10 glass-button rounded-xl focus:outline-none touch-target-exempt cursor-pointer shrink-0"
             aria-label="Toggle navigation menu"
-            style={{ minWidth: '44px', minHeight: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
             {mobileMenuOpen
               ? <X className="w-5 h-5" style={{ color: 'var(--color-text)' }} />
@@ -165,7 +164,7 @@ export default function Navbar({ personInfo = {} }) {
         </div>
       </div>
 
-      {/* Mobile & Tablet Dropdown Drawer (< 1024px) */}
+      {/* Mobile & Tablet Dropdown Drawer (< 1280px) */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -173,7 +172,7 @@ export default function Navbar({ personInfo = {} }) {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: 'easeInOut' }}
-            className="lg:hidden overflow-hidden px-4 pt-3 pb-6 mt-2 max-w-7xl mx-auto"
+            className="xl:hidden overflow-hidden px-4 pt-3 pb-6 mt-2 max-w-7xl mx-auto"
             style={{
               borderTop: '1px solid var(--color-border)',
               background: 'var(--glass-panel-bg)',
