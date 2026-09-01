@@ -48,17 +48,18 @@
   --text-5xl:   clamp(2.25rem,  1.6rem  + 2.4vw,   4rem);
 
   /* ── FLUID SPACING: section padding, card padding, gaps ── */
-  --section-px:       clamp(1rem,    3vw,    6rem);    /* horizontal page gutters */
-  --section-py:       clamp(2.5rem,  6vw,    8rem);    /* vertical section padding */
-  --card-p:           clamp(0.75rem, 1.5vw,  2rem);    /* card inner padding */
-  --card-p-sm:        clamp(0.5rem,  1vw,    1.25rem); /* smaller card padding */
-  --gap-sm:           clamp(0.5rem,  1vw,    1rem);    /* small gaps */
-  --gap-md:           clamp(0.75rem, 1.5vw,  1.5rem);  /* medium gaps */
-  --gap-lg:           clamp(1rem,    2vw,    2rem);    /* large gaps */
+  --section-px:       clamp(1.25rem, 5vw, 5.5rem);    /* generous horizontal page gutters for both laptops and wide screens */
+  --section-py:       clamp(3rem,    5vw, 6.5rem);    /* balanced vertical section padding */
+  --card-p:           clamp(0.875rem, 1.5vw, 1.75rem); /* card inner padding */
+  --card-p-sm:        clamp(0.625rem, 1vw, 1.125rem); /* smaller card padding */
+  --gap-sm:           clamp(0.5rem,  1vw,    0.875rem); /* small gaps */
+  --gap-md:           clamp(0.75rem, 1.5vw,  1.25rem);  /* medium gaps */
+  --gap-lg:           clamp(1rem,    2vw,    1.75rem);  /* large gaps */
 
-  /* ── FLUID CONTAINER WIDTHS ── */
-  --container-max:    min(88rem, 96vw);   /* absolute max width */
-  --container-inner:  min(80rem, 94vw);   /* inner content max */
+  /* ── FLUID CONTAINER WIDTHS: consistent across all laptop and monitor screens ── */
+  --container-max:    min(76rem, 88vw);   /* optimal reading & card width with healthy breathing room */
+  --container-inner:  min(72rem, 86vw);   /* unified inner width across all sections (~1150px max, 86vw on laptop) */
+  --container-narrow: min(56rem, 82vw);   /* focused single-column presentations */
 }
 
 /* ============================================================

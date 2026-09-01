@@ -286,7 +286,7 @@ export default function Projects({ projects = [], techSkills = [] }) {
 
   return (
     <SectionWrapper id="projects" variant="zoom-portal">
-      <div className="w-full relative z-10 perspective-1200" style={{ maxWidth: 'var(--container-inner)', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'var(--gap-md)' }}>
+      <div className="w-full relative z-10 perspective-1200 mx-auto" style={{ maxWidth: 'var(--container-inner)', display: 'flex', flexDirection: 'column', gap: 'var(--gap-md)' }}>
         
         {/* Section Header */}
         <SectionHeader
