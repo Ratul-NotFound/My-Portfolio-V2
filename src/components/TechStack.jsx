@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useRef, forwardRef, useEffect } from 'react';
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { useState, useRef, forwardRef } from 'react';
 import { 
   Layers, 
   Code2, 
@@ -11,10 +10,7 @@ import {
   Cpu, 
   Search, 
   LayoutGrid, 
-  TerminalSquare, 
-  ExternalLink, 
   FolderGit2, 
-  Sparkles,
   ArrowUpRight
 } from 'lucide-react';
 import SectionWrapper from './SectionWrapper';
@@ -54,7 +50,6 @@ export function isProjectUsingTech(project, techName) {
     const norm = t.toLowerCase().trim();
     if (norm === target) return true;
     if (norm.includes(target) || target.includes(norm)) return true;
-    // Common aliases
     if (target === 'c++' && (norm.includes('c++') || norm.includes('cpp'))) return true;
     if (target === 'next.js' && norm.includes('next')) return true;
     if (target === 'react' && norm.includes('react')) return true;
@@ -68,27 +63,9 @@ const EyePleasingCard = forwardRef(function EyePleasingCard({ skill, index, proj
   const cardRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
   const [popupPlacement, setPopupPlacement] = useState('top');
-  const [popupAlign, setPopupAlign] = useState('center'); // 'center' | 'left' | 'right'
-
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const mouseX = useSpring(x, { stiffness: 450, damping: 28 });
-  const mouseY = useSpring(y, { stiffness: 450, damping: 28 });
-
-  const rotateX = useTransform(mouseY, [-0.5, 0.5], [6, -6]);
-  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-6, 6]);
+  const [popupAlign, setPopupAlign] = useState('center');
 
   const linkedProjects = projects.filter(p => isProjectUsingTech(p, skill.name));
-
-  const setRefs = (node) => {
-    cardRef.current = node;
-    if (typeof ref === 'function') {
-      ref(node);
-    } else if (ref) {
-      ref.current = node;
-    }
-  };
 
   const handleMouseEnter = () => {
     if (cardRef.current && typeof window !== 'undefined') {
@@ -96,15 +73,12 @@ const EyePleasingCard = forwardRef(function EyePleasingCard({ skill, index, proj
       const vw = window.innerWidth;
       const cardCenter = rect.left + rect.width / 2;
 
-      // Vertical: If near top of screen (< 320px), place popup below
       if (rect.top < 320) {
         setPopupPlacement('bottom');
       } else {
         setPopupPlacement('top');
       }
 
-      // Horizontal: Cards on the right half open leftward; cards on the left half open rightward.
-      // This guarantees zero screen edge collision or horizontal clipping on any display.
       if (cardCenter > vw * 0.5) {
         setPopupAlign('right');
       } else {
@@ -116,26 +90,27 @@ const EyePleasingCard = forwardRef(function EyePleasingCard({ skill, index, proj
 
   const handleMouseLeave = () => {
     setIsHovered(false);
-    x.set(0);
-    y.set(0);
+    if (cardRef.current) {
+      cardRef.current.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+    }
   };
 
   const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    x.set((e.clientX - rect.left) / rect.width - 0.5);
-    y.set((e.clientY - rect.top) / rect.height - 0.5);
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    card.style.transform = `perspective(1000px) rotateX(${-y * 10}deg) rotateY(${x * 10}deg)`;
   };
 
   const handleCardClick = (e) => {
-    // If clicked on child link, let it handle
     if (e.target.closest('a') || e.target.closest('button.popup-btn')) return;
     if (onSelectTech) {
       onSelectTech(skill.name);
     }
   };
 
-  // Determine alignment classes: opens strictly inward toward center
   const alignClass = popupAlign === 'right' ? 'right-0 left-auto' : 'left-0 right-auto';
 
   return (
@@ -144,33 +119,27 @@ const EyePleasingCard = forwardRef(function EyePleasingCard({ skill, index, proj
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <motion.div
-        ref={setRefs}
-        layout
+      <div
+        ref={(node) => {
+          cardRef.current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) ref.current = node;
+        }}
         onMouseMove={handleMouseMove}
         onClick={handleCardClick}
-        initial={{ opacity: 0, y: 14, scale: 0.96 }}
-        whileInView={{ opacity: 1, y: 0, scale: 1 }}
-        viewport={{ once: true, margin: '20px' }}
-        exit={{ opacity: 0, scale: 0.9, y: -10, transition: { duration: 0.15 } }}
-        transition={{ duration: 0.35, delay: (index % 12) * 0.025, ease: [0.16, 1, 0.3, 1] }}
         style={{
-          rotateX, rotateY,
-          transformStyle: 'preserve-3d', perspective: 1000,
+          transformStyle: 'preserve-3d',
+          transition: 'transform 0.15s ease-out, border-color 0.2s, box-shadow 0.2s',
           background: 'var(--color-surface)',
           borderColor: isHovered ? 'var(--color-border-accent)' : 'var(--color-border)',
           padding: 'var(--card-p-sm)',
           gap: 'clamp(0.5rem, 1.2vw, 0.875rem)',
         }}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        className="rounded-2xl border flex items-center relative cursor-pointer select-none transition-all duration-200 shadow-sm hover:shadow-md group w-full"
+        className="rounded-2xl border flex items-center relative cursor-pointer select-none shadow-sm hover:shadow-md group w-full"
       >
         {/* Tech Icon Box */}
-        <motion.div
-          whileHover={{ rotateZ: 360, scale: 1.1 }}
-          transition={{ duration: 0.4, type: 'spring', stiffness: 300 }}
-          className="rounded-xl flex-shrink-0 flex items-center justify-center border shadow-inner"
+        <div
+          className="rounded-xl flex-shrink-0 flex items-center justify-center border shadow-inner transition-transform duration-300 group-hover:scale-105"
           style={{
             width: 'clamp(1.75rem, 2.5vw, 2.5rem)',
             height: 'clamp(1.75rem, 2.5vw, 2.5rem)',
@@ -179,7 +148,7 @@ const EyePleasingCard = forwardRef(function EyePleasingCard({ skill, index, proj
           }}
         >
           <GetTechLogo name={skill.name} style={{ width: 'clamp(1rem, 1.4vw, 1.375rem)', height: 'clamp(1rem, 1.4vw, 1.375rem)' }} className="object-contain" />
-        </motion.div>
+        </div>
 
         {/* Info */}
         <div className="flex-1 min-w-0 overflow-hidden">
@@ -213,114 +182,107 @@ const EyePleasingCard = forwardRef(function EyePleasingCard({ skill, index, proj
             </span>
           </div>
         </div>
-      </motion.div>
+      </div>
 
-      {/* 🚀 INTERACTIVE HOVER POPUP WITH LINKED PROJECTS - Desktop only */}
-      <AnimatePresence>
-        {isHovered && (
-          <motion.div
-            initial={{ opacity: 0, y: popupPlacement === 'top' ? 10 : -10, scale: 0.94 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: popupPlacement === 'top' ? 6 : -6, scale: 0.95 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className={`absolute ${popupPlacement === 'top' ? 'bottom-full mb-2.5' : 'top-full mt-2.5'} ${alignClass} z-50 w-64 sm:w-72 md:w-80 rounded-2xl p-3.5 shadow-2xl border pointer-events-auto backdrop-blur-2xl
-              hidden sm:block`}
-            style={{
-              background: 'rgba(12, 14, 24, 0.96)',
-              borderColor: 'var(--color-border-accent)',
-              boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.85), 0 0 25px rgba(56, 189, 248, 0.25)',
-              maxWidth: 'min(320px, calc(100vw - 2rem))',
-            }}
-          >
-            {/* Laser Line Accent */}
-            <div 
-              className="absolute inset-x-0 top-0 h-[1.5px] rounded-t-2xl" 
-              style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }} 
-            />
+      {/* 🚀 INTERACTIVE HOVER POPUP WITH LINKED PROJECTS */}
+      {isHovered && (
+        <div
+          className={`absolute ${popupPlacement === 'top' ? 'bottom-full mb-2.5' : 'top-full mt-2.5'} ${alignClass} z-50 w-64 sm:w-72 md:w-80 rounded-2xl p-3.5 shadow-2xl border pointer-events-auto backdrop-blur-2xl hidden sm:block animate-in fade-in zoom-in-95 duration-150`}
+          style={{
+            background: 'rgba(12, 14, 24, 0.96)',
+            borderColor: 'var(--color-border-accent)',
+            boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.85), 0 0 25px rgba(56, 189, 248, 0.25)',
+            maxWidth: 'min(320px, calc(100vw - 2rem))',
+          }}
+        >
+          {/* Laser Line Accent */}
+          <div 
+            className="absolute inset-x-0 top-0 h-[1.5px] rounded-t-2xl" 
+            style={{ background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)' }} 
+          />
 
-            {/* Popup Header */}
-            <div className="flex items-center justify-between gap-2 pb-2.5 border-b" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-lg flex items-center justify-center border bg-white/5 border-white/10 shadow-inner">
-                  <GetTechLogo name={skill.name} className="w-3.5 h-3.5 object-contain" />
-                </div>
-                <div>
-                  <h4 className="text-xs font-mono font-bold text-white leading-none">{skill.name}</h4>
-                  <span className="text-[10px] font-mono text-zinc-400 capitalize">{skill.category}</span>
-                </div>
+          {/* Popup Header */}
+          <div className="flex items-center justify-between gap-2 pb-2.5 border-b" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-lg flex items-center justify-center border bg-white/5 border-white/10 shadow-inner">
+                <GetTechLogo name={skill.name} className="w-3.5 h-3.5 object-contain" />
               </div>
-
-              <span 
-                className="text-[9px] px-2 py-0.5 rounded-full font-mono font-bold uppercase tracking-wider"
-                style={{ background: 'rgba(56, 189, 248, 0.15)', color: 'var(--color-accent)', border: '1px solid rgba(56, 189, 248, 0.3)' }}
-              >
-                {skill.level || 'Expert'}
-              </span>
+              <div>
+                <h4 className="text-xs font-mono font-bold text-white leading-none">{skill.name}</h4>
+                <span className="text-[10px] font-mono text-zinc-400 capitalize">{skill.category}</span>
+              </div>
             </div>
 
-            {/* Linked Projects Section */}
-            <div className="py-2.5 space-y-2">
-              <div className="flex items-center justify-between text-[11px] font-mono">
-                <span className="text-zinc-300 font-semibold flex items-center gap-1.5">
-                  <FolderGit2 className="w-3.5 h-3.5 text-accent" style={{ color: 'var(--color-accent)' }} />
-                  <span>Linked Projects ({linkedProjects.length})</span>
-                </span>
-                {linkedProjects.length > 0 && (
-                  <span className="text-[10px] text-accent font-bold" style={{ color: 'var(--color-accent)' }}>Active Production</span>
-                )}
-              </div>
+            <span 
+              className="text-[9px] px-2 py-0.5 rounded-full font-mono font-bold uppercase tracking-wider"
+              style={{ background: 'rgba(56, 189, 248, 0.15)', color: 'var(--color-accent)', border: '1px solid rgba(56, 189, 248, 0.3)' }}
+            >
+              {skill.level || 'Expert'}
+            </span>
+          </div>
 
-              {linkedProjects.length > 0 ? (
-                <div className="space-y-1.5 max-h-36 overflow-y-auto custom-scrollbar pr-1">
-                  {linkedProjects.map((p, pIdx) => (
-                    <div
-                      key={p.id || pIdx}
-                      onClick={() => onSelectTech && onSelectTech(skill.name)}
-                      className="p-2 rounded-xl border flex items-center justify-between gap-2 transition-all hover:bg-white/5 cursor-pointer group/proj"
-                      style={{ background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.06)' }}
-                    >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <img 
-                          src={p.image || '/tech1.jpg'} 
-                          alt={p.title} 
-                          loading="lazy"
-                          decoding="async"
-                          className="w-7 h-7 rounded-lg object-cover border border-white/10 flex-shrink-0" 
-                        />
-                        <div className="min-w-0">
-                          <p className="text-[11px] font-sans font-bold text-white truncate group-hover/proj:text-accent transition-colors">
-                            {p.title}
-                          </p>
-                          <p className="text-[9px] font-mono text-zinc-400 truncate">{p.category}</p>
-                        </div>
-                      </div>
-                      <ArrowUpRight className="w-3.5 h-3.5 text-zinc-400 group-hover/proj:text-accent group-hover/proj:translate-x-0.5 group-hover/proj:-translate-y-0.5 transition-all flex-shrink-0" />
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="p-2 rounded-xl border bg-white/2 text-zinc-400 text-[10px] font-mono leading-relaxed" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
-                  ⚡ Core engineering competency applied across low-level algorithms, DSP feature extraction, and backend microservices.
-                </div>
+          {/* Linked Projects Section */}
+          <div className="py-2.5 space-y-2">
+            <div className="flex items-center justify-between text-[11px] font-mono">
+              <span className="text-zinc-300 font-semibold flex items-center gap-1.5">
+                <FolderGit2 className="w-3.5 h-3.5 text-accent" style={{ color: 'var(--color-accent)' }} />
+                <span>Linked Projects ({linkedProjects.length})</span>
+              </span>
+              {linkedProjects.length > 0 && (
+                <span className="text-[10px] text-accent font-bold" style={{ color: 'var(--color-accent)' }}>Active Production</span>
               )}
             </div>
 
-            {/* Quick Action Button */}
-            <button
-              type="button"
-              onClick={() => onSelectTech && onSelectTech(skill.name)}
-              className="popup-btn w-full py-1.5 rounded-xl text-[11px] font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-sm hover:opacity-90 active:scale-95"
-              style={{
-                background: 'var(--color-accent)',
-                color: '#000',
-              }}
-            >
-              <span>{linkedProjects.length > 0 ? `Filter Projects with ${skill.name}` : 'Explore Projects Showcase'}</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            {linkedProjects.length > 0 ? (
+              <div className="space-y-1.5 max-h-36 overflow-y-auto custom-scrollbar pr-1">
+                {linkedProjects.map((p, pIdx) => (
+                  <div
+                    key={p.id || pIdx}
+                    onClick={() => onSelectTech && onSelectTech(skill.name)}
+                    className="p-2 rounded-xl border flex items-center justify-between gap-2 transition-all hover:bg-white/5 cursor-pointer group/proj"
+                    style={{ background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.06)' }}
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <img 
+                        src={p.image || '/tech1.jpg'} 
+                        alt={p.title} 
+                        loading="lazy"
+                        decoding="async"
+                        className="w-7 h-7 rounded-lg object-cover border border-white/10 flex-shrink-0" 
+                      />
+                      <div className="min-w-0">
+                        <p className="text-[11px] font-sans font-bold text-white truncate group-hover/proj:text-accent transition-colors">
+                          {p.title}
+                        </p>
+                        <p className="text-[9px] font-mono text-zinc-400 truncate">{p.category}</p>
+                      </div>
+                    </div>
+                    <ArrowUpRight className="w-3.5 h-3.5 text-zinc-400 group-hover/proj:text-accent group-hover/proj:translate-x-0.5 group-hover/proj:-translate-y-0.5 transition-all flex-shrink-0" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="p-2 rounded-xl border bg-white/2 text-zinc-400 text-[10px] font-mono leading-relaxed" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
+                ⚡ Core engineering competency applied across low-level algorithms, DSP feature extraction, and backend microservices.
+              </div>
+            )}
+          </div>
+
+          {/* Quick Action Button */}
+          <button
+            type="button"
+            onClick={() => onSelectTech && onSelectTech(skill.name)}
+            className="popup-btn w-full py-1.5 rounded-xl text-[11px] font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-sm hover:opacity-90 active:scale-95"
+            style={{
+              background: 'var(--color-accent)',
+              color: '#000',
+            }}
+          >
+            <span>{linkedProjects.length > 0 ? `Filter Projects with ${skill.name}` : 'Explore Projects Showcase'}</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
     </div>
   );
 });
@@ -347,7 +309,6 @@ export default function TechStack({ categories = [], skills = [], projects = [] 
   const [activeViewMode, setActiveViewMode] = useState('grid');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Handle clicking a tech card / popup button to smooth scroll and filter in Projects
   const handleSelectTech = (techName) => {
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('filter-project-tech', { detail: techName }));
@@ -366,7 +327,7 @@ export default function TechStack({ categories = [], skills = [], projects = [] 
     const matchesSearch = searchQuery === '' ||
       skill.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       skill.category.toLowerCase().includes(searchQuery.toLowerCase());
-return matchesTab && matchesSearch;
+    return matchesTab && matchesSearch;
   });
 
   return (
@@ -385,7 +346,7 @@ return matchesTab && matchesSearch;
         <div className="space-y-2.5 sm:space-y-3">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-4">
             
-            {/* View Switcher: Interactive Glass Deck vs CLI Terminal */}
+            {/* View Switcher */}
             <div 
               className="p-1 rounded-xl flex items-center gap-1 border shadow-inner"
               style={{ background: 'var(--color-surface-2)', borderColor: 'var(--color-border)' }}
@@ -487,17 +448,15 @@ return matchesTab && matchesSearch;
               width: '100%',
             }}
           >
-            <AnimatePresence mode="popLayout">
-              {filteredSkills.map((skill, index) => (
-                <EyePleasingCard
-                  key={skill.name}
-                  skill={skill}
-                  index={index}
-                  projects={projects}
-                  onSelectTech={handleSelectTech}
-                />
-              ))}
-            </AnimatePresence>
+            {filteredSkills.map((skill, index) => (
+              <EyePleasingCard
+                key={skill.name}
+                skill={skill}
+                index={index}
+                projects={projects}
+                onSelectTech={handleSelectTech}
+              />
+            ))}
           </div>
         ) : (
           /* CLI TERMINAL VIEW */

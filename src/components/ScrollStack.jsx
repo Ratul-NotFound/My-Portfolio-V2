@@ -26,8 +26,6 @@ const ScrollStack = ({
   touchMultiplier = 3.5,
   onStackComplete
 }) => {
-
-
   const scrollerRef = useRef(null);
   const stackCompletedRef = useRef(false);
   const animationFrameRef = useRef(null);
@@ -360,8 +358,6 @@ const ScrollStack = ({
       scroller.removeEventListener('touchmove', handleTouchMovePassThrough);
     };
   }, [useWindowScroll]);
-
-
 
   return (
     <div className={`scroll-stack-scroller ${className}`.trim()} ref={scrollerRef}>

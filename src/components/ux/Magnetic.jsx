@@ -1,37 +1,36 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useRef, useCallback } from 'react';
 
 export default function Magnetic({ children, distance = 0.35, className = '' }) {
-  const ref = useRef(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const wrapRef = useRef(null);
 
-  const handleMouseMove = (e) => {
-    if (!ref.current) return;
-    const { clientX, clientY } = e;
-    const { left, top, width, height } = ref.current.getBoundingClientRect();
-    const middleX = clientX - (left + width / 2);
-    const middleY = clientY - (top + height / 2);
-    setPosition({ x: middleX * distance, y: middleY * distance });
-  };
+  const handleMouseMove = useCallback((e) => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const { left, top, width, height } = el.getBoundingClientRect();
+    const x = (e.clientX - (left + width / 2)) * distance;
+    const y = (e.clientY - (top + height / 2)) * distance;
+    el.style.transform = `translate(${x}px, ${y}px)`;
+  }, [distance]);
 
-  const handleMouseLeave = () => {
-    setPosition({ x: 0, y: 0 });
-  };
-
-  const { x, y } = position;
+  const handleMouseLeave = useCallback(() => {
+    const el = wrapRef.current;
+    if (el) el.style.transform = 'translate(0px, 0px)';
+  }, []);
 
   return (
-    <motion.div
-      ref={ref}
+    <div
+      ref={wrapRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      animate={{ x, y }}
-      transition={{ type: 'spring', stiffness: 250, damping: 18, mass: 0.5 }}
       className={`inline-block ${className}`}
+      style={{
+        transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+        willChange: 'transform'
+      }}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

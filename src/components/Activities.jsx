@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Award, 
   Globe, 
@@ -164,6 +164,7 @@ const categoryIcons = {
 };
 
 export default function Activities({ activities = fallbackActivities }) {
+  const list = Array.isArray(activities) && activities.length > 0 ? activities : fallbackActivities;
   const [activeCategory, setActiveCategory] = useState("All");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -174,50 +175,48 @@ export default function Activities({ activities = fallbackActivities }) {
   // Helper to extract all images for an activity
   const getActImages = (act) => {
     if (!act) return [];
-    const list = [];
-    if (act.img) list.push(act.img);
-    if (act.image && !list.includes(act.image)) list.push(act.image);
+    const imgs = [];
+    if (act.img) imgs.push(act.img);
+    if (act.image && !imgs.includes(act.image)) imgs.push(act.image);
     if (Array.isArray(act.gallery)) {
-      act.gallery.forEach(u => { if (u && !list.includes(u)) list.push(u); });
+      act.gallery.forEach(u => { if (u && !imgs.includes(u)) imgs.push(u); });
     } else if (typeof act.gallery === 'string') {
-      act.gallery.split('\n').map(s => s.trim()).forEach(u => { if (u && !list.includes(u)) list.push(u); });
+      act.gallery.split('\n').map(s => s.trim()).forEach(u => { if (u && !imgs.includes(u)) imgs.push(u); });
     }
     if (Array.isArray(act.images)) {
-      act.images.forEach(u => { if (u && !list.includes(u)) list.push(u); });
+      act.images.forEach(u => { if (u && !imgs.includes(u)) imgs.push(u); });
     }
-    return list.length > 0 ? list : ['/cpc1.jpg'];
+    return imgs.length > 0 ? imgs : ['/cpc1.jpg'];
   };
 
-  // 3D Parallax Tilt for Spotlight Card
+  // 3D Parallax Tilt for Spotlight Card (GPU Accelerated)
   const cardRef = useRef(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const mouseX = useSpring(x, { stiffness: 350, damping: 25 });
-  const mouseY = useSpring(y, { stiffness: 350, damping: 25 });
-  const rotateX = useTransform(mouseY, [-0.5, 0.5], [5, -5]);
-  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-5, 5]);
 
   const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    x.set((e.clientX - rect.left) / rect.width - 0.5);
-    y.set((e.clientY - rect.top) / rect.height - 0.5);
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    card.style.transform = `perspective(1000px) rotateX(${-y * 8}deg) rotateY(${x * 8}deg)`;
   };
 
   const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
+    const card = cardRef.current;
+    if (card) {
+      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+    }
   };
 
   const filteredActivities = activeCategory === "All"
-    ? activities
-    : activities.filter(act => {
+    ? list
+    : list.filter(act => {
         const cat = act.category || "";
         return cat.toLowerCase().includes(activeCategory.toLowerCase().replace(" events", ""));
       });
 
   const total = filteredActivities.length;
-  const activeAct = filteredActivities[currentIndex] || filteredActivities[0] || activities[0];
+  const activeAct = filteredActivities[currentIndex] || filteredActivities[0] || list[0];
   const ActiveIcon = categoryIcons[activeAct?.category] || Award;
 
   const handleNext = useCallback(() => {
@@ -354,9 +353,9 @@ export default function Activities({ activities = fallbackActivities }) {
         <div className="flex flex-wrap items-center justify-between gap-2 pb-2 w-full" style={{ borderBottom: '1px solid var(--color-border)' }}>
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             {categories.map((cat) => {
-              const count = cat.id === 'all'
-                ? activities.length
-                : activities.filter(a => a.category?.toLowerCase() === cat.id).length;
+              const count = cat.id === 'All'
+                ? list.length
+                : list.filter(a => (a.category || '').toLowerCase().includes(cat.label.toLowerCase())).length;
 
               const Icon = cat.icon;
               const isActive = activeCategory === cat.id;
@@ -440,9 +439,8 @@ export default function Activities({ activities = fallbackActivities }) {
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
                 style={{
-                  rotateX,
-                  rotateY,
                   transformStyle: 'preserve-3d',
+                  transition: 'transform 0.15s ease-out',
                   background: 'var(--color-surface)',
                   border: '1.5px solid var(--color-border)',
                 }}

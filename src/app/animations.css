@@ -1,0 +1,173 @@
+/* ============================================================
+   PORTFOLIO V2 — GPU-ACCELERATED ANIMATION ENGINE
+   All animations use only transform + opacity (GPU composited)
+   ============================================================ */
+
+/* ── Reveal Primitives ─────────────────────────────────────── */
+
+/* Base reveal class — elements start hidden, become visible on .in-view */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Slide from left */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-35px) scale(0.92);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+.reveal-left.in-view {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+/* Scale up from slightly smaller */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+.reveal-scale.in-view {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Fade only — no movement */
+.reveal-fade {
+  opacity: 0;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity;
+}
+.reveal-fade.in-view {
+  opacity: 1;
+}
+
+/* Stagger container trigger support */
+.stagger-parent.inview-trigger .reveal,
+.stagger-parent.inview-trigger .reveal-scale,
+.stagger-parent.inview-trigger .reveal-left,
+.stagger-parent.inview-trigger .reveal-fade {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger delays — apply to children with .reveal class inside .stagger-parent */
+.stagger-parent .reveal:nth-child(1), .stagger-parent .reveal-scale:nth-child(1)  { transition-delay: 0.00s; }
+.stagger-parent .reveal:nth-child(2), .stagger-parent .reveal-scale:nth-child(2)  { transition-delay: 0.08s; }
+.stagger-parent .reveal:nth-child(3), .stagger-parent .reveal-scale:nth-child(3)  { transition-delay: 0.16s; }
+.stagger-parent .reveal:nth-child(4), .stagger-parent .reveal-scale:nth-child(4)  { transition-delay: 0.24s; }
+.stagger-parent .reveal:nth-child(5), .stagger-parent .reveal-scale:nth-child(5)  { transition-delay: 0.32s; }
+.stagger-parent .reveal:nth-child(6), .stagger-parent .reveal-scale:nth-child(6)  { transition-delay: 0.40s; }
+.stagger-parent .reveal:nth-child(7), .stagger-parent .reveal-scale:nth-child(7)  { transition-delay: 0.48s; }
+.stagger-parent .reveal:nth-child(8), .stagger-parent .reveal-scale:nth-child(8)  { transition-delay: 0.56s; }
+.stagger-parent .reveal:nth-child(9), .stagger-parent .reveal-scale:nth-child(9)  { transition-delay: 0.64s; }
+.stagger-parent .reveal:nth-child(10), .stagger-parent .reveal-scale:nth-child(10) { transition-delay: 0.72s; }
+
+/* ── Section Scroll Parallax — replaces SectionWrapper's useScroll ─ */
+
+.section-reveal-wrap {
+  opacity: 0.35;
+  transform: translateY(32px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+.section-reveal-wrap.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+.section-reveal-wrap.variant-hero {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+/* ── Text Reveal — replaces TextReveal.jsx useTransform per word ── */
+
+.text-reveal-word {
+  display: inline-block;
+  opacity: 0.18;
+  transform: translateY(6px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  will-change: transform, opacity;
+}
+.text-reveal-word.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Marquee — replaces ScrollVelocity.jsx useAnimationFrame loop ─ */
+
+@keyframes marquee-left {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.marquee-track--animate {
+  animation: marquee-left 24s linear infinite;
+}
+
+.marquee-container:hover .marquee-track--animate {
+  animation-duration: 10s;
+}
+
+/* ── Magnetic Button — CSS-only hover approach ─────────────── */
+.btn-magnetic {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s ease;
+  will-change: transform;
+}
+.btn-magnetic:hover {
+  transform: translateY(-3px);
+}
+
+/* ── Section containment — reduces layout recalc scope ──────── */
+.section-contain {
+  contain: layout style;
+}
+
+/* ── Reduced motion overrides ───────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-left,
+  .reveal-scale,
+  .reveal-fade,
+  .section-reveal-wrap,
+  .text-reveal-word {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .marquee-track--animate {
+    animation: none !important;
+  }
+}
+
+/* ── Low-end device: skip backdrop-blur to prevent GPU raster stalls */
+@media (max-width: 768px) and (hover: none) and (pointer: coarse) {
+  .glass-panel,
+  .glass-button {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}

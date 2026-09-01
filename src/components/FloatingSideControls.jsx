@@ -31,6 +31,7 @@ function ActualSectionPreview({ sec, isActive, isHovered }) {
 
   useEffect(() => {
     if (!isHovered || !previewRef.current) return;
+    if (typeof window !== 'undefined' && (window.innerWidth < 768 || window.matchMedia?.('(hover: none)').matches)) return;
     const targetEl = document.getElementById(sec.id);
     if (!targetEl) return;
 

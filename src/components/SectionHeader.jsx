@@ -1,14 +1,13 @@
 'use client';
-import { motion } from 'framer-motion';
+import { useReveal } from '@/hooks/useReveal';
 
 export default function SectionHeader({ number = '01', category = '', title = '', highlight = '' }) {
+  const [ref, inView] = useReveal({ threshold: 0.15, rootMargin: '-40px' });
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      className="text-center mx-auto glass-panel"
+    <div
+      ref={ref}
+      className={`reveal text-center mx-auto glass-panel${inView ? ' in-view' : ''}`}
       style={{ 
         maxWidth: 'var(--container-inner)',
         width: '100%',
@@ -55,6 +54,6 @@ export default function SectionHeader({ number = '01', category = '', title = ''
           </span>
         )}
       </h2>
-    </motion.div>
+    </div>
   );
 }

@@ -81,7 +81,7 @@ export default function Contact({ personInfo = {} }) {
               </div>
 
               <h3 className="font-sans font-black text-3xl sm:text-4xl leading-tight tracking-tight text-white">
-                Let's start a <span style={{ color: 'var(--color-accent)' }}>conversation</span>.
+                Let&apos;s start a <span style={{ color: 'var(--color-accent)' }}>conversation</span>.
               </h3>
 
               <p className="text-sm font-sans text-zinc-300 leading-relaxed max-w-md">

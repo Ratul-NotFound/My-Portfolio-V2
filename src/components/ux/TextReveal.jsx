@@ -1,40 +1,45 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-
-function Word({ word, progress, range }) {
-  const opacity = useTransform(progress, range, [0.18, 1]);
-  const color = useTransform(progress, range, ['var(--color-text-muted)', 'var(--color-text)']);
-
-  return (
-    <motion.span
-      style={{ opacity, color }}
-      className="text-xs sm:text-sm font-medium leading-relaxed inline-block"
-    >
-      {word}
-    </motion.span>
-  );
-}
+import { useEffect, useRef, useState } from 'react';
 
 export default function TextReveal({ text, className = '' }) {
   const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start 0.85', 'end 0.45']
-  });
-
+  const [inView, setInView] = useState(false);
   const words = text.split(' ');
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || typeof window === 'undefined' || !('IntersectionObserver' in window)) {
+      setInView(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.unobserve(el);
+        }
+      },
+      { threshold: 0.15, rootMargin: '-20px' }
+    );
+    observer.observe(el);
+    return () => {
+      if (el) observer.unobserve(el);
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <div ref={containerRef} className={`flex flex-wrap gap-x-1.5 gap-y-1 ${className}`}>
-      {words.map((word, i) => {
-        const start = i / words.length;
-        const end = start + 1 / words.length;
-        return (
-          <Word key={i} word={word} progress={scrollYProgress} range={[start, end]} />
-        );
-      })}
+      {words.map((word, i) => (
+        <span
+          key={i}
+          className={`text-reveal-word text-xs sm:text-sm font-medium leading-relaxed inline-block ${inView ? 'in-view' : ''}`}
+          style={{ transitionDelay: inView ? `${i * 0.035}s` : '0s' }}
+        >
+          {word}
+        </span>
+      ))}
     </div>
   );
 }
