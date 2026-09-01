@@ -31,19 +31,48 @@ export default function Navbar({ personInfo = {} }) {
 
   useEffect(() => {
     if (!isHome) return;
-    const onScroll = () => {
-      setScrolled(window.scrollY > 40);
-      for (const item of navItems) {
+    let rafId = null;
+
+    // Cache section offset positions — calculated on resize, not on every scroll tick
+    let sectionPositions = [];
+    const measure = () => {
+      sectionPositions = navItems.map(item => {
         const el = document.getElementById(item.id);
-        if (el) {
-          const r = el.getBoundingClientRect();
-          if (r.top <= 220 && r.bottom >= 180) { setActiveSection(item.id); break; }
-        }
-      }
+        return {
+          id: item.id,
+          top: el ? el.offsetTop : 0,
+          bottom: el ? el.offsetTop + el.offsetHeight : 0
+        };
+      });
     };
+    measure();
+    window.addEventListener('resize', measure, { passive: true });
+
+    const onScroll = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        const scrollY = window.scrollY || window.pageYOffset || 0;
+        setScrolled(scrollY > 40);
+
+        const checkY = scrollY + 200;
+        for (const sec of sectionPositions) {
+          if (checkY >= sec.top && checkY <= sec.bottom) {
+            setActiveSection(sec.id);
+            break;
+          }
+        }
+        rafId = null;
+      });
+    };
+
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', measure);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, [isHome]);
 
   return (

@@ -94,7 +94,6 @@ html.light {
    BASE STYLES & ZERO HORIZONTAL OVERFLOW
    ============================================================ */
 html { 
-  scroll-behavior: smooth;
   scroll-padding-top: 5rem;
   overflow-x: clip; 
   max-width: 100%;
@@ -118,7 +117,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-overflow-scrolling: touch;
-  transition: background-color 0.35s ease, color 0.35s ease;
   /* scrollbar-gutter causes layout shift on mobile — only apply on wide screens */
   scrollbar-gutter: stable;
   /* Prevents text from overflowing containers on small screens */
